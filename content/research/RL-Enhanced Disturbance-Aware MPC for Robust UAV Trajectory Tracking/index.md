@@ -1,7 +1,7 @@
 ---
 title: RL-Enhanced Disturbance-Aware MPC for Robust UAV Trajectory Tracking
 summary: Developed a hybrid control framework integrating reinforcement learning and sliding mode observer into MPC for disturbance-aware UAV tracking.
-date: 2024-06-01
+date: 2025-05-01
 type: docs
 tags:
   - UAV
