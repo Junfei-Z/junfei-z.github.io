@@ -52,7 +52,7 @@ profiles:
   - icon: brands/github
     url: https://github.com/Junfei-Z
   - icon: academicons/google-scholar
-   url: https://scholar.google.com/citations?user=IFibJMkAAAAJ&hl=en
+    url: https://scholar.google.com/citations?user=IFibJMkAAAAJ&hl=en
   - icon: brands/linkedin
     url: https://www.linkedin.com/in/junfei-z/
 
