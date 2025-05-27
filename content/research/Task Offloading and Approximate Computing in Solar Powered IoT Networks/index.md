@@ -1,7 +1,7 @@
 ---
 title: Task Offloading and Approximate Computing in Solar Powered IoT Networks
 summary: Proposed a novel MILP and Digital Twin-based control strategy for optimizing energy use in approximate IoT task execution.
-date: 2024-03-01
+date: 2024-01-07
 type: docs
 tags:
   - IoT
