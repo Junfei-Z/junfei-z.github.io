@@ -197,8 +197,8 @@ awards:
   #     Object-oriented programming (OOP) lets you specify relationships between functions and the objects that they can act on, helping you manage complexity in your code. This is an intermediate level course, providing an introduction to OOP, using the S3 and R6 systems. S3 is a great day-to-day R programming tool that simplifies some of the functions that you write. R6 is especially useful for industry-specific analyses, working with web APIs, and building GUIs.
 ---
 
-# About Me
-About Me:
+## About Me
+
 I’m Junfei Zhan, originally from China, and currently exploring opportunities to pursue PhD programs to further my academic journey.
 
 My academic interests center on optimization, Large Lanuage Models (LLM), and data-driven decision-making, especially in energy-constrained computing environments. I’ve led and co-authored multiple research projects and publications focused on task scheduling, LLM, and green IoT networks, including work published in IEEE Networking Letters and under review at IEEE Transactions on Mobile Computing, 2025 ACM Multlimedia and 2025 IEEE International Conference on Systems, Man, and Cybernetics (SMC). I’m passionate about combining mathematical modeling, machine learning, and control theory to tackle real-world system challenges.
