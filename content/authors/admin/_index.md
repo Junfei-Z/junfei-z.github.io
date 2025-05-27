@@ -1,13 +1,13 @@
 ---
 # Display name
-title: 黄景娟
+title: 占俊飞
 
 # Name pronunciation (optional)
-name_pronunciation: Jingjuan Huang
+name_pronunciation: Junfei Zhan
 
 # Full name (for SEO)
-first_name: Jingjuan
-last_name: Huang
+first_name: Junfei
+last_name: Zhan
 
 # Status emoji
 # status:
@@ -20,18 +20,18 @@ superuser: true
 highlight_name: true
 
 # Role/position/tagline
-role: Undergraduate Student
+role: Master Student
 
 # Organizations/Affiliations to display in Biography blox
 organizations:
-  - name: Southern University of Science and Technology (SUSTech)
-    url: https://www.sustech.edu.cn/en/
+  - name: University of Pennsylvania (UPenn)
+    url: https://www.upenn.edu/
 
 # Social network links
 # Need to use another icon? Simply download the SVG icon to your `assets/media/icons/` folder.
 # profiles:
 #   - icon: at-symbol
-#     url: 'mailto:huangjj2021@mail.sustech.edu.cn'
+#     url: 'mailto:zjf2024@seas.upenn.edu'
 #     label: E-mail Me
 #   - icon: brands/x
 #     url: https://twitter.com/GetResearchDev
@@ -47,67 +47,74 @@ organizations:
 #     url: https://orcid.org/
 profiles:
   - icon: at-symbol
-    url: 'mailto:huangjj2021@mail.sustech.edu.cn'
+    url: 'mailto:zjf2024@seas.upenn.edu'
     label: E-mail Me
   - icon: brands/github
-    url: https://github.com/CatherineYellow
+    url: https://github.com/Junfei-Z
+  - icon: academicons/google-scholar
+   url: https://scholar.google.com/citations?user=IFibJMkAAAAJ&hl=en
+  - icon: brands/linkedin
+    url: https://www.linkedin.com/in/junfei-z/
 
 interests:
-  - Analysis
+  - Large Language Models
   - Optimization
-  - Artificial Intelligence
+  - Network Science
 
 education:
-  - area: BSc in Data Science and Big Data Technology
-    institution: Southern University of Science and Technology (SUSTech), China
-    date_start: 2021-09-01
-    date_end: 2025-06-30
+  - area: MS in Electrical Engineering
+    institution: University of Pennsylvania, USA
+    date_start: 2024-09-01
+    date_end: 2026-06-01
     summary: |
-      **1. GPA: 3.93/4.0 (Ranking: 1/53)**
-      
-      **2. Relevant Courses:**
-      - **Challenging Mathematics Courses:** Mathematical Analysis (91), Advanced Linear Algebra (93)
-      - **Statistics Courses:** Probability Theory (99), Mathematical Statistics (100), Statistical Linear Models(99), Multivariate Statistical Analysis (98), Operational Research and Optimization (94)
-      - **Programming Courses:** Advanced natural language processing (94), Big Data Analysis Software and Application(Hadoop or Spark) (96)
-  - area: Exchange Program in Data Science and Artificial Intelligence
-    institution: Nanyang Technological University (NTU), Singapore
-    date_start: 2024-08-01
-    date_end: 2024-12-04
-    summary: |
-      **1. GPA:** 5.0/5.0
+      **1. GPA: 4.0/4.0 (Ranking: 1/127)**
 
       **2. Relevant Courses:**
-      - Computational Economics (Game Theory)
-      - Neural Networks and Deep Learning
-work:
-  - position: Academic Advising Mentor
-    company_name: Student Learning Center, SUSTech
-    company_url: ''
-    company_logo: ''
-    date_start: 2022-01-01
-    date_end: ''
-    summary: |
-      **I have offered one-on-one sessions to assist over 20 students in navigating their academic paths!**
-      - Help students set realistic academic goals, choose suitable courses, and develop effective study strategies to improve their performance.
-      - Actively listen to students' concerns and provide personalized advice to address individual academic challenges, fostering their academic growth and confidence.
-  - position: Student Representative
-    company_name: Department of Statistics and Data Science, SUSTech
-    company_url: ''
-    company_logo: ''
-    date_start: 2023-10-01
+      - **Challenging Mathematics Courses:** Modern Convex Optimization (A+), Linear System Theory (A)
+      - **Machine Learning Courses:** Applied Machine Learning (A), Graph Neural Network (A)
+      - **Applied Courses:** Autonomous Driving (A+), Estimation and Detection Theory (A+)
+
+  - area: Dual BSc in Applied Mathematics and Information Computing Science
+    institution: University of Birmingham, UK & Jinan University, China
+    date_start: 2020-09-01
     date_end: 2024-06-30
     summary: |
-      **Participated in activities and conferences to facilitate communication between faculty members and students.**
-  - position: Member of External Relations Department
-    company_name: Shuren College Student Union, SUSTech
-    company_url: ''
+      **1. Honors:** First Class Honors (University of Birmingham)
+
+      **2. GPA:** 3.82/4.00 (Birmingham), 4.01/5.00 (Jinan)
+
+      **3. Relevant Courses:**
+      - Probability and Statistics (A)
+      - Information Theory (A)
+      - Linear System Theory (A)
+      - C Programming (A)
+      - MATLAB Programming (A+)
+      - Game Theory (A+)
+      - Applied Statistics (A)
+work:
+  - position: Intern in Data Analytics
+    company_name: JLL (Jones Lang LaSalle)
+    company_url: https://www.joneslanglasalle.com.cn/en
     company_logo: ''
-    date_start: 2021-10-01
-    date_end: 2022-06-30
+    date_start: 2023-08-01
+    date_end: 2023-10-01
     summary: |
-      **The team achieved a 10000% increase in funding for the 2021-2022 fiscal year, and I was honored to be recognized as the "Outstanding Officer of the Year" for my contributions to this success!**
-      - Engaged in collaborations with multiple external organizations, including China Merchants Bank, New Oriental Education & Technology Group, etc.
-      - Assisted in coordinating major school events, such as securing China Merchants Bank as a sponsor for the school’s sports day.
+      **Conducted in-depth data collection and analysis for commercial real estate.**
+      - Collected data from over 600 companies and 40+ Grade-A office buildings through on-site surveys, focusing on tenants, vacancy rates, and performance metrics.
+      - Utilized SQL for data extraction and Excel for real-time database updates, ensuring accuracy and consistency.
+      - Built a custom program to extract text from large image datasets and automate text file organization, significantly improving workflow efficiency.
+
+  - position: Class Monitor
+    company_name: Jinan University
+    company_url: https://english.jnu.edu.cn/
+    company_logo: ''
+    date_start: 2020-09-01
+    date_end: 2024-06-30
+    summary: |
+      **Class Size: 36**
+      - Organized over 20 class activities, including hiking, short trips, and experience-sharing sessions with seniors.
+      - Coordinated a group graduation photo session for more than 260 students across the college.
+      - Led a long-term volunteer activity at the school hospital, providing patient directions for 200 service hours.
 
 # Skills
 # Add your own SVG icons to `assets/media/icons/`
@@ -148,8 +155,8 @@ languages:
     percent: 100
   - name: Chinese
     percent: 75
-  - name: Portuguese
-    percent: 25
+  - name: Cantonese
+    percent: 50
 
 # Awards.
 #   Add/remove as many awards below as you like.
@@ -192,8 +199,8 @@ awards:
 
 ## About Me
 
-I’m Jingjuan Huang, born and raised in China, currently exploring opportunities to pursue PhD programs to further my academic journey.
+I’m Junfei Zhan, originally from China, and currently exploring opportunities to pursue PhD programs to further my academic journey.
 
-My academic interests focus on unlocking the potential of data. With research experience in social science and financial simulation optimization, I have built strong foundations in mathematics, statistics, and programming. Advanced tools like large language models are particularly exciting for their potential to enhance productivity and address real-world challenges.
+My academic interests center on optimization, Large Lanuage Models (LLM), and data-driven decision-making, especially in energy-constrained computing environments. I’ve led and co-authored multiple research projects and publications focused on task scheduling, LLM, and green IoT networks, including work published in IEEE Networking Letters and under review at IEEE Transactions on Mobile Computing, 2025 ACM Multlimedia and 2025 IEEE International Conference on Systems, Man, and Cybernetics (SMC). I’m passionate about combining mathematical modeling, machine learning, and control theory to tackle real-world system challenges.
 
 Outside of academics, socializing and sharing meals with friends are some of my favorite activities. Sports have also been a meaningful part of my life, with awards earned in sprinting, rock climbing, rowing, and table tennis.
