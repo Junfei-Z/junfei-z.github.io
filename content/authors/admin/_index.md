@@ -86,7 +86,6 @@ education:
       **3. Relevant Courses:**
       - Probability and Statistics (A)
       - Information Theory (A)
-      - Linear System Theory (A)
       - C Programming (A)
       - MATLAB Programming (A+)
       - Game Theory (A+)
