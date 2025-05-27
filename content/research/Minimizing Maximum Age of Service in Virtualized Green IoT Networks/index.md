@@ -1,7 +1,7 @@
 ---
 title: Minimizing Maximum Age of Service in Virtualized Green IoT Networks
 summary: Developed optimization and control strategies to reduce service latency in renewable-powered IoT networks
-date: 2024-12-01
+date: 2024-12-07
 type: docs
 tags:
   - IoT
