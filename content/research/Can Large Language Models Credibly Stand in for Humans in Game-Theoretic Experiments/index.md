@@ -1,7 +1,7 @@
 ---
 title: Can Large Language Models Credibly Stand in for Humans in Game-Theoretic Experiments?
 summary: Evaluated LLM alignment with human behavior across strategic social games and proposed PRIME-Router to enhance role consistency and adaptability.
-date: 2025-10-01
+date: 2025-04-17
 type: docs
 tags:
   - Game Theory
