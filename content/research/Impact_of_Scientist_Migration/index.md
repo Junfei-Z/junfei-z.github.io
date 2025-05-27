@@ -1,31 +1,49 @@
 ---
-title: Study on the Impact of Scientist Migration
-summary: Conducted large-scale analysis on global scientist migration patterns
-date: 2023-09-01
+title: Task Offloading and Approximate Computing in Solar Powered IoT Networks
+summary: Proposed a novel MILP and Digital Twin-based control strategy for optimizing energy use in approximate IoT task execution.
+date: 2024-03-01
 type: docs
-math: false
 tags:
-  - Data Science
+  - IoT
+  - Approximate Computing
+  - Energy Harvesting
+  - Optimization
+  - Digital Twin
 image:
-  caption: 'Embed rich media such as videos and LaTeX math'
+  caption: 'DT-based control and offloading in green IoT systems'
 ---
 
-In this project, I contributed to a comprehensive study on the migration patterns of scientists and their impacts on various fields of research. The key activities and findings from this research are outlined below.
+This research proposes a novel framework for minimizing the **total energy consumption** of solar-powered IoT networks through **task offloading and approximate computing**. Devices can choose between local execution (exact or approximate) or offloading tasks to a solar-powered edge server.
 
-## Dataset Development
-We developed a large-scale dataset encompassing **200 million records**, which included data on over **350,000 scientists** and **630,000 academic positions** across **19 fields**, primarily focusing on **medicine, chemistry, materials science, computer science,** and **biology**. This extensive dataset serves as the foundation for analyzing trends in scientist migration and its implications.
+## Core Objectives
+- **Reduce energy usage** by allowing approximate task execution when tolerable errors are acceptable.
+- **Leverage digital twins (DTs)** to estimate future energy availability and channel conditions.
+- **Optimize offloading decisions** and resource allocation across time slots and channels.
 
-## Attrition and Attraction Rates Analysis
-We analyzed the **attrition rates** and **attraction rates** of postdoctoral and faculty scientists across different countries. This analysis allowed for the mapping of global scientific talent movement, highlighting the countries and regions that are gaining or losing scientific expertise.
+## Technical Highlights
 
-## Comparative Analysis
-We conducted a comparative analysis of domestic and foreign scientists over time, focusing on metrics such as **innovation, citation counts, productivity,** and **popularity**. Statistical significance was determined using **t-tests**, enabling a robust evaluation of differences between these groups.
+### MILP Formulation
+- Designed the **first MILP** to jointly optimize:
+  - Task offloading decisions
+  - Approximate vs. exact execution
+  - Channel allocation
+  - Virtual machine (VM) assignment
+- Captures constraints on energy arrivals, CPU cycles, approximation error bounds, and VM capacity.
 
-## National Policy Comparison
-The project also involved a comparison of national policies regarding requirements for domestic and foreign scientists. This comparison was based on citation counts, productivity, and interdisciplinary collaboration, providing insights into how different countries attract and retain scientific talent.
+### DT-Assisted Receding Horizon Control (DT-RHC)
+- Introduced a **DT-based control algorithm** using:
+  - **Gaussian Mixture Models (GMMs)** to predict energy and channel gain
+  - Sliding-window MILP optimization for dynamic scheduling
+- Achieves energy usage within **1.62×** of MILP optimal while requiring only **causal (past) data**
 
-## Survival Analysis
-Lastly, I formulated a **log-rank test** to compare the survival probabilities of scientists across **genders, countries,** and **fields** over a span of **seven decades**. This analysis sheds light on the long-term trajectories of scientific careers and the factors influencing their success.
+### Results & Evaluation
+- DT-RHC significantly outperforms random strategies across metrics such as:
+  - Energy consumption vs. number of devices
+  - Impact of approximation ratios
+  - Task completion within extended time horizons
+- Simulations conducted in Python + Gurobi over 100×100 m² deployments using realistic solar input and wireless models.
 
 ## Conclusion
-The research conducted during this period has provided valuable insights into the dynamics of scientist migration, including its implications for national policies and global scientific collaboration. The findings emphasize the importance of understanding these trends to enhance the retention and attraction of scientific talent in various fields.
+This study demonstrates the viability of integrating **approximate computing and intelligent offloading** in **renewable-powered IoT environments**. It provides a robust foundation for future **distributed optimization and adaptive energy-aware network control**.
+
+[IEEE Paper DOI: 10.1109/LNET.2023.3328893](https://doi.org/10.1109/LNET.2023.3328893)
