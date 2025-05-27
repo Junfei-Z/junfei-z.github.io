@@ -46,7 +46,7 @@ organizations:
 #   - icon: academicons/orcid
 #     url: https://orcid.org/
 profiles:
-  - icon: lucide/mailbox
+  - icon: mail
     url: 'mailto:zjf2024@seas.upenn.edu'
     label: E-mail Me
   - icon: brands/github
