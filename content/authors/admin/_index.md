@@ -120,15 +120,15 @@ work:
 skills:
   - name: Technical Skills
     items:
-      - name: Python, Java
+      - name: Python, ROS2
         description: ''
         percent: 80
         icon: code-bracket
-      - name: R, SAS, Matlab
+      - name: R, C++, Matlab
         description: ''
         percent: 100
         icon: chart-bar
-      - name: Hadoop, Spark, Pytorch
+      - name: Pyomo, Scikit-Learn, Pytorch
         description: ''
         percent: 40
         icon: circle-stack
