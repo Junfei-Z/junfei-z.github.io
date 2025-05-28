@@ -1,1 +1,23 @@
+{{ if $avatar }}
+  <div class="avatar-wrapper {{ if $img }}~mt-[105px]{{else}}mt-10{{end}}">
+    {{ $avatar_image := $avatar.Permalink }}
+    <img class="avatar rounded-full bg-white dark:bg-gray-800 p-1" src="{{ $avatar_image }}" alt="{{ with $person_page.Title }}{{ . }}{{ end }}" />
+  </div>
+  <br>
+{{ end }}
 
+<style>
+.avatar-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.avatar {
+  width: 256px;
+  height: 256px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+</style>
