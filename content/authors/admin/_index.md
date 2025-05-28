@@ -204,8 +204,7 @@ My academic interests center on optimization, Large Lanuage Models (LLM), and da
 
 Outside of academics, socializing and sharing meals with friends are some of my favorite activities. Sports have also been a meaningful part of my life, with awards earned in sprinting, rock climbing, rowing, and table tennis.
 
-<p>You can reach me at: <span id="email"></span></p>
-<script>
-  document.getElementById("email").innerHTML =
-    '<a href="mailto:' + 'zjf2024' + '@' + 'seas.upenn.edu">zjf2024@seas.upenn.edu</a>';
-</script>
+<p>
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" style="vertical-align:middle; margin-right: 6px;"><path d="M4 4h16v16H4z" fill="none"/><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.89 2 1.99 2H20c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+  Feel free to contact me at <strong>zjf2024 [at] seas [dot] upenn [dot] edu</strong>.
+</p>
