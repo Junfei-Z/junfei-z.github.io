@@ -1,3 +1,4 @@
+---
 title: Audio-based Material Classification Using Hybrid CNN and Logistic Regression
 date: 2024-12-15
 external_link: https://github.com/Junfei-Z/audio_based_material_classification
