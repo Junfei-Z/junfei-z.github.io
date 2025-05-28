@@ -203,3 +203,9 @@ I’m Junfei Zhan, originally from China, and currently exploring opportunities 
 My academic interests center on optimization, Large Lanuage Models (LLM), and data-driven decision-making, especially in energy-constrained computing environments. I’ve led and co-authored multiple research projects and publications focused on task scheduling, LLM, and green IoT networks, including work published in IEEE Networking Letters and under review at IEEE Transactions on Mobile Computing, 2025 ACM Multlimedia and 2025 IEEE International Conference on Systems, Man, and Cybernetics (SMC). I’m passionate about combining mathematical modeling, machine learning, and control theory to tackle real-world system challenges.
 
 Outside of academics, socializing and sharing meals with friends are some of my favorite activities. Sports have also been a meaningful part of my life, with awards earned in sprinting, rock climbing, rowing, and table tennis.
+
+<p>You can reach me at: <span id="email"></span></p>
+<script>
+  document.getElementById("email").innerHTML =
+    '<a href="mailto:' + 'zjf2024' + '@' + 'seas.upenn.edu">zjf2024@seas.upenn.edu</a>';
+</script>
