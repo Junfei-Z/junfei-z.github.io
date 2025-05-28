@@ -1,6 +1,6 @@
 ---
-title: MPPI with Control Barrier Functions for F1/10: Robust Safety Under Real-World Uncertainty
-date: 2025-05-07
+title: "MPPI with Control Barrier Functions for F1/10: Robust Safety Under Real-World Uncertainty"
+date: 2024-05-30
 external_link: https://github.com/vaithak/f1tenth_shield_mppi
 tags:
   - Model Predictive Control
