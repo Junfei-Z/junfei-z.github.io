@@ -1,13 +1,15 @@
 ---
-title: "The Art of Swing: You Are a Slugger?"
-date: 2024-05-30
-external_link: https://docs.google.com/viewer?url=https://raw.githubusercontent.com/jingjuanh/jingjuanh.github.io/main/static/uploads/dsp.pdf
-
+title: "Can Large Language Models Credibly Stand in for Humans in Game-Theoretic Experiments?"
+date: 2024-05-21
+external_link: https://junfei-z.github.io/static/uploads/Slide_for_MM_conference.pdf
 tags:
-  - Data Analysis
+  - Foundation Model
+  - Game Theory
+  - Multi-Agent Simulation
+  - LLMs
 ---
 
-Baseball Data Analysis
-
+Evaluating LLMs (e.g., GPT-4o, LLaMA-3.3) in classic games such as Prisoner's Dilemma, Ultimatum Game, and Public Goods Game.  
+We propose a multi-agent routing framework PRIME-Router that improves strategic adaptability and persona consistency across repeated interactions.  
 
 <!--more-->
