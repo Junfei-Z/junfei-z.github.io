@@ -97,10 +97,10 @@ work:
   company_logo: ''
   date_start: 2024-03-01
   date_end: 2024-06-30
-  summary: |
-    **Undergraduate Course**
-    - Assisted in teaching *Game Theory*, focusing on foundational concepts such as zero-sum and non-zero-sum games, Nash equilibrium, and Shapley value.
-    - Conducted 8 recitation sessions and review lessons to reinforce theoretical understanding and problem-solving skills.
+  summary: >
+    **Undergraduate Course**  
+    - Assisted in teaching *Game Theory*, focusing on foundational concepts such as zero-sum and non-zero-sum games, Nash equilibrium, and Shapley value.  
+    - Conducted 8 recitation sessions and review lessons to reinforce theoretical understanding and problem-solving skills.  
     - Supported students through Q&A, example walkthroughs, and exam preparation.
       
   - position: Intern in Data Analytics
