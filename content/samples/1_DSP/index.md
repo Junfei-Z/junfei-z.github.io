@@ -1,7 +1,7 @@
 ---
 title: "Can Large Language Models Credibly Stand in for Humans in Game-Theoretic Experiments?"
 date: 2024-05-21
-external_link: https://junfei-z.github.io/static/uploads/Slide_for_MM_conference.pdf
+external_link: https://github.com/Junfei-Z/junfei-z.github.io/blob/main/static/uploads/Slide_for_MM_conference.pdf
 tags:
   - Foundation Model
   - Game Theory
