@@ -1,5 +1,5 @@
 ---
-title: "MPPI with Control Barrier Functions for F1/10: Robust Safety Under Real-World Uncertainty"
+title: "Report - MPPI with Control Barrier Functions for F1/10: Robust Safety Under Real-World Uncertainty"
 date: 2024-05-30
 external_link: "https://github.com/Junfei-Z/junfei-z.github.io/blob/main/static/uploads/Report__MPPI_with_Control_Barrier_Functions_for_F1_10__Robust_Safety_Under_Real_World_Uncertainty.pdf"
 tags:
