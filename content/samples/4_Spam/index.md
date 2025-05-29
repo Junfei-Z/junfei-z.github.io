@@ -1,12 +1,14 @@
 ---
-title: "Defend Your Inbox: Spam Email Detection with Machine Learning"
-date: 2024-01-30
-external_link: https://docs.google.com/viewer?url=https://raw.githubusercontent.com/jingjuanh/jingjuanh.github.io/main/static/uploads/spam_detection.pdf
-
+title: "Undergraduate Thesis - Scheduling in Serverless Computing for Solar-Powered IoT Networks"
+date: 2024-04-30
+external_link: "https://github.com/Junfei-Z/junfei-z.github.io/blob/main/static/uploads/undergraduate_thesis.pdf"
 tags:
-  - Machine Learning
+  - Serverless Computing
+  - IoT
+  - MILP
+  - Optimization
 ---
 
-SVC, Logistic Regression, Decision Tree and Random Forest
+This undergraduate thesis proposes a two-phase optimization framework for solar-powered IoT networks, focusing on dynamic task allocation and energy-aware function configuration. A MILP benchmark and a GMM-enhanced Receding Horizon Control algorithm were developed to improve efficiency and adapt to fluctuating energy and computation conditions.
 
 <!--more-->
