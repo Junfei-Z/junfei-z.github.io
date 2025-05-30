@@ -210,11 +210,11 @@ awards:
 
 ## About Me
 
-I’m Junfei Zhan, originally from China, and currently exploring opportunities to pursue PhD programs to further my academic journey.
+I'm Junfei Zhan, originally from China, and currently exploring opportunities to pursue PhD programs to further my academic journey.
 
-My academic interests center on optimization, Large Lanuage Models (LLM), and data-driven decision-making, especially in energy-constrained computing environments. I’ve led and co-authored multiple research projects and publications focused on task scheduling, LLM, and green IoT networks, including work published in IEEE Networking Letters and under review at IEEE Transactions on Mobile Computing, 2025 ACM Multlimedia and 2025 IEEE International Conference on Systems, Man, and Cybernetics (SMC). I’m passionate about combining mathematical modeling, machine learning, and control theory to tackle real-world system challenges.
+My research interests center on optimization, Large Language Models (LLMs), and data-driven decision-making, particularly within energy-constrained computing environments. I've led and co-authored multiple research projects and publications focused on task scheduling, LLMs, and green IoT networks. My work has been published in IEEE Networking Letters and is currently under review at IEEE Transactions on Mobile Computing, the 2025 ACM Multimedia conference, and the 2025 IEEE International Conference on Systems, Man, and Cybernetics (SMC). I’m passionate about combining mathematical modeling, machine learning, and control theory to tackle real-world system challenges.
 
-Outside of academics, socializing and sharing meals with friends are some of my favorite activities. Sports have also been a meaningful part of my life, with awards earned in sprinting, rock climbing, rowing, and table tennis.
+Outside of academics, grabbing meals with friends and socializing are among my favorite activities. Sports have also been a significant part of my life, with awards earned in sprinting, rock climbing, rowing, and table tennis.
 
 📄 You can download my full CV [here](https://github.com/Junfei-Z/junfei-z.github.io/blob/main/static/uploads/CV_junfei_5_29.pdf).
 
