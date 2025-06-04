@@ -100,7 +100,7 @@ work:
     summary: |
       **Undergraduate Course**  
       - Assisted in teaching *Game Theory*, focusing on foundational concepts such as zero-sum and non-zero-sum games, Nash equilibrium, and Shapley value.  
-      - Conducted 8 recitation sessions and review lessons to reinforce theoretical understanding and problem-solving skills.  
+      - Conducted 8 recitation sessions to reinforce theoretical understanding and problem-solving skills.  
       - Supported students through Q&A, example walkthroughs.
       
   - position: Intern in Data Analytics
@@ -210,7 +210,7 @@ awards:
 
 ## About Me
 
-I'm Junfei Zhan, originally from China, and currently exploring opportunities to pursue PhD programs to further my academic journey.
+I'm Junfei Zhan, originally from China, and currently exploring opportunities to pursue PhD programs beginning in Fall 2026 to further my academic journey.
 
 My research interests center on optimization, Large Language Models (LLMs), and data-driven decision-making, particularly within energy-constrained computing environments. I've led and co-authored multiple research projects and publications focused on task scheduling, LLMs, and green IoT networks. My work has been published in IEEE Networking Letters and is currently under review at IEEE Transactions on Mobile Computing, the 2025 ACM Multimedia conference, and the 2025 IEEE International Conference on Systems, Man, and Cybernetics (SMC). I’m passionate about combining mathematical modeling, machine learning, and control theory to tackle real-world system challenges.
 
