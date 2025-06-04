@@ -67,7 +67,7 @@ education:
     date_start: 2024-09-01
     date_end: 2026-06-01
     summary: |
-      **1. GPA: 4.0/4.0**
+      **1. GPA:** 4.0/4.0
 
       **2. Relevant Courses:**
       - **Challenging Mathematics Courses:** Modern Convex Optimization (A+), Linear System Theory (A)
