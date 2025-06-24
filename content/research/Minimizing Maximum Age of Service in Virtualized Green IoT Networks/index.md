@@ -40,4 +40,4 @@ The research focuses on virtualized, computation-enabled IoT infrastructures pow
 ## Broader Impact
 The proposed system lays groundwork for **energy-aware, delay-sensitive IoT applications**, especially in **remote or energy-constrained environments**. The results provide insights into the tradeoffs between **computation freshness**, **resource allocation**, and **green network deployment** strategies.
 
-📄 [IEEE Transactions on Mobile Computing Submission] — Coming Soon
+📄 [IEEE Transactions on Services Computing Submission] — Coming Soon
