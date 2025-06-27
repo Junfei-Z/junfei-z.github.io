@@ -1,7 +1,7 @@
 ---
 title: "Undergraduate Thesis - Scheduling in Serverless Computing for Solar-Powered IoT Networks"
 date: 2024-04-30
-external_link: "https://github.com/Junfei-Z/junfei-z.github.io/blob/main/static/uploads/undergraduate_thesis.pdf"
+external_link: "https://junfei-z.github.io/undergraduate_thesis.pdf"
 tags:
   - Serverless Computing
   - IoT
