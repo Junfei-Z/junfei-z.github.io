@@ -50,7 +50,7 @@ Traditional UAV controllers using MPC struggle under **model mismatch**, **wind 
 
 ROAM demonstrates that **deep integration of RL, observers, and MPC** yields a control system with faster convergence, better stability, and higher resilience. Its lightweight and modular design makes it highly suitable for **real-time deployment** on embedded UAV platforms.
 
-📄 [IEEE SMC 2025 Submission] — Coming Soon
+📄[Accepted at IEEE SMC 2025] — To appear
 
 <!-- [Hugo Blox Builder](https://hugoblox.com) is designed to give technical content creators a seamless experience. You can focus on the content and the Hugo Blox Builder which this template is built upon handles the rest.
 
