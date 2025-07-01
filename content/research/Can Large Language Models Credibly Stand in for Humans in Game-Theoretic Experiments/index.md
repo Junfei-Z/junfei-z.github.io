@@ -13,7 +13,7 @@ image:
   caption: 'Multi-agent LLM framework for simulating human behavior in games'
 ---
 
-This work investigates the feasibility of using Large Language Models (LLMs) as **proxies for human participants** in behavioral game-theoretic experiments. We evaluated four LLMs—GPT-4o, LLaMA-3.3B/8B, and DeepSeek-R1—across **three canonical games**: the **Prisoner’s Dilemma**, the **Ultimatum Game**, and the **Public Goods Game**.
+This work investigates the feasibility of using Large Language Models (LLMs) as **proxies for human participants** in behavioral game-theoretic experiments. We evaluated four LLMs—GPT-4o, Llama‑3.3‑70B‑Instruct, Llama‑3.3‑8B‑Instruct, and DeepSeek-R1 across **three canonical games**: the **Prisoner’s Dilemma**, the **Ultimatum Game**, and the **Public Goods Game**.
 
 ## Research Objectives
 
@@ -31,7 +31,7 @@ LLMs were benchmarked against human behavior using three new metrics:
 
 Key findings:
 - Most LLMs showed **high initial BAM** but struggled with **adaptive consistency** in repeated games.
-- GPT-4o and LLaMA-3.3B demonstrated **excellent persona consistency** in one-shot games.
+- GPT-4o and LLaMA-3.3-70B demonstrated **excellent persona consistency** in one-shot games.
 
 ### 2. PRIME-Router Framework
 To overcome adaptation and consistency limitations, we proposed **PRIME-Router**, a modular MoE-style architecture that:
