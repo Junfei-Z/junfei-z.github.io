@@ -1,20 +1,20 @@
 ---
-title: PRISM: Privacy-Aware Routing for Adaptive Cloud–Edge LLM Inference with Semantic Sketch Collaboration
+title : PRISM: Privacy-Aware Routing for Adaptive Cloud–Edge LLM Inference with Semantic Sketch Collaboration
 
-summary: Designed a privacy-aware routing framework that dynamically selects execution paths across cloud and edge for LLM inference, combining adaptive LDP and semantic sketching
+summary : Designed a privacy-aware routing framework that dynamically selects execution paths across cloud and edge for LLM inference, combining adaptive LDP and semantic sketching
 
-date: 2025-07-30
+date : 2025-07-30
 
-type: docs
+type : docs
 
-tags:
+tags :
   - Privacy
   - LLM Inference
   - Cloud–Edge Collaboration
   - Differential Privacy
   - Routing
 
-image:
+image :
   caption: 'Semantic-sensitive routing and collaboration pipeline in PRISM'
 
 ---
