@@ -209,10 +209,9 @@ awards:
 ---
 
 ## About Me
+I'm Junfei Zhan, a second-year master's student in Electrical Engineering at the University of Pennsylvania, originally from China. I'm currently supervised by Professor <a href="https://directory.seas.upenn.edu/saswati-sarkar/">Saswati Sarkar</a> and am exploring opportunities to pursue a PhD program beginning in Fall 2026 to further my academic journey.
 
-I'm Junfei Zhan, originally from China, and currently exploring opportunities to pursue PhD programs beginning in Fall 2026 to further my academic journey.
-
-My research interests center on optimization, Large Language Models (LLMs), and data-driven decision-making, particularly within energy-constrained computing environments. I've led and co-authored multiple research projects and publications focused on task scheduling, LLMs, and green IoT networks. I have published research in IEEE Networking Letters and at the 2025 IEEE International Conference on Systems, Man, and Cybernetics (SMC), with further work under review at IEEE Transactions on Communications and the 2025 AAAI Conference. I’m passionate about combining mathematical modeling, machine learning, and control theory to tackle real-world system challenges.
+My research interests center on optimization, Large Language Models (LLMs), and data-driven decision-making, particularly within energy-constrained computing environments. I've led and co-authored multiple research projects and publications focused on task scheduling, LLMs, and green IoT networks. I have published research in IEEE Networking Letters and at the 2025 IEEE International Conference on Systems, Man, and Cybernetics (SMC), with further work under review at IEEE Transactions on Communications and the 2026 AAAI Conference. I’m passionate about combining mathematical modeling, machine learning, and control theory to tackle real-world system challenges.
 
 Outside of academics, grabbing meals with friends and socializing are among my favorite activities. Sports have also been a significant part of my life, with awards earned in sprinting, rock climbing, rowing, and table tennis.
 
