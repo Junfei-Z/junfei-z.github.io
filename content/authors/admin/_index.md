@@ -91,10 +91,10 @@ education:
       - Game Theory (A+)
       - Applied Statistics (A)
 work:
-  - position: Graduate Teaching Assistant – Linear System Theory
+- position: Graduate Teaching Assistant – Linear System Theory
   company_name: University of Pennsylvania
   company_url: https://www.upenn.edu/
-  company_logo: 'Present'
+  company_logo: ''
   date_start: 2025-09-01
   date_end: ''
   summary: |
