@@ -96,7 +96,7 @@ work:
     company_url: https://www.upenn.edu/
     company_logo: ''
     date_start: 2025-09-08
-    date_end: Present
+    date_end: 2025-12-17
     summary: |
       **Graduate Course (ESE 5000: Linear System Theory)**  
       - Designed homework assignments for ~125 students, ensuring alignment with course learning objectives.  
