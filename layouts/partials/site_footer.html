@@ -1,7 +1,9 @@
 <footer class="site-footer">
   <p class="powered-by">
     {{ with site.Params.footer.copyright.notice }}
-      {{ replace . "{year}" now.Year | replace . "{license}" (printf "<a href=\"%s\" rel=\"noopener noreferrer\" target=\"_blank\">%s</a>" "https://creativecommons.org/licenses/by-nc-nd/4.0/" "CC BY NC ND 4.0") | safeHTML }}
+      {{ $notice := replace . "{year}" now.Year }}
+      {{ $license := printf `<a href="%s" rel="noopener noreferrer" target="_blank">%s</a>` "https://creativecommons.org/licenses/by-nc-nd/4.0/" "CC BY NC ND 4.0" }}
+      {{ replace $notice "{license}" $license | safeHTML }}
     {{ end }}
   </p>
 
