@@ -27,4 +27,14 @@ sections:
           position: center
           parallax: false
   
+  - block: markdown
+    content:
+      title: ""
+      text: |
+        <div style="text-align: center; padding: 40px 0;">
+          <script type="text/javascript" id="clstr_globe" src="//clustrmaps.com/globe.js?d=Jt8x0LRoUsM3933STN7ojMVodayS1v9s5VQdU-YmKa4"></script>
+        </div>
+    design:
+      columns: '1'
+  
 ---
