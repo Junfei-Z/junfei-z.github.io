@@ -29,13 +29,11 @@ sections:
   
   - block: markdown
     content:
-      title: Visitor Map
+      title: ""
       text: |
-        <div style="text-align: center; margin: 40px 0;">
-          <script type="text/javascript" src="//rf.revolvermaps.com/0/0/8.js?i=5x3ebj080sx&amp;m=0&amp;c=ff0000&amp;cr1=ffffff&amp;f=arial&amp;l=33" async="async"></script>
+        <div style="text-align: center; padding: 40px 0;">
+          <script type="text/javascript" id="clustrmaps" src="//clustrmaps.com/map_v2.js?d=FQz0kGAdBdLBQgSBv5Uj2Zl5g8kXBuDcz3wOpiq5YwU&cl=ffffff&w=a"></script>
         </div>
     design:
       columns: '1'
-      spacing:
-        padding: ['20px', '0', '20px', '0']
 ---
