@@ -26,4 +26,16 @@ sections:
           size: cover
           position: center
           parallax: false
+  
+  - block: markdown
+    content:
+      title: Visitor Map
+      text: |
+        <div style="text-align: center; margin: 40px 0;">
+          <script type="text/javascript" src="//rf.revolvermaps.com/0/0/8.js?i=5x3ebj080sx&amp;m=0&amp;c=ff0000&amp;cr1=ffffff&amp;f=arial&amp;l=33" async="async"></script>
+        </div>
+    design:
+      columns: '1'
+      spacing:
+        padding: ['20px', '0', '20px', '0']
 ---
