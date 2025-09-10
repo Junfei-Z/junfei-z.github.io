@@ -1,0 +1,72 @@
+{{/* Resume Biography Block */}}
+{{ $block := .block }}
+{{ $page := .page }}
+{{ $username := $block.content.username }}
+{{ $person_page_path := (printf "/authors/%s" $username) }}
+{{ $person_page := site.GetPage $person_page_path }}
+{{ if not $person_page }}
+  {{ errorf "Could not find an author page at `%s`. Please check the value of `username` in your `resume-biography` block and create an associated author page." $person_page_path }}
+{{end}}
+{{ $person := $person_page.Params }}
+{{ $avatar := ($person_page.Resources.ByType "image").GetMatch "*avatar*" }}
+
+<section id="{{ $block.id }}" class="resume-biography-3 block">
+  <div class="container mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      {{/* Avatar */}}
+      <div class="flex justify-center lg:justify-start">
+        {{ if $avatar }}
+          {{ $avatar_image := $avatar.Resize "512x512 png q100 lanczos" }}
+          <img src="{{ $avatar_image.RelPermalink }}" 
+               alt="{{ $person.name | default "Avatar" }}" 
+               class="avatar rounded-full border-4 border-gray-200 shadow-lg"
+               width="256" height="256"
+               style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; max-width: 256px;">
+        {{ else }}
+          <div class="w-64 h-64 bg-gray-300 rounded-full flex items-center justify-center">
+            <span class="text-gray-600">No Avatar</span>
+          </div>
+        {{ end }}
+      </div>
+      
+      {{/* Biography content */}}
+      <div class="space-y-6">
+        <div class="space-y-4">
+          <h1 class="text-4xl font-bold">{{ $person.name }}</h1>
+          {{ with $person.name_pronunciation }}
+            <p class="text-lg text-gray-600">{{ . }}</p>
+          {{ end }}
+          {{ with $person.role }}
+            <p class="text-xl text-primary">{{ . }}</p>
+          {{ end }}
+          {{ range $person.organizations }}
+            <p class="text-lg text-gray-700">{{ .name }}</p>
+          {{ end }}
+        </div>
+        
+        {{/* Social links */}}
+        <div class="flex space-x-4">
+          {{ range $person.social }}
+            <a href="{{ .url }}" class="text-gray-600 hover:text-primary text-xl" title="{{ .display.label }}">
+              {{ partial "functions/get_icon" .icon }}
+            </a>
+          {{ end }}
+        </div>
+        
+        {{/* Biography text */}}
+        {{ with $person.bio }}
+          <div class="prose prose-lg max-w-none">
+            {{ . | markdownify }}
+          </div>
+        {{ end }}
+        
+        {{/* Additional block content */}}
+        {{ with $block.content.text }}
+          <div class="prose prose-lg max-w-none">
+            {{ . | markdownify }}
+          </div>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</section>
