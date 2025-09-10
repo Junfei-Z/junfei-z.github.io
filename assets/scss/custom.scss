@@ -1,33 +1,57 @@
-/* High-quality avatar styling */
-.avatar {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  image-rendering: optimize-quality;
-  -ms-interpolation-mode: bicubic;
+/* Maximum quality avatar styling */
+.avatar, 
+.avatar img,
+img[src*="avatar"],
+.profile-pic,
+.author-avatar img {
+  image-rendering: -webkit-optimize-contrast !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: pixelated !important;
+  image-rendering: optimize-quality !important;
+  image-rendering: high-quality !important;
+  -ms-interpolation-mode: bicubic !important;
+  -webkit-backface-visibility: hidden !important;
+  -moz-backface-visibility: hidden !important;
+  backface-visibility: hidden !important;
+  -webkit-transform: translateZ(0) !important;
+  -moz-transform: translateZ(0) !important;
+  transform: translateZ(0) !important;
+  max-width: none !important;
+  height: auto !important;
+  filter: contrast(1.1) saturate(1.1) !important;
 }
 
-.avatar img {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  image-rendering: optimize-quality;
-  -ms-interpolation-mode: bicubic;
+/* Force high quality on all profile images */
+.resume-biography img,
+.author img,
+.profile img {
+  image-rendering: -webkit-optimize-contrast !important;
+  image-rendering: optimize-quality !important;
+  -ms-interpolation-mode: bicubic !important;
+  filter: unsharp-mask(0.5px 0.5px 0.5px) !important;
 }
 
-/* Ensure high-quality rendering on all devices */
-img {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: optimize-quality;
+/* Enhanced sharpness for retina displays */
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+       only screen and (min--moz-device-pixel-ratio: 1.5),
+       only screen and (-o-min-device-pixel-ratio: 3/2),
+       only screen and (min-device-pixel-ratio: 1.5),
+       only screen and (min-resolution: 144dpi),
+       only screen and (min-resolution: 1.5dppx) {
+  
+  .avatar, .avatar img, img[src*="avatar"] {
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: optimize-quality !important;
+    filter: contrast(1.05) brightness(1.02) saturate(1.05) !important;
+    -webkit-filter: contrast(1.05) brightness(1.02) saturate(1.05) !important;
+  }
 }
 
-/* High DPI display support */
-@media only screen and (-webkit-min-device-pixel-ratio: 2),
-       only screen and (min--moz-device-pixel-ratio: 2),
-       only screen and (-o-min-device-pixel-ratio: 2/1),
-       only screen and (min-device-pixel-ratio: 2),
-       only screen and (min-resolution: 192dpi),
-       only screen and (min-resolution: 2dppx) {
-  .avatar img {
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: optimize-quality;
+/* Prevent blur on mobile webkit */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .avatar img, img[src*="avatar"] {
+    -webkit-transform: translateZ(0) !important;
+    transform: translateZ(0) !important;
+    will-change: transform !important;
   }
 }
