@@ -31,8 +31,10 @@ sections:
     content:
       title: ""
       text: |
-        <div style="text-align: center; padding: 40px 0;">
-          <script type="text/javascript" id="clustrmaps" src="//clustrmaps.com/map_v2.js?d=FQz0kGAdBdLBQgSBv5Uj2Zl5g8kXBuDcz3wOpiq5YwU&cl=ffffff&w=a"></script>
+        <div align="center">
+          <a href="https://clustrmaps.com/site/1c0pj" title="Visit tracker">
+            <img src="//www.clustrmaps.com/map_v2.png?d=FQz0kGAdBdLBQgSBv5Uj2Zl5g8kXBuDcz3wOpiq5YwU&cl=ffffff" />
+          </a>
         </div>
     design:
       columns: '1'
