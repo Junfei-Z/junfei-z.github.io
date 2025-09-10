@@ -91,6 +91,18 @@ education:
       - Game Theory (A+)
       - Applied Statistics (A)
 work:
+- position: Graduate Teaching Assistant – Linear System Theory
+  company_name: University of Pennsylvania
+  company_url: https://www.upenn.edu/
+  company_logo: 'Present'
+  date_start: 2025-09-01
+  date_end: ''
+  summary: |
+    **Graduate Course (ESE 5000: Linear System Theory)**  
+    - Designed homework assignments for ~125 students, ensuring alignment with course learning objectives.  
+    - Held weekly office hours to provide academic support and address student questions.  
+    - Conducted recitations to reinforce lecture material, facilitate problem-solving, and guide students in a large-class setting.  
+
   - position: Teaching Assistant – Game Theory
     company_name: Jinan University
     company_url: https://english.jnu.edu.cn/
