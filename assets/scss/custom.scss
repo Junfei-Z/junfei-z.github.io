@@ -1,0 +1,33 @@
+/* High-quality avatar styling */
+.avatar {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: optimize-quality;
+  -ms-interpolation-mode: bicubic;
+}
+
+.avatar img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: optimize-quality;
+  -ms-interpolation-mode: bicubic;
+}
+
+/* Ensure high-quality rendering on all devices */
+img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: optimize-quality;
+}
+
+/* High DPI display support */
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+       only screen and (min--moz-device-pixel-ratio: 2),
+       only screen and (-o-min-device-pixel-ratio: 2/1),
+       only screen and (min-device-pixel-ratio: 2),
+       only screen and (min-resolution: 192dpi),
+       only screen and (min-resolution: 2dppx) {
+  .avatar img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-quality;
+  }
+}
