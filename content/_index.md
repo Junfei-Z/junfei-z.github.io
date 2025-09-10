@@ -27,15 +27,4 @@ sections:
           position: center
           parallax: false
   
-  - block: markdown
-    content:
-      title: ""
-      text: |
-        <div align="center">
-          <a href="https://clustrmaps.com/site/1c0pj" title="Visit tracker">
-            <img src="//www.clustrmaps.com/map_v2.png?d=FQz0kGAdBdLBQgSBv5Uj2Zl5g8kXBuDcz3wOpiq5YwU&cl=ffffff" />
-          </a>
-        </div>
-    design:
-      columns: '1'
 ---
