@@ -99,10 +99,10 @@ work:
     date_end: Present
     summary: |
       **Graduate Course (ESE 5000: Linear System Theory)**  
-    - Designed homework assignments for ~125 students, ensuring alignment with course learning objectives.  
-    - Held weekly office hours to provide academic support and address student questions.  
-    - Conducted recitations to reinforce lecture material, facilitate problem-solving, and guide students in a large-class setting.  
-      
+      - Designed homework assignments for ~125 students, ensuring alignment with course learning objectives.  
+      - Held weekly office hours to provide academic support and address student questions.  
+      - Conducted recitations to reinforce lecture material, facilitate problem-solving, and guide students in a large-class setting.  
+        
   - position: Teaching Assistant – Game Theory
     company_name: Jinan University
     company_url: https://english.jnu.edu.cn/
