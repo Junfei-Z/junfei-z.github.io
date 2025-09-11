@@ -1,13 +1,7 @@
 <footer class="site-footer" style="text-align: center;">
   <p class="powered-by">
     {{ with site.Params.footer.copyright.notice }}
-      {{ $notice := replace . "{year}" now.Year }}
-      {{ $license := printf `<a href="%s" rel="noopener noreferrer" target="_blank">%s</a>` "https://creativecommons.org/licenses/by-nc-nd/4.0/" "CC BY NC ND 4.0" }}
-      {{ replace $notice "{license}" $license | safeHTML }}
+      {{ replace . "{year}" now.Year | safeHTML }}
     {{ end }}
-  </p>
-
-  <p class="powered-by">
-    Published with <a href="https://hugoblox.com" target="_blank" rel="noopener">Hugo Blox Builder</a> — the free, <a href="https://github.com/HugoBlox/hugo-blox-builder" target="_blank" rel="noopener">open source</a> website builder that empowers creators.
   </p>
 </footer>
