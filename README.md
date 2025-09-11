@@ -32,8 +32,7 @@ I am a graduate student pursuing an MS in Electrical Engineering at the Universi
 
 This website is built using the [Hugo Academic CV Theme](https://github.com/HugoBlox/theme-academic-cv) powered by [Hugo Blox Builder](https://hugoblox.com).
 
-Special thanks to my friend [Jingjuan Huang](https://github.com/jingjuanh/jingjuanh.github.io) for inspiration on the visitor map integration and UI improvements.
-
+Special thanks to my friend [Jingjuan Huang](https://github.com/jingjuanh/jingjuanh.github.io), whose repository served as the starting point for this site.
 ## Built With
 
 - [Hugo](https://gohugo.io/) - Static site generator
