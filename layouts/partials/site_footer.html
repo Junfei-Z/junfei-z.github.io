@@ -5,7 +5,11 @@
     {{ end }}
     <br>
     <span style="font-size: 0.9em; color: #6c757d;">
-      Last updated: {{ now.Format "January 2, 2006" }}
+      {{ with .GitInfo }}
+        Last updated: {{ .AuthorDate.Format "January 2, 2006" }}
+      {{ else }}
+        Last updated: {{ now.Format "January 2, 2006" }}
+      {{ end }}
     </span>
   </p>
 </footer>
