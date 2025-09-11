@@ -25,6 +25,8 @@ I am a graduate student pursuing an MS in Electrical Engineering at the Universi
 - ✅ Added interactive visitor map with ClustrMaps integration
 - ✅ Centered footer content for better visual balance
 - ✅ Optimized spacing and layout
+- ✅ Simplified footer to show only copyright notice
+- ✅ Added automatic last updated date based on git history
 
 ## Acknowledgments
 

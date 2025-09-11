@@ -5,11 +5,15 @@
     {{ end }}
     <br>
     <span style="font-size: 0.9em; color: #6c757d;">
-      {{ with .GitInfo }}
-        Last updated: {{ .AuthorDate.Format "January 2, 2006" }}
-      {{ else }}
-        Last updated: {{ now.Format "January 2, 2006" }}
+      {{ $lastMod := now }}
+      {{ range site.RegularPages }}
+        {{ if .GitInfo }}
+          {{ if gt .GitInfo.AuthorDate.Unix $lastMod.Unix }}
+            {{ $lastMod = .GitInfo.AuthorDate }}
+          {{ end }}
+        {{ end }}
       {{ end }}
+      Last updated: {{ $lastMod.Format "January 2, 2006" }}
     </span>
   </p>
 </footer>
