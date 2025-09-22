@@ -52,4 +52,4 @@ across repeated games.
 
 Our study highlights the promise and limitations of LLMs in behavioral game simulations. Structured multi-agent design like PRIME-Router significantly enhances realism, offering a new paradigm for **AI-driven human modeling** in experimental social science.
 
-📄 [ACM MM 2025 Submission] — Coming Soon
+📄 [AAAI 2026 Submission] — Coming Soon
