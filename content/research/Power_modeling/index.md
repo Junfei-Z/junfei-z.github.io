@@ -52,4 +52,4 @@ Running SLMs locally on smartphones, laptops, or IoT nodes promises **low-latenc
 
 This study establishes the first **unified mathematical framework** linking SLM parameters, stochastic energy consumption, and inference quality. By integrating HSMM-based cost modeling with CMDP optimization, it enables **sustainable, adaptive deployment** of SLMs in edge and IoT environments, paving the way for future extensions with deep RL and collaborative multi-device scheduling.
 
-📄 [ICASSP 2026 Submission]
+📄 [ICASSP 2026 Submission] — In Review
