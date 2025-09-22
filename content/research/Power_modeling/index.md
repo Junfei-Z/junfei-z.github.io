@@ -13,7 +13,7 @@ image:
   caption: 'Energy-aware SLM inference with HSMM-driven CMDP optimization'
 ---
 
-This research introduces a **stochastic and interpretable framework** for sustainable **on-device inference of small language models (SLMs)** under strict energy and hardware constraints. By capturing fine-grained CPU/GPU power dynamics and optimizing inference scheduling with constrained MDPs, the work provides a principled foundation for **adaptive, resource-aware AI at the edge** [oai_citation:0‡Junfei__Stochastic_Power_Modeling_and_Constrained_MDP_Optimization_for_On_Device_SLM_Inference.pdf](file-service://file-7tuLYaNsaCUGZTaq4A7dDA).
+This research introduces a **stochastic and interpretable framework** for sustainable **on-device inference of small language models (SLMs)** under strict energy and hardware constraints. By capturing fine-grained CPU/GPU power dynamics and optimizing inference scheduling with constrained MDPs, the work provides a principled foundation for **adaptive, resource-aware AI at the edge**.
 
 ## Problem and Motivation
 
