@@ -67,5 +67,5 @@ PRISM enables **selective privacy-preserving inference** for sensitive domains s
 - Reducing energy costs in **cloud-edge infrastructure**
 - Bridging the tradeoff between **privacy and inference quality**
 
-📄 [AAAI 2026 Submission] — In Review
+📄 [Accepted at 2026 AAAI Conference on Artificial Intelligence] — To appear
 
