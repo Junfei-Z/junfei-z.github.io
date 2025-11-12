@@ -15,6 +15,7 @@ image:
 <a href="https://junfei-z.github.io/prism_full.pdf" target="_blank">
   <img src="https://img.shields.io/badge/View%20Full%20Paper-PDF-red?logo=adobeacrobatreader&logoColor=white" alt="PDF">
 </a>
+
 📄 [Accepted at 2026 AAAI Conference on Artificial Intelligence] — To appear
 
 This project introduces **PRISM**, a context-aware cloud–edge inference framework that balances privacy, utility, and efficiency for **Large Language Model (LLM)** services. It addresses the key limitations of uniform privacy mechanisms by adapting protection based on **semantic sensitivity** of user inputs.
