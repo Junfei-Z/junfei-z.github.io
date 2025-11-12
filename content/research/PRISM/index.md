@@ -1,5 +1,8 @@
 ---
 title: "PRISM: Privacy-Aware Routing for Adaptive Cloud–Edge LLM Inference with Semantic Sketch Collaboration"
+<a href="https://junfei-z.github.io/prism_full.pdf" target="_blank">
+  <img src="https://img.shields.io/badge/View%20Full%20Paper-PDF-red?logo=adobeacrobatreader&logoColor=white" alt="PDF">
+</a>
 summary: "Designed a privacy-aware routing framework that dynamically selects execution paths across cloud and edge for LLM inference, combining adaptive LDP and semantic sketching"
 date: 2025-07-30
 type: docs
