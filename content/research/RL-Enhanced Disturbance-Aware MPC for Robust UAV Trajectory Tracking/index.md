@@ -12,6 +12,11 @@ tags:
 image:
   caption: 'Robust trajectory tracking via RL-MPC and AST-SMO integration'
 ---
+<a href="https://junfei-z.github.io/uav_control.pdf" target="_blank">
+  <img src="https://img.shields.io/badge/View%20Full%20Paper-PDF-red?logo=adobeacrobatreader&logoColor=white" alt="PDF">
+</a>
+
+📄[Accepted at IEEE SMC 2025] — To appear
 
 This research introduces **ROAM**, a novel RL-enhanced, disturbance-aware MPC framework for **precise UAV trajectory tracking** in uncertain and dynamic environments. The method combines the predictive strengths of MPC with the fast response of reinforcement learning (RL) and the robustness of an adaptive sliding mode observer (SMO).
 
@@ -50,7 +55,7 @@ Traditional UAV controllers using MPC struggle under **model mismatch**, **wind 
 
 ROAM demonstrates that **deep integration of RL, observers, and MPC** yields a control system with faster convergence, better stability, and higher resilience. Its lightweight and modular design makes it highly suitable for **real-time deployment** on embedded UAV platforms.
 
-📄[Accepted at IEEE SMC 2025] — To appear
+
 
 <!-- [Hugo Blox Builder](https://hugoblox.com) is designed to give technical content creators a seamless experience. You can focus on the content and the Hugo Blox Builder which this template is built upon handles the rest.
 
