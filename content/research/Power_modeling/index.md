@@ -12,9 +12,6 @@ tags:
 image:
   caption: 'Energy-aware SLM inference with HSMM-driven CMDP optimization'
 ---
-<a href="https://junfei-z.github.io/slm_power.pdf" target="_blank">
-  <img src="https://img.shields.io/badge/View%20Full%20Paper-PDF-red?logo=adobeacrobatreader&logoColor=white" alt="PDF">
-</a>
 
 📄 [ICASSP 2026 Submission] — In Review
 
