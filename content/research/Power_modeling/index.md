@@ -12,6 +12,11 @@ tags:
 image:
   caption: 'Energy-aware SLM inference with HSMM-driven CMDP optimization'
 ---
+<a href="https://junfei-z.github.io/slm_power.pdf" target="_blank">
+  <img src="https://img.shields.io/badge/View%20Full%20Paper-PDF-red?logo=adobeacrobatreader&logoColor=white" alt="PDF">
+</a>
+
+📄 [ICASSP 2026 Submission] — In Review
 
 This research introduces a **stochastic and interpretable framework** for sustainable **on-device inference of small language models (SLMs)** under strict energy and hardware constraints. By capturing fine-grained CPU/GPU power dynamics and optimizing inference scheduling with constrained MDPs, the work provides a principled foundation for **adaptive, resource-aware AI at the edge**.
 
@@ -52,4 +57,3 @@ Running SLMs locally on smartphones, laptops, or IoT nodes promises **low-latenc
 
 This study establishes the first **unified mathematical framework** linking SLM parameters, stochastic energy consumption, and inference quality. By integrating HSMM-based cost modeling with CMDP optimization, it enables **sustainable, adaptive deployment** of SLMs in edge and IoT environments, paving the way for future extensions with deep RL and collaborative multi-device scheduling.
 
-📄 [ICASSP 2026 Submission] — In Review
