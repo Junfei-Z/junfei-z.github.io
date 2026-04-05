@@ -224,10 +224,252 @@
         .modal-backdrop { transition: opacity 0.25s ease; }
         .modal-content { animation: modalIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both; }
 
-        @media (max-width: 768px) { .glass { border-radius: 1rem; } .work-timer-big { font-size: 2rem; } }
+        /* === Header Clock === */
+        .header-clock {
+            font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        /* === Zen Fullscreen Mode === */
+        .zen-overlay {
+            position: fixed; inset: 0; z-index: 100;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            overflow: hidden; cursor: default;
+        }
+        .zen-overlay.active { display: flex; animation: fadeIn 0.8s ease both; }
+
+        /* Sky - set dynamically by JS */
+        .zen-bg { position: absolute; inset: 0; transition: background 8s ease; }
+
+        /* Stars */
+        .zen-stars { position: absolute; inset: 0; overflow: hidden; transition: opacity 3s ease; }
+        .zen-star {
+            position: absolute; background: white; border-radius: 50%;
+            animation: twinkle var(--tw-dur, 3s) ease-in-out infinite alternate;
+            animation-delay: var(--tw-delay, 0s);
+        }
+        @keyframes twinkle { 0%{opacity:0.15; transform:scale(0.6)} 50%{opacity:1; transform:scale(1.3)} 100%{opacity:0.3; transform:scale(0.8)} }
+
+        /* Clouds */
+        .zen-clouds { position: absolute; inset: 0; overflow: hidden; transition: opacity 3s ease; }
+        .zen-cloud {
+            position: absolute; background: white; border-radius: 50%;
+            filter: blur(1px); opacity: 0.7;
+        }
+        .zen-cloud::before, .zen-cloud::after {
+            content: ''; position: absolute; background: white; border-radius: 50%;
+        }
+        .zen-cloud-1 { width: 120px; height: 40px; animation: cloudDrift1 45s linear infinite; }
+        .zen-cloud-1::before { width: 60px; height: 60px; top: -30px; left: 20px; }
+        .zen-cloud-1::after { width: 80px; height: 50px; top: -20px; left: 50px; }
+        .zen-cloud-2 { width: 90px; height: 30px; animation: cloudDrift2 60s linear infinite; opacity: 0.5; }
+        .zen-cloud-2::before { width: 45px; height: 45px; top: -22px; left: 15px; }
+        .zen-cloud-2::after { width: 60px; height: 38px; top: -15px; left: 35px; }
+        .zen-cloud-3 { width: 150px; height: 45px; animation: cloudDrift3 55s linear infinite; opacity: 0.4; }
+        .zen-cloud-3::before { width: 70px; height: 70px; top: -35px; left: 25px; }
+        .zen-cloud-3::after { width: 90px; height: 55px; top: -25px; left: 60px; }
+        .zen-cloud-4 { width: 70px; height: 25px; animation: cloudDrift2 70s linear infinite; opacity: 0.35; }
+        .zen-cloud-4::before { width: 35px; height: 35px; top: -18px; left: 10px; }
+        .zen-cloud-4::after { width: 50px; height: 30px; top: -12px; left: 28px; }
+        @keyframes cloudDrift1 { 0%{transform:translateX(-200px)} 100%{transform:translateX(calc(100vw + 200px))} }
+        @keyframes cloudDrift2 { 0%{transform:translateX(calc(100vw + 150px))} 100%{transform:translateX(-250px)} }
+        @keyframes cloudDrift3 { 0%{transform:translateX(-300px)} 100%{transform:translateX(calc(100vw + 300px))} }
+
+        /* Mountains - color set by JS */
+        .zen-mountains { position: absolute; bottom: 0; left: 0; right: 0; height: 35%; }
+        .zen-mountain { position: absolute; bottom: 0; width: 0; height: 0; border-style: solid; border-color: transparent; transition: border-bottom-color 8s ease; }
+        .zen-mountain-1 { left: -5%; border-width: 0 35vw 28vh 35vw; }
+        .zen-mountain-2 { left: 15%; border-width: 0 30vw 35vh 30vw; }
+        .zen-mountain-3 { left: 40%; border-width: 0 25vw 22vh 25vw; }
+        .zen-mountain-4 { left: 55%; border-width: 0 35vw 30vh 35vw; }
+
+        /* Fog */
+        .zen-fog {
+            position: absolute; bottom: 15%; left: -10%; right: -10%; height: 12%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), rgba(255,255,255,0.08), rgba(255,255,255,0.04), transparent);
+            animation: fogDrift 20s ease-in-out infinite alternate; filter: blur(8px);
+            transition: opacity 3s ease;
+        }
+        @keyframes fogDrift { 0%{transform:translateX(-5%)} 100%{transform:translateX(5%)} }
+
+        /* Sun */
+        .zen-sun {
+            position: absolute; width: 70px; height: 70px; border-radius: 50%;
+            background: radial-gradient(circle at 40% 40%, #fff7b0, #fbbf24, #f59e0b);
+            box-shadow: 0 0 60px 20px rgba(251,191,36,0.4), 0 0 120px 50px rgba(251,191,36,0.15);
+            transition: left 60s linear, bottom 60s linear, opacity 3s ease, transform 3s ease;
+        }
+        .zen-sun-rays {
+            position: absolute; width: 100%; height: 100%; animation: sunRotate 30s linear infinite;
+        }
+        .zen-sun-rays::before, .zen-sun-rays::after {
+            content: ''; position: absolute; inset: -15px; border-radius: 50%;
+            border: 2px solid rgba(251,191,36,0.15);
+        }
+        .zen-sun-rays::after { inset: -30px; border-color: rgba(251,191,36,0.08); }
+        @keyframes sunRotate { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+        /* Moon */
+        .zen-moon {
+            position: absolute; width: 55px; height: 55px; border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #f5f5f0, #e5e5d8);
+            box-shadow: 0 0 40px 12px rgba(245,245,240,0.2), 0 0 80px 30px rgba(245,245,240,0.08);
+            transition: left 60s linear, bottom 60s linear, opacity 3s ease, transform 3s ease;
+        }
+        .zen-moon-crater {
+            position: absolute; border-radius: 50%; background: rgba(0,0,0,0.06);
+        }
+        .zen-moon-crater-1 { width: 12px; height: 12px; top: 15px; left: 10px; }
+        .zen-moon-crater-2 { width: 8px; height: 8px; top: 28px; left: 28px; }
+        .zen-moon-crater-3 { width: 6px; height: 6px; top: 12px; left: 30px; }
+        .zen-moon-glow {
+            position: absolute; inset: -8px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(245,245,240,0.1), transparent 70%);
+            animation: moonBreathe 4s ease-in-out infinite;
+        }
+        @keyframes moonBreathe { 0%,100%{transform:scale(1);opacity:0.5} 50%{transform:scale(1.15);opacity:1} }
+
+        /* Zen task name */
+        .zen-task-name {
+            z-index: 2; margin-top: 1.5rem;
+            font-size: clamp(1rem, 3vw, 1.5rem); font-weight: 300;
+            color: rgba(255,255,255,0.6); letter-spacing: 0.08em;
+            padding: 0.5rem 1.5rem; border-radius: 9999px;
+            background: rgba(255,255,255,0.08); backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: fadeInUp 0.6s ease both;
+        }
+        .zen-task-name i { margin-right: 0.5rem; color: rgba(255,255,255,0.4); }
+
+        .zen-clock {
+            font-size: clamp(4rem, 12vw, 8rem); font-weight: 200; color: white;
+            letter-spacing: 0.05em; text-shadow: 0 2px 40px rgba(0,0,0,0.3);
+            z-index: 2; line-height: 1;
+        }
+        .zen-date {
+            font-size: clamp(0.875rem, 2vw, 1.25rem); color: rgba(255,255,255,0.5);
+            font-weight: 300; letter-spacing: 0.15em; text-transform: uppercase;
+            margin-top: 0.5rem; z-index: 2;
+        }
+        .zen-work-timer {
+            margin-top: 2rem; z-index: 2; text-align: center;
+        }
+        .zen-work-timer .label {
+            font-size: 0.75rem; color: rgba(255,255,255,0.4); letter-spacing: 0.2em;
+            text-transform: uppercase; margin-bottom: 0.5rem;
+        }
+        .zen-work-timer .time {
+            font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: 600; color: rgba(255,255,255,0.9);
+            text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+        }
+        .zen-work-timer .pulse-ring-zen {
+            display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+            background: #34d399; margin-right: 8px; vertical-align: middle;
+            box-shadow: 0 0 12px 4px rgba(52,211,153,0.4);
+            animation: focusPulse 2s infinite;
+        }
+        .zen-exit-btn {
+            position: absolute; bottom: 2.5rem; z-index: 3;
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.15); border-radius: 9999px;
+            color: rgba(255,255,255,0.6); padding: 0.75rem 2rem;
+            font-size: 0.875rem; font-weight: 500; cursor: pointer;
+            transition: all 0.3s ease; letter-spacing: 0.05em;
+        }
+        .zen-exit-btn:hover { background: rgba(255,255,255,0.2); color: white; transform: translateY(-2px); }
+        .zen-quote {
+            position: absolute; bottom: 6rem; z-index: 2;
+            font-size: 0.875rem; color: rgba(255,255,255,0.35); font-style: italic;
+            max-width: 400px; text-align: center; line-height: 1.6;
+        }
+
+        /* === Zen Audio Panel === */
+        .zen-audio {
+            position: absolute; bottom: 2.5rem; left: 2rem; z-index: 3;
+            display: flex; align-items: center; gap: 0.5rem;
+            background: rgba(255,255,255,0.08); backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.12); border-radius: 9999px;
+            padding: 0.5rem 0.75rem; animation: fadeIn 1s ease 0.5s both;
+        }
+        .zen-audio-btn {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.5); font-size: 0.75rem;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.25s ease; flex-shrink: 0;
+        }
+        .zen-audio-btn:hover { background: rgba(255,255,255,0.2); color: white; transform: scale(1.1); }
+        .zen-audio-btn.active { background: rgba(99,102,241,0.4); border-color: rgba(99,102,241,0.5); color: white; }
+        .zen-audio-btn.muted { opacity: 0.3; }
+        .zen-volume {
+            -webkit-appearance: none; appearance: none; width: 70px; height: 3px;
+            background: rgba(255,255,255,0.15); border-radius: 9999px; outline: none;
+            cursor: pointer; transition: opacity 0.3s ease;
+        }
+        .zen-volume::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%;
+            background: rgba(255,255,255,0.7); cursor: pointer; transition: transform 0.15s ease;
+        }
+        .zen-volume::-webkit-slider-thumb:hover { transform: scale(1.3); }
+        .zen-sound-label {
+            font-size: 0.6rem; color: rgba(255,255,255,0.35); letter-spacing: 0.1em;
+            text-transform: uppercase; min-width: 32px; text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .glass { border-radius: 1rem; } .work-timer-big { font-size: 2rem; } .header-clock { font-size: 1.25rem; }
+            .zen-audio { left: 50%; transform: translateX(-50%); bottom: 7rem; }
+        }
     </style>
 </head>
 <body class="p-4 md:p-8 max-w-7xl mx-auto">
+
+    <!-- Zen Fullscreen Overlay -->
+    <div id="zenOverlay" class="zen-overlay">
+        <div class="zen-bg" id="zenBg"></div>
+        <div class="zen-stars" id="zenStars"></div>
+        <div class="zen-clouds" id="zenClouds">
+            <div class="zen-cloud zen-cloud-1" style="top:10%"></div>
+            <div class="zen-cloud zen-cloud-2" style="top:18%"></div>
+            <div class="zen-cloud zen-cloud-3" style="top:6%"></div>
+            <div class="zen-cloud zen-cloud-4" style="top:25%"></div>
+        </div>
+        <div class="zen-sun" id="zenSun"><div class="zen-sun-rays"></div></div>
+        <div class="zen-moon" id="zenMoon">
+            <div class="zen-moon-glow"></div>
+            <div class="zen-moon-crater zen-moon-crater-1"></div>
+            <div class="zen-moon-crater zen-moon-crater-2"></div>
+            <div class="zen-moon-crater zen-moon-crater-3"></div>
+        </div>
+        <div class="zen-mountains" id="zenMountains">
+            <div class="zen-mountain zen-mountain-1"></div>
+            <div class="zen-mountain zen-mountain-2"></div>
+            <div class="zen-mountain zen-mountain-3"></div>
+            <div class="zen-mountain zen-mountain-4"></div>
+        </div>
+        <div class="zen-fog" id="zenFog"></div>
+        <div class="zen-clock timer-display" id="zenClock">00:00:00</div>
+        <div class="zen-date" id="zenDate"></div>
+        <div id="zenTaskName" class="zen-task-name" style="display:none;"></div>
+        <div class="zen-work-timer">
+            <div class="label" id="zenTimerLabel" data-i18n="workingNow"></div>
+            <div class="time timer-display"><span class="pulse-ring-zen"></span><span id="zenWorkTimer">00:00:00</span></div>
+        </div>
+        <div class="zen-quote" id="zenQuote"></div>
+        <!-- Audio Controls -->
+        <div class="zen-audio" id="zenAudio">
+            <button class="zen-audio-btn" id="zenMuteBtn" title="Mute"><i class="fas fa-volume-up"></i></button>
+            <input type="range" class="zen-volume" id="zenVolume" min="0" max="100" value="40">
+            <div style="display:flex; gap:4px;">
+                <button class="zen-audio-btn active" data-sound="rain" title="Rain"><i class="fas fa-cloud-rain"></i></button>
+                <button class="zen-audio-btn" data-sound="wheat" title="Wheat Field"><i class="fas fa-wind"></i></button>
+                <button class="zen-audio-btn" data-sound="frogs" title="Summer Frogs"><i class="fas fa-frog"></i></button>
+                <button class="zen-audio-btn" data-sound="fire" title="Fireplace"><i class="fas fa-fire"></i></button>
+            </div>
+        </div>
+        <button class="zen-exit-btn" id="zenExitBtn"><i class="fas fa-compress-alt mr-2"></i><span data-i18n="exitZen"></span></button>
+    </div>
 
     <!-- Header -->
     <header class="glass p-5 mb-6 animate-fadein-up">
@@ -237,12 +479,18 @@
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-lg" style="animation: float 3s ease-in-out infinite;">
                         <i class="fas fa-feather-alt"></i>
                     </div>
-                    <div>
-                        <input type="text" id="dailyThemeInput" class="text-xl font-bold bg-transparent border-none outline-none w-full text-gray-800 placeholder-gray-300" value="">
-                        <div class="text-sm text-gray-400 mt-0.5" id="dateDisplay"></div>
+                    <div class="flex items-center gap-4">
+                        <div>
+                            <div class="flex items-center gap-1.5 group cursor-text">
+                                <input type="text" id="dailyThemeInput" class="text-xl font-bold bg-transparent outline-none w-full text-gray-800 placeholder-gray-300 border-b-2 border-transparent hover:border-indigo-200 focus:border-indigo-400 transition-colors" value="">
+                                <i class="fas fa-pen text-[0.6rem] text-gray-300 group-hover:text-indigo-400 transition-colors flex-shrink-0"></i>
+                            </div>
+                            <div class="text-sm text-gray-400 mt-0.5" id="dateDisplay"></div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="header-clock timer-display" id="headerClock">00:00</div>
             <div class="flex items-center gap-2">
                 <button id="langToggleBtn" class="lang-toggle bg-white/60 border border-white/50 rounded-full px-3 py-1.5 text-xs font-semibold text-gray-600 flex items-center gap-1.5 shadow-sm">
                     <i class="fas fa-globe"></i> <span id="langLabel">EN</span>
@@ -463,6 +711,7 @@ const I18N = {
         calWeekDays: ['日','一','二','三','四','五','六'],
         moodNames: { happy: "开心", calm: "平静", down: "低落" },
         completedAt: "完成于",
+        exitZen: "退出专注",
     },
     en: {
         mood: "Mood", diary: "Diary", workClock: "Work Clock", morning: "Morning", afternoon: "Afternoon",
@@ -500,6 +749,7 @@ const I18N = {
         calWeekDays: ['Su','Mo','Tu','We','Th','Fr','Sa'],
         moodNames: { happy: "Happy", calm: "Calm", down: "Down" },
         completedAt: "Completed at",
+        exitZen: "Exit Focus",
     }
 };
 let currentLang = localStorage.getItem('diary_lang') || 'zh';
@@ -583,11 +833,12 @@ function getTodayWork() {
 
 function workStartClick() {
     const rec = getTodayWork();
-    if (rec.currentStart) return; // already working
+    if (rec.currentStart) return;
     rec.currentStart = Date.now();
     saveAll();
     startWorkLiveTimer();
     updateWorkUI();
+    enterZenMode('work');
 }
 
 function workStopClick() {
@@ -779,6 +1030,7 @@ function renderTasks() {
                 }
             });
             startBtn.classList.add('opacity-40','pointer-events-none'); stopBtn.classList.remove('opacity-40','pointer-events-none');
+            enterZenMode('focus', task);
         };
         stopBtn.onclick = () => {
             if (!task.isTimingActive) return;
@@ -786,6 +1038,7 @@ function renderTasks() {
             li.classList.remove('focusing'); timerDiv.classList.remove('bg-amber-50','border','border-amber-200');
             const bb=taskText.querySelector('.focus-pulse'); if(bb) bb.remove();
             startBtn.classList.remove('opacity-40','pointer-events-none'); stopBtn.classList.add('opacity-40','pointer-events-none');
+            if (zenMode === 'focus') exitZenMode();
             upd(task.focusSecs||0);
         };
         resetBtn.onclick = () => { if (task.isTimingActive) stopBtn.click(); task.focusSecs=0; upd(0); saveAll(); updateFocusTodayUI(); };
@@ -912,6 +1165,589 @@ function importData(f) {
     const r=new FileReader(); r.onload=e=>{const d=JSON.parse(e.target.result);tasks=d.tasks||[];workMap=new Map(d.workMap||[]);moodEntries=d.moodEntries||[];inspirationMap=new Map(d.inspirationMap||[]);focusMap=new Map(d.focusMap||[]);focusTimeline=d.focusTimeline||[];completedHistory=d.completedHistory||[];saveAll();location.reload();}; if(f) r.readAsText(f);
 }
 
+// ======================== AMBIENT SOUND ENGINE ========================
+let audioCtx = null;
+let ambientNodes = [];
+let ambientIntervals = [];
+let ambientGain = null;
+let currentSound = 'rain';
+let audioMuted = false;
+
+function initAudio() {
+    if (audioCtx) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    ambientGain = audioCtx.createGain();
+    ambientGain.gain.value = 0.4;
+    ambientGain.connect(audioCtx.destination);
+}
+
+function makeNoise(seconds) {
+    const sr = audioCtx.sampleRate, len = sr * seconds;
+    const buf = audioCtx.createBuffer(2, len, sr);
+    for (let ch = 0; ch < 2; ch++) {
+        const d = buf.getChannelData(ch);
+        // Brown noise: integrated white noise, sounds warmer/more natural
+        let last = 0;
+        for (let i = 0; i < len; i++) {
+            const w = Math.random() * 2 - 1;
+            last = (last + 0.02 * w) / 1.02;
+            d[i] = last * 3.5;
+        }
+    }
+    return buf;
+}
+
+function makeWhiteNoise(seconds) {
+    const sr = audioCtx.sampleRate, buf = audioCtx.createBuffer(2, sr * seconds, sr);
+    for (let ch = 0; ch < 2; ch++) {
+        const d = buf.getChannelData(ch);
+        for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    }
+    return buf;
+}
+
+// Helper: looping noise source
+function noiseSrc(buf) {
+    const s = audioCtx.createBufferSource();
+    s.buffer = buf; s.loop = true; s.start();
+    ambientNodes.push(s);
+    return s;
+}
+// Helper: LFO
+function lfo(freq, amount, target) {
+    const o = audioCtx.createOscillator();
+    o.type = 'sine'; o.frequency.value = freq;
+    const g = audioCtx.createGain(); g.gain.value = amount;
+    o.connect(g).connect(target);
+    o.start(); ambientNodes.push(o);
+    return o;
+}
+// Helper: filter
+function filt(type, freq, q) {
+    const f = audioCtx.createBiquadFilter();
+    f.type = type; f.frequency.value = freq; if (q) f.Q.value = q;
+    return f;
+}
+// Helper: gain
+function gn(v) {
+    const g = audioCtx.createGain(); g.gain.value = v;
+    return g;
+}
+
+function startSound(type) {
+    stopAllSounds();
+    if (!audioCtx) initAudio();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    currentSound = type;
+
+    const brown = makeNoise(6);
+    const white = makeWhiteNoise(4);
+
+    if (type === 'rain') {
+        // Layer 1: Steady rain body — warm mid-frequency noise
+        const s1 = noiseSrc(brown);
+        const f1 = filt('bandpass', 1200, 0.4);
+        const g1 = gn(0.45);
+        s1.connect(f1).connect(g1).connect(ambientGain);
+
+        // Layer 2: Rain patter — soft high-frequency detail
+        const s2 = noiseSrc(white);
+        const f2a = filt('highpass', 2500);
+        const f2b = filt('lowpass', 8000);
+        const g2 = gn(0.08);
+        // Gentle volume variation for realism
+        const lfo2 = lfo(0.15, 0.03, g2.gain);
+        s2.connect(f2a).connect(f2b).connect(g2).connect(ambientGain);
+
+        // Layer 3: Deep distant rumble
+        const s3 = noiseSrc(brown);
+        const f3 = filt('lowpass', 120);
+        const g3 = gn(0.2);
+        const lfo3 = lfo(0.04, 0.12, g3.gain);
+        s3.connect(f3).connect(g3).connect(ambientGain);
+
+        // Layer 4: Drip splashes — occasional droplet texture
+        const s4 = noiseSrc(white);
+        const f4 = filt('bandpass', 4000, 2);
+        const g4 = gn(0.04);
+        const lfo4 = lfo(0.25, 0.03, g4.gain);
+        s4.connect(f4).connect(g4).connect(ambientGain);
+
+        // Layer 5: Roof/surface resonance
+        const s5 = noiseSrc(brown);
+        const f5 = filt('bandpass', 600, 0.8);
+        const g5 = gn(0.15);
+        s5.connect(f5).connect(g5).connect(ambientGain);
+    }
+    else if (type === 'wheat') {
+        // Wind through wheat field: warm, gentle, rustling
+
+        // Layer 1: Base warm wind — very soft, low
+        const s1 = noiseSrc(brown);
+        const f1 = filt('lowpass', 400);
+        const g1 = gn(0.3);
+        const lfo1 = lfo(0.035, 0.15, g1.gain); // slow swell
+        s1.connect(f1).connect(g1).connect(ambientGain);
+
+        // Layer 2: Mid rustling — the "shhhh" of wheat stalks
+        const s2 = noiseSrc(white);
+        const f2a = filt('bandpass', 1800, 0.6);
+        const f2b = filt('bandpass', 2400, 0.5);
+        const g2 = gn(0.06);
+        const lfo2a = lfo(0.07, 0.04, g2.gain); // gentle volume wave
+        lfo(0.05, 400, f2a.frequency); // sweep the filter slowly
+        s2.connect(f2a).connect(f2b).connect(g2).connect(ambientGain);
+
+        // Layer 3: High soft shimmer — leaves and tips
+        const s3 = noiseSrc(white);
+        const f3 = filt('bandpass', 5000, 1.5);
+        const g3 = gn(0.015);
+        const lfo3 = lfo(0.09, 0.01, g3.gain);
+        lfo(0.04, 1500, f3.frequency);
+        s3.connect(f3).connect(g3).connect(ambientGain);
+
+        // Layer 4: Deep warm undertone — earth/field
+        const s4 = noiseSrc(brown);
+        const f4 = filt('lowpass', 200);
+        const g4 = gn(0.12);
+        s4.connect(f4).connect(g4).connect(ambientGain);
+
+        // Layer 5: Occasional gust — sweeping bandpass surge
+        const s5 = noiseSrc(brown);
+        const f5 = filt('bandpass', 700, 0.3);
+        const g5 = gn(0.08);
+        lfo(0.02, 0.06, g5.gain); // very slow swell
+        lfo(0.025, 300, f5.frequency);
+        s5.connect(f5).connect(g5).connect(ambientGain);
+    }
+    else if (type === 'frogs') {
+        // Summer night with frogs, crickets, gentle warmth
+
+        // Layer 1: Warm night air base
+        const s1 = noiseSrc(brown);
+        const f1 = filt('lowpass', 250);
+        const g1 = gn(0.18);
+        s1.connect(f1).connect(g1).connect(ambientGain);
+
+        // Layer 2: Crickets — continuous high chirp
+        [4100, 4600, 5200].forEach(freq => {
+            const o = audioCtx.createOscillator();
+            o.type = 'sine'; o.frequency.value = freq + Math.random() * 300;
+            // Rapid tremolo gives chirping texture
+            const trem = audioCtx.createOscillator();
+            trem.type = 'square'; trem.frequency.value = 12 + Math.random() * 10;
+            const tremG = gn(0.008 + Math.random() * 0.005);
+            const outG = gn(0);
+            trem.connect(tremG); tremG.connect(outG.gain);
+            o.connect(outG).connect(ambientGain);
+            o.start(); trem.start();
+            ambientNodes.push(o, trem);
+        });
+
+        // Layer 3: Frogs — periodic calls at natural rhythms
+        // Each frog: short descending sine chirp, repeated at random intervals
+        const frogConfigs = [
+            { freq: 420, dur: 0.12, interval: [1.5, 3.5], vol: 0.06 },   // small tree frog - quick "peep"
+            { freq: 280, dur: 0.25, interval: [2.0, 5.0], vol: 0.05 },   // medium frog - "ribbit"
+            { freq: 180, dur: 0.4,  interval: [3.0, 8.0], vol: 0.04 },   // bullfrog - deep "croak"
+            { freq: 520, dur: 0.08, interval: [0.8, 2.0], vol: 0.04 },   // tiny frog - rapid "pip"
+            { freq: 350, dur: 0.18, interval: [2.5, 6.0], vol: 0.045 },  // another mid frog
+        ];
+
+        frogConfigs.forEach(cfg => {
+            function chirp() {
+                if (!audioCtx || audioCtx.state === 'closed') return;
+                const now = audioCtx.currentTime;
+                const o = audioCtx.createOscillator();
+                o.type = 'sine';
+                // Frequency sweep down for natural chirp
+                o.frequency.setValueAtTime(cfg.freq * (1 + Math.random() * 0.1), now);
+                o.frequency.exponentialRampToValueAtTime(cfg.freq * 0.7, now + cfg.dur);
+
+                const env = audioCtx.createGain();
+                env.gain.setValueAtTime(0, now);
+                env.gain.linearRampToValueAtTime(cfg.vol, now + cfg.dur * 0.1);
+                env.gain.setValueAtTime(cfg.vol, now + cfg.dur * 0.6);
+                env.gain.exponentialRampToValueAtTime(0.001, now + cfg.dur);
+
+                o.connect(env).connect(ambientGain);
+                o.start(now);
+                o.stop(now + cfg.dur + 0.05);
+
+                // Some frogs do double/triple chirps
+                if (Math.random() < 0.4) {
+                    const o2 = audioCtx.createOscillator();
+                    o2.type = 'sine';
+                    const t2 = now + cfg.dur + 0.06;
+                    o2.frequency.setValueAtTime(cfg.freq * (1 + Math.random() * 0.08), t2);
+                    o2.frequency.exponentialRampToValueAtTime(cfg.freq * 0.72, t2 + cfg.dur * 0.9);
+                    const env2 = audioCtx.createGain();
+                    env2.gain.setValueAtTime(0, t2);
+                    env2.gain.linearRampToValueAtTime(cfg.vol * 0.8, t2 + cfg.dur * 0.1);
+                    env2.gain.exponentialRampToValueAtTime(0.001, t2 + cfg.dur * 0.9);
+                    o2.connect(env2).connect(ambientGain);
+                    o2.start(t2);
+                    o2.stop(t2 + cfg.dur + 0.05);
+                }
+
+                // Schedule next chirp at random interval
+                const next = cfg.interval[0] + Math.random() * (cfg.interval[1] - cfg.interval[0]);
+                const tid = setTimeout(chirp, next * 1000);
+                ambientIntervals.push(tid);
+            }
+            // Stagger start
+            const startDelay = Math.random() * 3000;
+            const tid = setTimeout(chirp, startDelay);
+            ambientIntervals.push(tid);
+        });
+
+        // Layer 4: Gentle water nearby (pond surface)
+        const s4 = noiseSrc(brown);
+        const f4a = filt('bandpass', 800, 0.5);
+        const g4 = gn(0.03);
+        const lfo4 = lfo(0.1, 0.015, g4.gain);
+        s4.connect(f4a).connect(g4).connect(ambientGain);
+    }
+    else if (type === 'fire') {
+        // Fireplace: warm crackling + deep roar + pops
+
+        // Layer 1: Deep warm roar — the body of the fire
+        const s1 = noiseSrc(brown);
+        const f1 = filt('lowpass', 300);
+        const g1 = gn(0.28);
+        const lfo1 = lfo(0.06, 0.08, g1.gain); // slow breathing
+        s1.connect(f1).connect(g1).connect(ambientGain);
+
+        // Layer 2: Mid crackle texture
+        const s2 = noiseSrc(white);
+        const f2 = filt('bandpass', 2000, 1.2);
+        const g2 = gn(0.04);
+        const lfo2 = lfo(0.3, 0.025, g2.gain);
+        s2.connect(f2).connect(g2).connect(ambientGain);
+
+        // Layer 3: High hiss — flames licking
+        const s3 = noiseSrc(white);
+        const f3 = filt('bandpass', 5000, 1.5);
+        const g3 = gn(0.015);
+        lfo(0.08, 0.01, g3.gain);
+        lfo(0.05, 1500, f3.frequency);
+        s3.connect(f3).connect(g3).connect(ambientGain);
+
+        // Layer 4: Random pops and crackles
+        function pop() {
+            if (!audioCtx || audioCtx.state === 'closed') return;
+            const now = audioCtx.currentTime;
+            // A pop = very short burst of filtered noise
+            const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.06, audioCtx.sampleRate);
+            const d = buf.getChannelData(0);
+            for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (d.length * 0.15));
+            const src = audioCtx.createBufferSource();
+            src.buffer = buf;
+            const f = filt('bandpass', 800 + Math.random() * 3000, 1 + Math.random() * 3);
+            const env = gn(0.05 + Math.random() * 0.08);
+            src.connect(f).connect(env).connect(ambientGain);
+            src.start(now);
+
+            // Sometimes a double pop
+            if (Math.random() < 0.3) {
+                const buf2 = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.04, audioCtx.sampleRate);
+                const d2 = buf2.getChannelData(0);
+                for (let i = 0; i < d2.length; i++) d2[i] = (Math.random() * 2 - 1) * Math.exp(-i / (d2.length * 0.1));
+                const src2 = audioCtx.createBufferSource();
+                src2.buffer = buf2;
+                const f2 = filt('bandpass', 1500 + Math.random() * 2000, 2);
+                const env2 = gn(0.04 + Math.random() * 0.06);
+                src2.connect(f2).connect(env2).connect(ambientGain);
+                src2.start(now + 0.05 + Math.random() * 0.08);
+            }
+
+            // Random next pop
+            const next = 0.15 + Math.random() * 0.8;
+            const tid = setTimeout(pop, next * 1000);
+            ambientIntervals.push(tid);
+        }
+        const startTid = setTimeout(pop, 300);
+        ambientIntervals.push(startTid);
+
+        // Layer 5: Wood settling — occasional deeper knock
+        function knock() {
+            if (!audioCtx || audioCtx.state === 'closed') return;
+            const now = audioCtx.currentTime;
+            const o = audioCtx.createOscillator();
+            o.type = 'sine';
+            o.frequency.setValueAtTime(150 + Math.random() * 100, now);
+            o.frequency.exponentialRampToValueAtTime(60, now + 0.15);
+            const env = gn(0);
+            env.gain.setValueAtTime(0, now);
+            env.gain.linearRampToValueAtTime(0.06, now + 0.01);
+            env.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+            o.connect(env).connect(ambientGain);
+            o.start(now); o.stop(now + 0.2);
+            const next = 2 + Math.random() * 6;
+            const tid = setTimeout(knock, next * 1000);
+            ambientIntervals.push(tid);
+        }
+        const knockTid = setTimeout(knock, 1500 + Math.random() * 3000);
+        ambientIntervals.push(knockTid);
+    }
+}
+
+function stopAllSounds() {
+    ambientNodes.forEach(n => { try { n.stop(); } catch(e) { try { n.disconnect(); } catch(e2){} } });
+    ambientNodes = [];
+    ambientIntervals.forEach(id => clearTimeout(id));
+    ambientIntervals = [];
+}
+
+function setAudioVolume(v) {
+    if (ambientGain) ambientGain.gain.setTargetAtTime(v, audioCtx.currentTime, 0.1);
+}
+
+function toggleMute() {
+    audioMuted = !audioMuted;
+    const btn = document.getElementById('zenMuteBtn');
+    if (audioMuted) {
+        setAudioVolume(0);
+        btn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        btn.classList.add('muted');
+    } else {
+        setAudioVolume(document.getElementById('zenVolume').value / 100);
+        btn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        btn.classList.remove('muted');
+    }
+}
+
+function initAudioControls() {
+    document.getElementById('zenMuteBtn').onclick = toggleMute;
+    document.getElementById('zenVolume').oninput = (e) => {
+        if (!audioMuted) setAudioVolume(e.target.value / 100);
+    };
+    document.querySelectorAll('[data-sound]').forEach(btn => {
+        btn.onclick = () => {
+            document.querySelectorAll('[data-sound]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            startSound(btn.dataset.sound);
+            if (!audioMuted) setAudioVolume(document.getElementById('zenVolume').value / 100);
+        };
+    });
+}
+
+// ======================== CLOCK & ZEN MODE ========================
+let headerClockInterval = null;
+let zenClockInterval = null;
+
+function updateHeaderClock() {
+    const now = new Date();
+    const el = document.getElementById('headerClock');
+    if (el) el.textContent = [now.getHours(), now.getMinutes(), now.getSeconds()].map(v => String(v).padStart(2,'0')).join(':');
+}
+function startHeaderClock() { updateHeaderClock(); headerClockInterval = setInterval(updateHeaderClock, 1000); }
+
+// --- Time-of-day scene system ---
+// Sunrise 6:00, Solar noon ~12:00, Sunset ~18:30, Midnight 0:00
+// Sun visible 6:00-18:30, Moon visible 18:30-6:00
+// Celestial arc: rises from left-bottom, peaks at center-top, sets at right-bottom
+
+function getTimePhase(hour, minute) {
+    const t = hour + minute / 60;
+    if (t >= 5 && t < 7) return 'dawn';
+    if (t >= 7 && t < 11) return 'morning';
+    if (t >= 11 && t < 14) return 'noon';
+    if (t >= 14 && t < 17) return 'afternoon';
+    if (t >= 17 && t < 19.5) return 'sunset';
+    if (t >= 19.5 && t < 21) return 'dusk';
+    return 'night';
+}
+
+const SKY_THEMES = {
+    dawn:      { bg: 'linear-gradient(180deg, #2d1b69 0%, #764ba2 25%, #f093fb 50%, #f5af19 75%, #ffecd2 100%)',
+                 mt: ['#3d2b5a','#4a3568','#5e4080','#6b4d8e'], text: 'rgba(255,255,255,0.85)' },
+    morning:   { bg: 'linear-gradient(180deg, #56CCF2 0%, #89CFF0 30%, #B6E0F0 60%, #E8F4FD 100%)',
+                 mt: ['#5B8A72','#4A7A64','#6B9E80','#3D6B56'], text: 'rgba(30,50,80,0.8)' },
+    noon:      { bg: 'linear-gradient(180deg, #2196F3 0%, #64B5F6 30%, #90CAF9 60%, #BBDEFB 100%)',
+                 mt: ['#4E8B5E','#3D7A4E','#5E9B6E','#2D6B3E'], text: 'rgba(30,50,80,0.75)' },
+    afternoon: { bg: 'linear-gradient(180deg, #4A90D9 0%, #7BB3E0 30%, #A8CCE8 60%, #D4E6F1 100%)',
+                 mt: ['#5E7B5E','#4D6A4D','#6E8B6E','#3D5A3D'], text: 'rgba(40,50,70,0.8)' },
+    sunset:    { bg: 'linear-gradient(180deg, #2D3561 0%, #C33764 25%, #F77062 50%, #FE8C00 75%, #FFE259 100%)',
+                 mt: ['#2D1F3D','#3D2B50','#4E3660','#5F4170'], text: 'rgba(255,255,255,0.9)' },
+    dusk:      { bg: 'linear-gradient(180deg, #0F0C29 0%, #302B63 30%, #544E80 50%, #24243e 100%)',
+                 mt: ['#1a1530','#221e3d','#2b264a','#191430'], text: 'rgba(255,255,255,0.85)' },
+    night:     { bg: 'linear-gradient(180deg, #0a0a1a 0%, #0d1025 20%, #141832 40%, #1a1e3e 70%, #0f1020 100%)',
+                 mt: ['#0c0c1e','#10102a','#141436','#0a0a18'], text: 'rgba(255,255,255,0.8)' },
+};
+
+// Compute celestial body position on an arc given time range
+// Returns {x: 0-100 (%), y: 0-100 (% from bottom)} — arc peaks at midpoint
+function celestialPos(currentT, riseT, setT) {
+    let span = setT - riseT;
+    if (span < 0) span += 24; // wraps past midnight
+    let elapsed = currentT - riseT;
+    if (elapsed < 0) elapsed += 24;
+    const progress = Math.max(0, Math.min(1, elapsed / span)); // 0=rise, 1=set
+    const x = 10 + progress * 80; // 10% to 90%
+    // Arc: sin curve, peak at 0.5
+    const arcHeight = Math.sin(progress * Math.PI);
+    const y = 8 + arcHeight * 55; // 8% to 63% from bottom
+    return { x, y, progress };
+}
+
+function generateStars() {
+    const c = document.getElementById('zenStars'); if (!c) return;
+    c.innerHTML = '';
+    for (let i = 0; i < 100; i++) {
+        const s = document.createElement('div');
+        s.className = 'zen-star';
+        s.style.left = Math.random() * 100 + '%';
+        s.style.top = Math.random() * 65 + '%';
+        const dur = 2 + Math.random() * 5;
+        const delay = Math.random() * 6;
+        s.style.setProperty('--tw-dur', dur + 's');
+        s.style.setProperty('--tw-delay', delay + 's');
+        const size = 1 + Math.random() * 2.5;
+        s.style.width = size + 'px';
+        s.style.height = size + 'px';
+        c.appendChild(s);
+    }
+}
+
+function updateZenScene() {
+    const now = new Date();
+    const hour = now.getHours(), min = now.getMinutes();
+    const tNow = hour + min / 60;
+    const phase = getTimePhase(hour, min);
+    const theme = SKY_THEMES[phase];
+
+    // Sky
+    document.getElementById('zenBg').style.background = theme.bg;
+
+    // Mountains
+    const mts = document.querySelectorAll('.zen-mountain');
+    theme.mt.forEach((c, i) => { if (mts[i]) mts[i].style.borderBottomColor = c; });
+
+    // Stars: visible at night/dusk, fading at dawn/sunset
+    const starsEl = document.getElementById('zenStars');
+    const isNighty = ['night','dusk','dawn'].includes(phase);
+    starsEl.style.opacity = phase === 'night' ? '1' : phase === 'dusk' ? '0.7' : phase === 'dawn' ? '0.3' : '0';
+
+    // Clouds: visible during daytime
+    const cloudsEl = document.getElementById('zenClouds');
+    const isDaytime = ['morning','noon','afternoon'].includes(phase);
+    cloudsEl.style.opacity = isDaytime ? '1' : phase === 'dawn' || phase === 'sunset' ? '0.4' : '0';
+
+    // Fog: stronger at dawn/dusk
+    const fogEl = document.getElementById('zenFog');
+    fogEl.style.opacity = (phase === 'dawn' || phase === 'dusk') ? '1' : isDaytime ? '0.3' : '0.5';
+
+    // Sun position (rises ~6, sets ~18.5)
+    const sunEl = document.getElementById('zenSun');
+    const sunRise = 6, sunSet = 18.5;
+    const sunVisible = tNow >= sunRise && tNow <= sunSet;
+    if (sunVisible) {
+        const sp = celestialPos(tNow, sunRise, sunSet);
+        sunEl.style.left = sp.x + '%';
+        sunEl.style.bottom = sp.y + '%';
+        sunEl.style.opacity = '1';
+        sunEl.style.transform = 'translate(-50%, 50%)';
+        // Near horizon: bigger & more orange glow
+        const horizonProx = 1 - Math.sin(sp.progress * Math.PI);
+        sunEl.style.boxShadow = `0 0 ${60 + horizonProx * 40}px ${20 + horizonProx * 30}px rgba(251,191,36,${0.3 + horizonProx * 0.3})`;
+    } else {
+        sunEl.style.opacity = '0';
+    }
+
+    // Moon position (rises ~18.5, sets ~6)
+    const moonEl = document.getElementById('zenMoon');
+    const moonRise = 18.5, moonSet = 6;
+    // Moon visible: from 18.5 to 6 (next day)
+    const moonVisible = tNow >= moonRise || tNow <= moonSet;
+    if (moonVisible) {
+        const mp = celestialPos(tNow, moonRise, moonSet);
+        moonEl.style.left = mp.x + '%';
+        moonEl.style.bottom = mp.y + '%';
+        moonEl.style.opacity = '1';
+        moonEl.style.transform = 'translate(-50%, 50%)';
+    } else {
+        moonEl.style.opacity = '0';
+    }
+
+    // Clock text color
+    const clockEl = document.getElementById('zenClock');
+    const dateEl = document.getElementById('zenDate');
+    if (clockEl) clockEl.style.color = theme.text;
+    if (dateEl) clockEl.style.textShadow = isDaytime ? '0 2px 20px rgba(0,0,0,0.1)' : '0 2px 40px rgba(0,0,0,0.3)';
+}
+
+function updateZenClock() {
+    const now = new Date();
+    const zenCl = document.getElementById('zenClock');
+    if (zenCl) zenCl.textContent = [now.getHours(), now.getMinutes(), now.getSeconds()].map(v => String(v).padStart(2,'0')).join(':');
+
+    const zenDt = document.getElementById('zenDate');
+    if (zenDt) {
+        zenDt.textContent = currentLang === 'zh'
+            ? `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 周${t('weekDays')[now.getDay()]}`
+            : now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    // Update timer based on mode
+    const zenWt = document.getElementById('zenWorkTimer');
+    if (zenMode === 'focus' && zenFocusTask) {
+        if (zenWt) zenWt.textContent = formatSecs(zenFocusTask.focusSecs || 0);
+    } else {
+        const rec = getTodayWork();
+        if (rec.currentStart) {
+            const runMs = Date.now() - rec.currentStart;
+            const sessMs = rec.sessions.reduce((s, x) => s + x.duration * 60000, 0);
+            if (zenWt) zenWt.textContent = formatHMS(sessMs + runMs);
+        }
+    }
+
+    updateZenScene();
+}
+
+let zenMode = null; // 'work' or 'focus'
+let zenFocusTask = null; // reference to the task being focused
+
+function enterZenMode(mode, taskObj) {
+    zenMode = mode || 'work';
+    zenFocusTask = taskObj || null;
+    generateStars();
+    updateZenScene();
+    document.getElementById('zenOverlay').classList.add('active');
+    const quotes = t('quotes');
+    document.getElementById('zenQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+
+    // Task name display
+    const taskNameEl = document.getElementById('zenTaskName');
+    const labelEl = document.getElementById('zenTimerLabel');
+    if (zenMode === 'focus' && zenFocusTask) {
+        taskNameEl.innerHTML = `<i class="fas fa-crosshairs"></i>${zenFocusTask.text}`;
+        taskNameEl.style.display = 'block';
+        labelEl.textContent = t('focusing');
+    } else {
+        taskNameEl.style.display = 'none';
+        labelEl.textContent = t('workingNow');
+    }
+
+    updateZenClock();
+    if (zenClockInterval) clearInterval(zenClockInterval);
+    zenClockInterval = setInterval(updateZenClock, 1000);
+    document.body.style.overflow = 'hidden';
+    // Start ambient audio
+    initAudio();
+    startSound(currentSound);
+    if (!audioMuted) setAudioVolume(document.getElementById('zenVolume').value / 100);
+}
+
+function exitZenMode() {
+    document.getElementById('zenOverlay').classList.remove('active');
+    if (zenClockInterval) { clearInterval(zenClockInterval); zenClockInterval = null; }
+    document.body.style.overflow = '';
+    zenMode = null;
+    zenFocusTask = null;
+    stopAllSounds();
+}
+
 // ======================== INIT ========================
 function init() {
     loadAll();
@@ -921,9 +1757,12 @@ function init() {
     applyI18n();
     renderTasks();
 
+    // Start header clock
+    startHeaderClock();
+
     // Resume work timer if working
     const rec = getTodayWork();
-    if (rec.currentStart) startWorkLiveTimer();
+    if (rec.currentStart) { startWorkLiveTimer(); enterZenMode('work'); }
     updateWorkUI();
     updateFocusTodayUI();
 
@@ -931,6 +1770,8 @@ function init() {
     document.getElementById("langToggleBtn").onclick = toggleLang;
     document.getElementById("workStartBtn").onclick = workStartClick;
     document.getElementById("workStopBtn").onclick = workStopClick;
+    document.getElementById("zenExitBtn").onclick = exitZenMode;
+    initAudioControls();
     document.getElementById("addTaskBtn").onclick = () => {
         const v=document.getElementById("newTaskInput").value.trim();
         if(v){tasks.push({id:Date.now()+Math.random(),text:v,status:"todo",createdAt:new Date().toISOString(),focusSecs:0,isTimingActive:false});saveAll();renderTasks();updateStatsAndCalendar();document.getElementById("newTaskInput").value="";}
