@@ -140,9 +140,9 @@
             background: var(--surface); border: 1px solid var(--border);
             border-radius: 0.5rem; overflow: hidden;
         }
-        .timeline-phase-segment.phase-morning { background: linear-gradient(135deg, #fef9c3 0%, #fef3c7 100%); border-color: #fde68a; }
-        .timeline-phase-segment.phase-afternoon { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-color: #93c5fd; }
-        .timeline-phase-segment.phase-evening { background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%); border-color: #c4b5fd; }
+        .timeline-phase-segment.phase-morning { background: linear-gradient(135deg, #fffde7 0%, #fef9c3 100%); border-color: #fef08a; }
+        .timeline-phase-segment.phase-afternoon { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-color: #bfdbfe; }
+        .timeline-phase-segment.phase-evening { background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-color: #ddd6fe; }
         .timeline-phase-segment.phase-latenight { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); border-color: #4338ca; }
         .timeline-phase-block {
             position: absolute; top: 3px; bottom: 3px; border-radius: 3px;
@@ -1186,7 +1186,7 @@ function updateWorkUI() {
         });
         logEl.innerHTML = rec.sessions.map((s, i) => {
             const owner = sessOwners[i];
-            const ownerColor = owner ? getTaskColor(owner.id) : '#a1a1aa';
+            const ownerColor = owner ? getTaskColor(owner.id) : '#6b7280';
             const ownerName = owner ? owner.text : t('generalWork');
             return `
             <div class="session-log-item flex items-center gap-2 text-xs bg-zinc-50 rounded-md px-2.5 py-1.5 border border-zinc-100" style="animation-delay:${i*0.05}s">
@@ -1242,7 +1242,7 @@ function renderFocusTimeline() {
         if (owner) {
             blocks.push({ startMin, endMin, color: getTaskColor(owner.id), label: owner.text, type: 'task' });
         } else {
-            blocks.push({ startMin, endMin, color: '#a1a1aa', label: t('generalWork'), type: 'general' });
+            blocks.push({ startMin, endMin, color: '#6b7280', label: t('generalWork'), type: 'general' });
         }
     });
 
@@ -1252,7 +1252,7 @@ function renderFocusTimeline() {
         const startMin = st.getHours() * 60 + st.getMinutes();
         let endMin = now.getHours() * 60 + now.getMinutes();
         if (endMin <= startMin) endMin += 1440;
-        blocks.push({ startMin, endMin, color: '#a1a1aa', label: t('generalWork'), type: 'general', active: true });
+        blocks.push({ startMin, endMin, color: '#6b7280', label: t('generalWork'), type: 'general', active: true });
     }
 
     // Phase definitions for 4-segment layout
@@ -1297,7 +1297,7 @@ function renderFocusTimeline() {
                 if (os1 < oe1) {
                     const left = ((os1 - r1Start) / phaseDuration) * 100;
                     const width = ((oe1 - os1) / phaseDuration) * 100;
-                    const opacity = b.type === 'general' ? '0.5' : '0.9';
+                    const opacity = b.type === 'general' ? '0.65' : '0.9';
                     const pulse = b.active ? 'animation:focusPulse 2s infinite;' : '';
                     segBlocksHtml += `<div class="timeline-phase-block" style="left:${left}%;width:${width}%;background:${b.color};opacity:${opacity};${pulse}" title="${b.label}"></div>`;
                 }
@@ -1306,7 +1306,7 @@ function renderFocusTimeline() {
                     const offset = (24 - p.startH) * 60; // minutes from phase start to midnight
                     const left = ((offset + os2) / phaseDuration) * 100;
                     const width = ((oe2 - os2) / phaseDuration) * 100;
-                    const opacity = b.type === 'general' ? '0.5' : '0.9';
+                    const opacity = b.type === 'general' ? '0.65' : '0.9';
                     segBlocksHtml += `<div class="timeline-phase-block" style="left:${left}%;width:${width}%;background:${b.color};opacity:${opacity}" title="${b.label}"></div>`;
                 }
             } else {
@@ -1315,7 +1315,7 @@ function renderFocusTimeline() {
                 if (overlapStart < overlapEnd) {
                     const left = ((overlapStart - phaseStartMin) / phaseDuration) * 100;
                     const width = ((overlapEnd - overlapStart) / phaseDuration) * 100;
-                    const opacity = b.type === 'general' ? '0.5' : '0.9';
+                    const opacity = b.type === 'general' ? '0.65' : '0.9';
                     const pulse = b.active ? 'animation:focusPulse 2s infinite;' : '';
                     segBlocksHtml += `<div class="timeline-phase-block" style="left:${left}%;width:${width}%;background:${b.color};opacity:${opacity};${pulse}" title="${b.label}"></div>`;
                 }
@@ -1365,7 +1365,7 @@ function renderFocusTimeline() {
         }
     });
     if (blocks.some(b => b.type === 'general')) {
-        legendItems.unshift(`<div class="timeline-legend-item"><div class="timeline-legend-dot" style="background:#a1a1aa"></div>${t('generalWork')}</div>`);
+        legendItems.unshift(`<div class="timeline-legend-item"><div class="timeline-legend-dot" style="background:#6b7280"></div>${t('generalWork')}</div>`);
     }
 
     c.innerHTML = `
