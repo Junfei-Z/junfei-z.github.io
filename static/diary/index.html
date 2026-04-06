@@ -790,7 +790,8 @@ const STORAGE = {
 };
 let tasks=[], workMap=new Map(), moodEntries=[], inspirationMap=new Map(), focusMap=new Map(), focusTimeline=[], completedHistory=[];
 
-function getTodayStr() { return new Date().toISOString().slice(0,10); }
+function toLocalDateStr(d) { const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${day}`; }
+function getTodayStr() { return toLocalDateStr(new Date()); }
 function getNowDateTimeStr() { return new Date().toLocaleString('zh-CN'); }
 function getNowTimeStr() { return new Date().toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
 
@@ -1111,7 +1112,7 @@ function showDayDetail(ds) {
 let lineChart = null, currentMetric = "completion", currentPeriod = "week";
 function getPeriodDates(p) {
     const now = new Date(); let d = [];
-    if (p==="week") { const s=new Date(now); s.setDate(now.getDate()-now.getDay()+(now.getDay()===0?-6:1)); for(let i=0;i<7;i++){let x=new Date(s);x.setDate(s.getDate()+i);d.push(x.toISOString().slice(0,10));} }
+    if (p==="week") { const s=new Date(now); s.setDate(now.getDate()-now.getDay()+(now.getDay()===0?-6:1)); for(let i=0;i<7;i++){let x=new Date(s);x.setDate(s.getDate()+i);d.push(toLocalDateStr(x));} }
     else if (p==="month") { const y=now.getFullYear(),m=now.getMonth(); for(let i=1;i<=new Date(y,m+1,0).getDate();i++) d.push(`${y}-${String(m+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`); }
     else { for(let m=1;m<=12;m++) d.push(`${now.getFullYear()}-${String(m).padStart(2,'0')}-01`); }
     return d;
