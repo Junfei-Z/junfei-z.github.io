@@ -205,6 +205,28 @@
             color: var(--text-primary);
         }
 
+        /* === Focus button on tasks === */
+        .btn-focus {
+            background: var(--accent-bg); border: 1px solid var(--accent-light);
+            border-radius: 0.5rem; color: var(--accent); font-weight: 500;
+            transition: all 0.15s ease; font-size: 0.75rem;
+            padding: 0.25rem 0.625rem; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 0.35rem;
+        }
+        .btn-focus:hover { background: var(--accent); color: white; }
+        .btn-focus.active-focus {
+            background: #f59e0b; border-color: #f59e0b; color: white;
+        }
+        .btn-focus.active-focus:hover { background: #d97706; border-color: #d97706; }
+
+        /* Focusing on info bar */
+        .focusing-on-bar {
+            background: #fffbeb; border: 1px solid #fde68a; border-radius: 0.5rem;
+            padding: 0.5rem 0.75rem; margin-top: 0.75rem;
+            display: flex; align-items: center; gap: 0.5rem;
+            animation: fadeInUp 0.3s ease both;
+        }
+
         /* === Zen Fullscreen Mode === */
         .zen-overlay {
             position: fixed; inset: 0; z-index: 100;
@@ -493,6 +515,12 @@
                             </button>
                         </div>
                     </div>
+                    <!-- Focusing on indicator -->
+                    <div id="focusingOnBar" class="focusing-on-bar" style="display:none;">
+                        <i class="fas fa-crosshairs text-amber-500 text-sm"></i>
+                        <span class="text-xs font-medium text-amber-700" id="focusingOnLabel"></span>
+                        <span class="timer-display text-xs font-semibold text-amber-600 ml-auto" id="focusingOnTimer">0:00</span>
+                    </div>
                     <div class="mt-3 pt-3 border-t border-zinc-100">
                         <div class="flex justify-between items-center">
                             <span class="text-xs font-medium text-zinc-400"><i class="fas fa-hourglass-half text-indigo-400 mr-1"></i><span data-i18n="todayTotal"></span></span>
@@ -572,20 +600,31 @@
                     <i class="fas fa-chart-bar text-indigo-400"></i>
                     <span data-i18n="dashboard"></span>
                 </div>
-                <div class="flex gap-1 mt-1 mb-2">
+                <!-- Workdays highlight -->
+                <div class="flex items-center justify-between bg-gradient-to-r from-indigo-50/80 to-violet-50/60 rounded-lg p-3 mt-2 mb-3 border border-indigo-100/50">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
+                            <i class="fas fa-calendar-check text-indigo-500 text-sm"></i>
+                        </div>
+                        <span class="text-xs font-medium text-zinc-500" data-i18n="statWorkdays"></span>
+                    </div>
+                    <div class="text-2xl font-bold text-indigo-600 stat-number" id="statWorkDaysCount">0</div>
+                </div>
+
+                <!-- Chart controls -->
+                <div class="flex gap-1 mb-2">
                     <button data-period="week" class="chip bg-zinc-100 text-zinc-500 text-xs" data-i18n="week"></button>
                     <button data-period="month" class="chip bg-zinc-100 text-zinc-500 text-xs" data-i18n="month"></button>
                     <button data-period="year" class="chip bg-zinc-100 text-zinc-500 text-xs" data-i18n="year"></button>
                 </div>
-                <div class="flex gap-1 mb-3 flex-wrap">
+                <div class="flex gap-1 mb-3">
                     <button data-metric="completion" class="chip bg-zinc-50 text-zinc-500 text-xs active" data-i18n="metricTasks"></button>
                     <button data-metric="focus" class="chip bg-zinc-50 text-zinc-500 text-xs" data-i18n="metricFocus"></button>
-                    <button data-metric="workdays" class="chip bg-zinc-50 text-zinc-500 text-xs" data-i18n="metricWorkdays"></button>
                 </div>
-                <div class="bg-zinc-50 rounded-lg p-2">
-                    <canvas id="statsLineChart" height="170" style="max-height:190px;width:100%"></canvas>
+                <div class="bg-zinc-50/80 rounded-lg p-2">
+                    <canvas id="statsLineChart" height="150" style="max-height:170px;width:100%"></canvas>
                 </div>
-                <div class="grid grid-cols-3 gap-2 mt-3">
+                <div class="grid grid-cols-2 gap-2 mt-3">
                     <div class="stat-card">
                         <div class="text-[0.625rem] text-zinc-400 mb-0.5" data-i18n="statTasks"></div>
                         <div class="text-lg font-bold text-zinc-700 stat-number" id="statTasksCount">0</div>
@@ -593,10 +632,6 @@
                     <div class="stat-card">
                         <div class="text-[0.625rem] text-zinc-400 mb-0.5" data-i18n="statFocus"></div>
                         <div class="text-lg font-bold text-zinc-700 stat-number" id="statFocusCount">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="text-[0.625rem] text-zinc-400 mb-0.5" data-i18n="statWorkdays"></div>
-                        <div class="text-lg font-bold text-zinc-700 stat-number" id="statWorkDaysCount">0</div>
                     </div>
                 </div>
                 <div class="flex gap-2 mt-3">
@@ -645,7 +680,7 @@ const I18N = {
     zh: {
         mood: "心情", diary: "日记", workClock: "今日工作", morning: "上午", afternoon: "下午",
         clockIn: "开始工作", clockOut: "结束工作",
-        todayTotal: "今日合计", minUnit: "分钟", tasksFocus: "任务 & 专注",
+        todayTotal: "今日合计", minUnit: "分钟", tasksFocus: "任务列表",
         history: "历史", addTaskPlaceholder: "添加新任务...", add: "添加",
         todayFocus: "今日专注", focusTimeline: "专注时间轴", clear: "清空",
         notes: "笔记 & 反思", notesPlaceholder: "记录灵感、科研心得、每日感悟...",
@@ -661,7 +696,7 @@ const I18N = {
         noCompleted: "暂无已完成任务", noMoodEntry: "暂无心情记录",
         confirmComplete: "完成任务", confirmReset: "重置任务？",
         confirmDelete: "删除任务", focusing: "专注中",
-        completedCantTime: "已完成的任务无法计时",
+        completedCantFocus: "已完成的任务无法专注",
         addNoteOptional: "添加备注（可选）：", moodRecorded: "已记录心情",
         clearTimeline: "清空今日专注时间轴？",
         clearAllConfirm: "永久删除所有数据？不可撤销！", clearAllConfirm2: "再确认一次，数据将全部清空",
@@ -678,11 +713,15 @@ const I18N = {
         moodNames: { happy: "开心", calm: "平静", down: "低落" },
         completedAt: "完成于",
         exitZen: "退出专注",
+        focusBtn: "专注", unfocusBtn: "取消专注",
+        focusingOn: "正在专注：",
+        startWorkFirst: "请先开始工作",
+        generalWork: "通用工作时间",
     },
     en: {
         mood: "Mood", diary: "Diary", workClock: "Today's Work", morning: "Morning", afternoon: "Afternoon",
         clockIn: "Start Work", clockOut: "End Work",
-        todayTotal: "Today Total", minUnit: "min", tasksFocus: "Tasks & Focus",
+        todayTotal: "Today Total", minUnit: "min", tasksFocus: "Tasks",
         history: "History", addTaskPlaceholder: "Add a new task...", add: "Add",
         todayFocus: "Today's Focus", focusTimeline: "Focus Timeline", clear: "Clear",
         notes: "Notes & Reflections", notesPlaceholder: "Capture thoughts, research insights, reflections...",
@@ -698,7 +737,7 @@ const I18N = {
         noCompleted: "No completed tasks yet.", noMoodEntry: "No mood entries yet.",
         confirmComplete: "Complete task", confirmReset: "Reset task?",
         confirmDelete: "Delete task", focusing: "Focusing",
-        completedCantTime: "Completed tasks cannot be timed.",
+        completedCantFocus: "Completed tasks cannot be focused.",
         addNoteOptional: "Add a note (optional):", moodRecorded: "Mood recorded",
         clearTimeline: "Clear today's focus timeline?",
         clearAllConfirm: "Permanently delete ALL data? This cannot be undone.",
@@ -716,6 +755,10 @@ const I18N = {
         moodNames: { happy: "Happy", calm: "Calm", down: "Down" },
         completedAt: "Completed at",
         exitZen: "Exit Focus",
+        focusBtn: "Focus", unfocusBtn: "Unfocus",
+        focusingOn: "Focusing on:",
+        startWorkFirst: "Start work first",
+        generalWork: "General work time",
     }
 };
 let currentLang = localStorage.getItem('diary_lang') || 'zh';
@@ -752,9 +795,15 @@ const STORAGE = {
     tasks: SP+"tasks_v7", workRecords: SP+"work_records_v8",
     dailyMoods: SP+"mood_entries", dailyInspiration: SP+"inspiration",
     dailyFocus: SP+"focus_records", dailyTheme: SP+"theme",
-    focusTimeline: SP+"focus_timeline_v7", completedTasksHistory: SP+"completed_history_v7"
+    focusTimeline: SP+"focus_timeline_v7", completedTasksHistory: SP+"completed_history_v7",
+    activeFocusTaskId: SP+"active_focus_task_id",
+    activeFocusStartTs: SP+"active_focus_start_ts"
 };
 let tasks=[], workMap=new Map(), moodEntries=[], inspirationMap=new Map(), focusMap=new Map(), focusTimeline=[], completedHistory=[];
+
+// Active focus state: which task is currently focused while the global work timer runs
+let activeFocusTaskId = null;
+let activeFocusStartTs = null;
 
 function toLocalDateStr(d) { const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${day}`; }
 function getTodayStr() { return toLocalDateStr(new Date()); }
@@ -770,6 +819,14 @@ function saveAll() {
     localStorage.setItem(STORAGE.dailyTheme, document.getElementById("dailyThemeInput").value);
     localStorage.setItem(STORAGE.focusTimeline, JSON.stringify(focusTimeline));
     localStorage.setItem(STORAGE.completedTasksHistory, JSON.stringify(completedHistory));
+    // Persist active focus state
+    if (activeFocusTaskId !== null) {
+        localStorage.setItem(STORAGE.activeFocusTaskId, activeFocusTaskId);
+        localStorage.setItem(STORAGE.activeFocusStartTs, String(activeFocusStartTs));
+    } else {
+        localStorage.removeItem(STORAGE.activeFocusTaskId);
+        localStorage.removeItem(STORAGE.activeFocusStartTs);
+    }
 }
 function loadAll() {
     const tv=localStorage.getItem(STORAGE.tasks); tasks=tv?JSON.parse(tv):[];
@@ -780,11 +837,32 @@ function loadAll() {
     const tl=localStorage.getItem(STORAGE.focusTimeline); focusTimeline=tl?JSON.parse(tl):[];
     const ch=localStorage.getItem(STORAGE.completedTasksHistory); completedHistory=ch?JSON.parse(ch):[];
     document.getElementById("dailyThemeInput").value = localStorage.getItem(STORAGE.dailyTheme) || t('defaultTheme');
+    // Restore active focus state
+    const storedFocusId = localStorage.getItem(STORAGE.activeFocusTaskId);
+    const storedFocusTs = localStorage.getItem(STORAGE.activeFocusStartTs);
+    if (storedFocusId && storedFocusTs) {
+        activeFocusTaskId = parseFloat(storedFocusId);
+        activeFocusStartTs = parseInt(storedFocusTs, 10);
+    } else {
+        activeFocusTaskId = null;
+        activeFocusStartTs = null;
+    }
 }
 function formatSecs(sec) { let m=Math.floor(sec/60),s=sec%60; return `${m}:${s<10?'0'+s:s}`; }
 function formatHMS(ms) {
     const s=Math.floor(ms/1000), h=Math.floor(s/3600), m=Math.floor((s%3600)/60), sec=s%60;
     return `${h<10?'0'+h:h}:${m<10?'0'+m:m}:${sec<10?'0'+sec:sec}`;
+}
+
+// ======================== HELPERS ========================
+function isWorking() {
+    const rec = getTodayWork();
+    return !!rec.currentStart;
+}
+
+function getActiveFocusTask() {
+    if (activeFocusTaskId === null) return null;
+    return tasks.find(tk => tk.id === activeFocusTaskId) || null;
 }
 
 // ======================== UNIFIED WORK CLOCK ========================
@@ -804,12 +882,14 @@ function workStartClick() {
     saveAll();
     startWorkLiveTimer();
     updateWorkUI();
-    enterZenMode('work');
+    enterZenMode();
 }
 
 function workStopClick() {
     const rec = getTodayWork();
     if (!rec.currentStart) return;
+    // Stop any active focus first
+    stopActiveFocus();
     const elapsed = Math.floor((Date.now() - rec.currentStart) / 60000);
     const startTime = new Date(rec.currentStart).toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'});
     const endTime = new Date().toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'});
@@ -820,11 +900,17 @@ function workStopClick() {
     stopWorkLiveTimer();
     updateWorkUI();
     updateStatsAndCalendar();
+    // Exit zen mode since work stopped
+    exitZenMode();
 }
 
 function startWorkLiveTimer() {
     stopWorkLiveTimer();
-    workLiveTimer = setInterval(() => updateWorkUI(), 1000);
+    workLiveTimer = setInterval(() => {
+        updateWorkUI();
+        // Accumulate focus seconds for the active task
+        tickActiveFocus();
+    }, 1000);
 }
 function stopWorkLiveTimer() {
     if (workLiveTimer) { clearInterval(workLiveTimer); workLiveTimer = null; }
@@ -832,7 +918,7 @@ function stopWorkLiveTimer() {
 
 function updateWorkUI() {
     const rec = getTodayWork();
-    const isWorking = !!rec.currentStart;
+    const working = !!rec.currentStart;
     const panel = document.getElementById('workPanel');
     const timerEl = document.getElementById('workTimerDisplay');
     const statusEl = document.getElementById('workStatusLine');
@@ -840,12 +926,12 @@ function updateWorkUI() {
     const stopBtn = document.getElementById('workStopBtn');
 
     let runningMs = 0;
-    if (isWorking) runningMs = Date.now() - rec.currentStart;
+    if (working) runningMs = Date.now() - rec.currentStart;
     const sessionMs = rec.sessions.reduce((sum, s) => sum + s.duration * 60000, 0);
     const totalMs = sessionMs + runningMs;
     timerEl.textContent = formatHMS(totalMs);
 
-    if (isWorking) {
+    if (working) {
         panel.classList.add('is-working');
         timerEl.classList.add('is-running');
         statusEl.innerHTML = `<span class="pulse-dot"></span> <span class="text-emerald-600 font-medium text-xs">${t('workingNow')}</span>`;
@@ -861,6 +947,19 @@ function updateWorkUI() {
     document.getElementById("totalWorkMinutes").textContent = totalMin;
     document.getElementById("totalWorkHours").textContent = (totalMin / 60).toFixed(1);
 
+    // Focusing-on bar
+    const focusingBar = document.getElementById('focusingOnBar');
+    const focusingLabel = document.getElementById('focusingOnLabel');
+    const focusingTimer = document.getElementById('focusingOnTimer');
+    const focusTask = getActiveFocusTask();
+    if (working && focusTask) {
+        focusingBar.style.display = 'flex';
+        focusingLabel.textContent = `${t('focusingOn')} ${focusTask.text}`;
+        focusingTimer.textContent = formatSecs(focusTask.focusSecs || 0);
+    } else {
+        focusingBar.style.display = 'none';
+    }
+
     const logEl = document.getElementById('sessionLogList');
     if (rec.sessions.length === 0) {
         logEl.innerHTML = `<div class="text-xs text-zinc-300 text-center py-1">${t('noSessions')}</div>`;
@@ -875,7 +974,7 @@ function updateWorkUI() {
     }
 }
 
-// ======================== FOCUS ========================
+// ======================== FOCUS (linked to work timer) ========================
 function addTimelineRecord(taskId, taskName, startDT, endDT, durSec) {
     focusTimeline.push({ id: Date.now()+Math.random(), taskId, taskName, startTime: startDT, endTime: endDT, durationSec: durSec, dateStr: getTodayStr() });
     saveAll(); renderFocusTimeline();
@@ -894,45 +993,90 @@ function renderFocusTimeline() {
         </div>`).join('');
 }
 
-function stopTaskTimerAndRecord(task) {
-    if (task.timerInterval) { clearInterval(task.timerInterval); task.timerInterval = null; }
-    if (task.isTimingActive && task.lastStartTimeStr) {
-        const added = (task.focusSecs||0) - (task.lastFocusSecsBeforeStart||0);
+// Called every second by the work live timer
+function tickActiveFocus() {
+    if (!isWorking()) return;
+    if (activeFocusTaskId === null) return;
+    const task = getActiveFocusTask();
+    if (!task || task.status === 'done') {
+        stopActiveFocus();
+        return;
+    }
+    task.focusSecs = (task.focusSecs || 0) + 1;
+    // No need to saveAll every second (heavy), save every 10 seconds
+    if (task.focusSecs % 10 === 0) saveAll();
+}
+
+function startFocusOnTask(taskId) {
+    if (!isWorking()) return;
+    const task = tasks.find(tk => tk.id === taskId);
+    if (!task || task.status === 'done') return;
+    // If already focusing on this task, unfocus it
+    if (activeFocusTaskId === taskId) {
+        stopActiveFocus();
+        renderTasks();
+        updateZenTaskDisplay();
+        return;
+    }
+    // Stop previous focus if any
+    stopActiveFocus();
+    // Start new focus
+    activeFocusTaskId = taskId;
+    activeFocusStartTs = Date.now();
+    task._focusSecsAtStart = task.focusSecs || 0;
+    saveAll();
+    renderTasks();
+    updateZenTaskDisplay();
+}
+
+function stopActiveFocus() {
+    if (activeFocusTaskId === null) return;
+    const task = getActiveFocusTask();
+    if (task && activeFocusStartTs) {
+        const secsAtStart = task._focusSecsAtStart !== undefined ? task._focusSecsAtStart : (task.focusSecs || 0);
+        const added = (task.focusSecs || 0) - secsAtStart;
         if (added > 0) {
             let tf = focusMap.get(getTodayStr()) || 0;
-            tf += Math.floor(added/60);
+            tf += Math.floor(added / 60);
             focusMap.set(getTodayStr(), tf);
-            addTimelineRecord(task.id, task.text, task.lastStartTimeStr, getNowDateTimeStr(), added);
+            const startDT = new Date(activeFocusStartTs).toLocaleString('zh-CN');
+            addTimelineRecord(task.id, task.text, startDT, getNowDateTimeStr(), added);
         }
-        task.isTimingActive = false; task.lastStartTimeStr = null; task.lastFocusSecsBeforeStart = undefined;
-        saveAll(); updateFocusTodayUI(); updateStatsAndCalendar();
+        delete task._focusSecsAtStart;
     }
-}
-function startTaskTimer(task, cb) {
-    if (task.isTimingActive) return;
-    if (task.status === "done") { alert(t('completedCantTime')); return; }
-    task.isTimingActive = true; task.lastStartTimeStr = getNowDateTimeStr();
-    task.lastFocusSecsBeforeStart = task.focusSecs || 0;
-    task.timerInterval = setInterval(() => {
-        if (task.isTimingActive && task.status !== "done") {
-            task.focusSecs = (task.focusSecs||0) + 1;
-            if (cb) cb(task.focusSecs); saveAll();
-        } else if (task.status === "done" && task.timerInterval) clearInterval(task.timerInterval);
-    }, 1000);
+    activeFocusTaskId = null;
+    activeFocusStartTs = null;
     saveAll();
+    updateFocusTodayUI();
+    updateStatsAndCalendar();
+    updateZenTaskDisplay();
+}
+
+function updateZenTaskDisplay() {
+    const taskNameEl = document.getElementById('zenTaskName');
+    const labelEl = document.getElementById('zenTimerLabel');
+    const focusTask = getActiveFocusTask();
+    if (focusTask) {
+        taskNameEl.innerHTML = `<i class="fas fa-crosshairs"></i>${focusTask.text}`;
+        taskNameEl.style.display = 'block';
+        labelEl.textContent = t('focusing');
+    } else {
+        taskNameEl.style.display = 'none';
+        labelEl.textContent = t('workingNow');
+    }
 }
 
 // ======================== RENDER TASKS ========================
 function renderTasks() {
-    tasks.forEach(tk => { if (tk.timerInterval) { clearInterval(tk.timerInterval); tk.timerInterval = null; } });
     const c = document.getElementById("taskList"); if (!c) return;
     const today = getTodayStr();
     const list = tasks.filter(tk => tk.status !== "done" || tk.completedDate === today);
+    const working = isWorking();
     c.innerHTML = "";
     list.forEach((task, idx) => {
-        const isFoc = task.isTimingActive && task.status !== "done";
+        const isFocused = (activeFocusTaskId === task.id) && working;
         const li = document.createElement("li");
-        li.className = `task-item flex flex-wrap items-center gap-2.5 ${isFoc?'focusing':''} ${task.status==='done'?'task-completed':''}`;
+        li.className = `task-item flex flex-wrap items-center gap-2.5 ${isFocused?'focusing':''} ${task.status==='done'?'task-completed':''}`;
         li.style.animationDelay = `${idx * 0.04}s`;
 
         const statusBtn = document.createElement("button");
@@ -943,17 +1087,15 @@ function renderTasks() {
             if (task.status === "todo") task.status = "doing";
             else if (task.status === "doing") {
                 if (!confirm(`${t('confirmComplete')} "${task.text}"?`)) return;
-                if (task.isTimingActive) stopTaskTimerAndRecord(task);
+                // Stop focus if this was the focused task
+                if (activeFocusTaskId === task.id) stopActiveFocus();
                 task.status = "done"; task.completedDate = getTodayStr(); task.completedTimeStr = getNowDateTimeStr();
                 completedHistory.push({ taskId:task.id, taskName:task.text, completedDate:getTodayStr(), completedTimeStr:getNowDateTimeStr() });
-                if (task.timerInterval) { clearInterval(task.timerInterval); task.timerInterval = null; }
-                task.isTimingActive = false;
             } else {
                 if (!confirm(t('confirmReset'))) return;
-                if (task.isTimingActive) stopTaskTimerAndRecord(task);
+                if (activeFocusTaskId === task.id) stopActiveFocus();
                 task.status = "todo"; delete task.completedDate; delete task.completedTimeStr;
-                task.focusSecs = 0; task.isTimingActive = false;
-                if (task.timerInterval) { clearInterval(task.timerInterval); task.timerInterval = null; }
+                task.focusSecs = 0;
             }
             saveAll(); renderTasks(); updateStatsAndCalendar();
         };
@@ -961,67 +1103,56 @@ function renderTasks() {
         const taskText = document.createElement("span");
         taskText.innerText = task.text;
         taskText.className = "task-text flex-1 font-medium text-sm text-zinc-700 break-words";
-        if (isFoc) {
+        if (isFocused) {
             const b = document.createElement("span");
             b.className = "ml-2 inline-flex items-center gap-1 bg-amber-400 text-white text-[0.6rem] font-medium px-1.5 py-0.5 rounded focus-pulse";
             b.innerHTML = `<i class="fas fa-fire text-[0.5rem]"></i> ${t('focusing')}`;
             taskText.appendChild(b);
         }
 
-        const timerDiv = document.createElement("div");
-        timerDiv.className = `flex items-center gap-1 ${isFoc?'bg-amber-50 border border-amber-200':'bg-zinc-50'} rounded-md px-1.5 py-1 flex-shrink-0 transition-all`;
+        // Timer display (read-only, shows accumulated focus seconds)
         const timerSpan = document.createElement("span");
-        timerSpan.className = "timer-display text-xs font-semibold text-zinc-500 min-w-[44px] text-center";
-        const upd = s => { timerSpan.innerText = formatSecs(s); };
-        upd(task.focusSecs || 0);
+        timerSpan.className = "timer-display text-xs font-semibold text-zinc-400 min-w-[44px] text-center flex-shrink-0";
+        timerSpan.textContent = formatSecs(task.focusSecs || 0);
 
-        const mk = (icon, cls) => { const b=document.createElement("button"); b.innerHTML=`<i class="fas fa-${icon} text-[0.6rem]"></i>`; b.className=`w-6 h-6 rounded flex items-center justify-center text-white transition ${cls}`; return b; };
-        const startBtn = mk("play","bg-emerald-500 hover:bg-emerald-600");
-        const stopBtn = mk("pause","bg-amber-500 hover:bg-amber-600");
-        const resetBtn = mk("redo-alt","bg-zinc-400 hover:bg-zinc-500");
-
-        startBtn.onclick = () => {
-            if (task.status === "done" || task.isTimingActive) return;
-            startTaskTimer(task, s => {
-                upd(s);
-                if (!li.classList.contains('focusing')) {
-                    li.classList.add('focusing'); timerDiv.classList.add('bg-amber-50','border','border-amber-200');
-                    if (!taskText.querySelector('.focus-pulse')) {
-                        const bb=document.createElement("span"); bb.className="ml-2 inline-flex items-center gap-1 bg-amber-400 text-white text-[0.6rem] font-medium px-1.5 py-0.5 rounded focus-pulse";
-                        bb.innerHTML=`<i class="fas fa-fire text-[0.5rem]"></i> ${t('focusing')}`; taskText.appendChild(bb);
-                    }
-                }
-            });
-            startBtn.classList.add('opacity-40','pointer-events-none'); stopBtn.classList.remove('opacity-40','pointer-events-none');
-            enterZenMode('focus', task);
-        };
-        stopBtn.onclick = () => {
-            if (!task.isTimingActive) return;
-            stopTaskTimerAndRecord(task);
-            li.classList.remove('focusing'); timerDiv.classList.remove('bg-amber-50','border','border-amber-200');
-            const bb=taskText.querySelector('.focus-pulse'); if(bb) bb.remove();
-            startBtn.classList.remove('opacity-40','pointer-events-none'); stopBtn.classList.add('opacity-40','pointer-events-none');
-            if (zenMode === 'focus') exitZenMode();
-            upd(task.focusSecs||0);
-        };
-        resetBtn.onclick = () => { if (task.isTimingActive) stopBtn.click(); task.focusSecs=0; upd(0); saveAll(); updateFocusTodayUI(); };
-
-        if (isFoc) startBtn.classList.add('opacity-40','pointer-events-none');
-        else stopBtn.classList.add('opacity-40','pointer-events-none');
-
-        timerDiv.append(startBtn, stopBtn, timerSpan, resetBtn);
+        // Focus button (only shown when global work timer is running and task is not done)
+        const focusBtn = document.createElement("button");
+        if (working && task.status !== 'done') {
+            if (isFocused) {
+                focusBtn.className = "btn-focus active-focus";
+                focusBtn.innerHTML = `<i class="fas fa-pause text-[0.6rem]"></i> ${t('unfocusBtn')}`;
+            } else {
+                focusBtn.className = "btn-focus";
+                focusBtn.innerHTML = `<i class="fas fa-crosshairs text-[0.6rem]"></i> ${t('focusBtn')}`;
+            }
+            focusBtn.onclick = (e) => {
+                e.stopPropagation();
+                startFocusOnTask(task.id);
+            };
+        } else if (!working && task.status !== 'done') {
+            focusBtn.className = "btn-focus";
+            focusBtn.innerHTML = `<i class="fas fa-crosshairs text-[0.6rem]"></i> ${t('focusBtn')}`;
+            focusBtn.disabled = true;
+            focusBtn.title = t('startWorkFirst');
+            focusBtn.style.opacity = '0.35';
+            focusBtn.style.cursor = 'not-allowed';
+        }
 
         const delBtn = document.createElement("button");
         delBtn.innerHTML = '<i class="fas fa-times text-[0.6rem]"></i>';
         delBtn.className = "w-6 h-6 rounded flex items-center justify-center text-zinc-300 hover:text-red-400 hover:bg-red-50 transition flex-shrink-0";
-        delBtn.onclick = () => { if (confirm(`${t('confirmDelete')} "${task.text}"?`)) { if(task.timerInterval) clearInterval(task.timerInterval); tasks=tasks.filter(x=>x.id!==task.id); saveAll(); renderTasks(); updateStatsAndCalendar(); renderFocusTimeline(); } };
+        delBtn.onclick = () => {
+            if (confirm(`${t('confirmDelete')} "${task.text}"?`)) {
+                if (activeFocusTaskId === task.id) stopActiveFocus();
+                tasks=tasks.filter(x=>x.id!==task.id);
+                saveAll(); renderTasks(); updateStatsAndCalendar(); renderFocusTimeline();
+            }
+        };
 
-        li.append(statusBtn, taskText, timerDiv, delBtn);
+        li.append(statusBtn, taskText, timerSpan);
+        if (task.status !== 'done') li.append(focusBtn);
+        li.append(delBtn);
         c.appendChild(li);
-
-        if (isFoc && !task.timerInterval) {
-            startTaskTimer(task, s => { upd(s); if (!li.classList.contains('focusing')) li.classList.add('focusing'); });
-        }
     });
     updateFocusTodayUI(); renderFocusTimeline();
 }
@@ -1098,9 +1229,9 @@ function updateLineChart() {
         options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:9,family:'Inter'},color:'#a1a1aa',maxRotation:45}},y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.03)'},ticks:{font:{size:9,family:'Inter'},color:'#a1a1aa'}}},
         animation:{duration:600,easing:'easeOutQuart'}}
     });
-    ["completion","focus","workdays"].forEach((m,i) => {
-        document.getElementById(["statTasksCount","statFocusCount","statWorkDaysCount"][i]).innerText = getMetricData(currentPeriod,m).reduce((a,b)=>a+b,0);
-    });
+    document.getElementById("statTasksCount").innerText = getMetricData(currentPeriod,"completion").reduce((a,b)=>a+b,0);
+    document.getElementById("statFocusCount").innerText = getMetricData(currentPeriod,"focus").reduce((a,b)=>a+b,0);
+    document.getElementById("statWorkDaysCount").innerText = getMetricData(currentPeriod,"workdays").reduce((a,b)=>a+b,0);
 }
 function updateStatsAndCalendar(p=currentPeriod) { currentPeriod=p; updateLineChart(); renderCalendar(); }
 
@@ -1594,8 +1725,9 @@ function updateZenClock() {
     }
 
     const zenWt = document.getElementById('zenWorkTimer');
-    if (zenMode === 'focus' && zenFocusTask) {
-        if (zenWt) zenWt.textContent = formatSecs(zenFocusTask.focusSecs || 0);
+    const focusTask = getActiveFocusTask();
+    if (focusTask) {
+        if (zenWt) zenWt.textContent = formatSecs(focusTask.focusSecs || 0);
     } else {
         const rec = getTodayWork();
         if (rec.currentStart) {
@@ -1608,28 +1740,17 @@ function updateZenClock() {
     updateZenScene();
 }
 
-let zenMode = null;
-let zenFocusTask = null;
+let zenActive = false;
 
-function enterZenMode(mode, taskObj) {
-    zenMode = mode || 'work';
-    zenFocusTask = taskObj || null;
+function enterZenMode() {
+    zenActive = true;
     generateStars();
     updateZenScene();
     document.getElementById('zenOverlay').classList.add('active');
     const quotes = t('quotes');
     document.getElementById('zenQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
 
-    const taskNameEl = document.getElementById('zenTaskName');
-    const labelEl = document.getElementById('zenTimerLabel');
-    if (zenMode === 'focus' && zenFocusTask) {
-        taskNameEl.innerHTML = `<i class="fas fa-crosshairs"></i>${zenFocusTask.text}`;
-        taskNameEl.style.display = 'block';
-        labelEl.textContent = t('focusing');
-    } else {
-        taskNameEl.style.display = 'none';
-        labelEl.textContent = t('workingNow');
-    }
+    updateZenTaskDisplay();
 
     updateZenClock();
     if (zenClockInterval) clearInterval(zenClockInterval);
@@ -1644,15 +1765,20 @@ function exitZenMode() {
     document.getElementById('zenOverlay').classList.remove('active');
     if (zenClockInterval) { clearInterval(zenClockInterval); zenClockInterval = null; }
     document.body.style.overflow = '';
-    zenMode = null;
-    zenFocusTask = null;
+    zenActive = false;
     stopAllSounds();
 }
 
 // ======================== INIT ========================
 function init() {
     loadAll();
-    tasks.forEach(tk => { delete tk.timerInterval; if(tk.isTimingActive) tk.isTimingActive=false; });
+    // Clean up old per-task timer state from previous version
+    tasks.forEach(tk => {
+        delete tk.timerInterval;
+        delete tk.isTimingActive;
+        delete tk.lastStartTimeStr;
+        delete tk.lastFocusSecsBeforeStart;
+    });
     tasks.forEach(tk => { if(tk.status==="未开始")tk.status="todo"; else if(tk.status==="进行中")tk.status="doing"; else if(tk.status==="已完成")tk.status="done"; });
     saveAll();
     applyI18n();
@@ -1661,7 +1787,10 @@ function init() {
     startHeaderClock();
 
     const rec = getTodayWork();
-    if (rec.currentStart) { startWorkLiveTimer(); enterZenMode('work'); }
+    if (rec.currentStart) {
+        startWorkLiveTimer();
+        enterZenMode();
+    }
     updateWorkUI();
     updateFocusTodayUI();
 
@@ -1672,7 +1801,7 @@ function init() {
     initAudioControls();
     document.getElementById("addTaskBtn").onclick = () => {
         const v=document.getElementById("newTaskInput").value.trim();
-        if(v){tasks.push({id:Date.now()+Math.random(),text:v,status:"todo",createdAt:new Date().toISOString(),focusSecs:0,isTimingActive:false});saveAll();renderTasks();updateStatsAndCalendar();document.getElementById("newTaskInput").value="";}
+        if(v){tasks.push({id:Date.now()+Math.random(),text:v,status:"todo",createdAt:new Date().toISOString(),focusSecs:0});saveAll();renderTasks();updateStatsAndCalendar();document.getElementById("newTaskInput").value="";}
     };
     document.getElementById("newTaskInput").addEventListener("keydown", e => { if(e.key==="Enter") document.getElementById("addTaskBtn").click(); });
     document.getElementById("viewMoodHistoryBtn").onclick = showMoodHistory;
