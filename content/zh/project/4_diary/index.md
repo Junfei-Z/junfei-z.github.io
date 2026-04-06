@@ -1,5 +1,5 @@
 ---
-title: "Daily Productivity Tracker"
+title: "每日效率追踪器"
 date: 2026-04-05
 external_link: https://junfei-z.github.io/diary/
 tags:
@@ -8,13 +8,13 @@ tags:
   - JavaScript
 ---
 
-A personal daily productivity and diary tracker with a beautiful, animated UI. Features include a unified work clock, task management, daily theme editing, and an immersive full-screen zen mode with time-aware scenes (sunrise, daytime clouds, sunset, starry night), celestial body animations, and procedurally generated ambient sounds (rain, wheat fields, summer frogs, fireplace).
+一款拥有精美动画界面的个人每日效率与日记追踪工具。功能包括统一工作计时器、任务管理、每日主题编辑，以及沉浸式全屏禅模式——具备随时间变化的场景（日出、白天云朵、日落、星空夜晚）、天体动画和程序化生成的环境音效（雨声、麦田、夏蛙、壁炉）。
 
 <!--more-->
 
-Key features:
-- **Zen Focus Mode**: Full-screen immersive environment with real-time clock, nature scenery that matches the actual time of day
-- **Ambient Sound Engine**: Four procedurally generated sounds using Web Audio API — no external audio files needed
-- **Task Management**: Create, track, and focus on individual tasks with dedicated focus mode
-- **Bilingual Support**: Chinese/English toggle with full i18n
-- **Data Persistence**: All data saved locally via localStorage
+主要功能：
+- **禅定专注模式**：全屏沉浸式环境，带有实时时钟和与实际时间同步的自然风景
+- **环境音效引擎**：使用 Web Audio API 程序化生成四种音效，无需外部音频文件
+- **任务管理**：创建、跟踪并专注于单个任务，提供专属专注模式
+- **双语支持**：中英文切换，完整 i18n 支持
+- **数据持久化**：所有数据通过 localStorage 本地保存

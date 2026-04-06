@@ -1,6 +1,6 @@
 ---
 title: Can Large Language Models Credibly Stand in for Humans in Game-Theoretic Experiments?
-summary: Evaluated LLM alignment with human behavior across strategic social games and proposed PRIME-Router to enhance role consistency and adaptability.
+summary: 评估了 LLM 在策略性社会博弈中与人类行为的一致性，并提出 PRIME-Router 以增强角色一致性和适应性。
 date: 2025-04-17
 type: docs
 tags:
@@ -10,46 +10,46 @@ tags:
   - Multi-Agent Systems
   - Behavioral AI
 image:
-  caption: 'Multi-agent LLM framework for simulating human behavior in games'
+  caption: '用于模拟博弈中人类行为的多智能体 LLM 框架'
 ---
 
-This work investigates the feasibility of using Large Language Models (LLMs) as **proxies for human participants** in behavioral game-theoretic experiments. We evaluated four LLMs—GPT-4o, Llama‑3.3‑70B‑Instruct, Llama‑3.3‑8B‑Instruct, and DeepSeek-R1 across **three canonical games**: the **Prisoner’s Dilemma**, the **Ultimatum Game**, and the **Public Goods Game**.
+本研究探讨了使用 Large Language Models (LLMs) 作为行为博弈论实验中**人类参与者代理**的可行性。我们评估了四个 LLM——GPT-4o、Llama-3.3-70B-Instruct、Llama-3.3-8B-Instruct 和 DeepSeek-R1，涵盖**三个经典博弈**：**Prisoner’s Dilemma**、**Ultimatum Game** 和 **Public Goods Game**。
 
-## Research Objectives
+## 研究目标
 
-- Evaluate **behavioral alignment**, **persona consistency**, and **strategic adaptability** of LLMs vs. human norms.
-- Design a **modular, multi-agent framework (PRIME-Router)** for improved consistency and adaptability.
-- Benchmark LLM behavior using **MBTI-based persona prompts**: Diplomat, Analyst, Sentinel, Explorer.
+- 评估 LLM 相对于人类规范的**行为一致性**、**角色一致性**和**策略适应性**。
+- 设计一个**模块化多智能体框架（PRIME-Router）**以提高一致性和适应性。
+- 使用**基于 MBTI 的角色提示**对 LLM 行为进行基准测试：Diplomat、Analyst、Sentinel、Explorer。
 
-## Core Contributions
+## 核心贡献
 
-### 1. Behavioral Assessment in Canonical Games
-LLMs were benchmarked against human behavior using three new metrics:
-- **BAM (Behavioral Alignment Measure)**: similarity to human action distributions
-- **PCI (Persona Consistency Index)**: adherence to prompted social roles
-- **ASP (Adaptive Strategic Profile)**: responsiveness to evolving game contexts
+### 1. 经典博弈中的行为评估
+使用三个新指标对 LLM 进行了与人类行为的对标：
+- **BAM (Behavioral Alignment Measure)**：与人类行为分布的相似度
+- **PCI (Persona Consistency Index)**：对提示的社会角色的遵循程度
+- **ASP (Adaptive Strategic Profile)**：对不断变化的博弈情境的响应能力
 
-Key findings:
-- Most LLMs showed **high initial BAM** but struggled with **adaptive consistency** in repeated games.
-- GPT-4o and LLaMA-3.3-70B demonstrated **excellent persona consistency** in one-shot games.
+主要发现：
+- 大多数 LLM 表现出**较高的初始 BAM**，但在重复博弈中的**适应性一致性**方面表现不佳。
+- GPT-4o 和 LLaMA-3.3-70B 在单次博弈中展现了**优秀的角色一致性**。
 
-### 2. PRIME-Router Framework
-To overcome adaptation and consistency limitations, we proposed **PRIME-Router**, a modular MoE-style architecture that:
-- Spawns **specialized subroles** (e.g., Empathy Enforcer, Strategic Planner)
-- Assigns the **most suitable LLM** to each subrole based on empirical performance
-- Aggregates multi-agent outputs via **collaboration patterns** (e.g., star, debate, chain)
+### 2. PRIME-Router 框架
+为克服适应性和一致性的局限，我们提出了 **PRIME-Router**，一种模块化 MoE 风格的架构：
+- 生成**专业化子角色**（例如 Empathy Enforcer、Strategic Planner）
+- 根据经验性能为每个子角色分配**最合适的 LLM**
+- 通过**协作模式**（例如 star、debate、chain）聚合多智能体输出
 
-PRIME-Router improves:
-- **PCI** by up to **0.23**
-- **ASP** by up to **0.32**
-across repeated games.
+PRIME-Router 的提升效果：
+- **PCI** 最高提升 **0.23**
+- **ASP** 最高提升 **0.32**
+（在重复博弈中）。
 
-### 3. Implications and Outlook
-- LLMs can **simulate human-like behavior credibly**, but **strategic depth** and **long-horizon persona fidelity** remain challenges.
-- PRIME-Router paves the way for **cost-effective AI agents** in **social science experimentation**, **policy modeling**, and **online platform simulation**.
+### 3. 启示与展望
+- LLM 能够**可信地模拟类人行为**，但**策略深度**和**长期角色保真度**仍是挑战。
+- PRIME-Router 为**社会科学实验**、**政策建模**和**在线平台模拟**中的**高性价比 AI 智能体**铺平了道路。
 
-## Conclusion
+## 结论
 
-Our study highlights the promise and limitations of LLMs in behavioral game simulations. Structured multi-agent design like PRIME-Router significantly enhances realism, offering a new paradigm for **AI-driven human modeling** in experimental social science.
+本研究揭示了 LLM 在行为博弈模拟中的潜力与局限。像 PRIME-Router 这样的结构化多智能体设计显著增强了真实性，为实验社会科学中的**AI 驱动人类建模**提供了新范式。
 
-📄 [AAAI 2026 Submission] — In Review
+[AAAI 2026 投稿] — 审稿中

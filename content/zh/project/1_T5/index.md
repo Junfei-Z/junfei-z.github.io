@@ -1,5 +1,5 @@
 ---
-title: "MPPI with Control Barrier Functions for F1/10: Robust Safety Under Real-World Uncertainty"
+title: "MPPI with Control Barrier Functions for F1/10：真实世界不确定性下的鲁棒安全控制"
 date: 2025-05-07
 external_link: https://github.com/vaithak/f1tenth_shield_mppi
 tags:
@@ -8,14 +8,14 @@ tags:
   - Autonomous Racing
 ---
 
-This project implements Shield-MPPI, a novel integration of Control Barrier Functions (CBFs) with Model Predictive Path Integral (MPPI) control, on the F1/10 autonomous racing platform to achieve robust, safe navigation under real-world uncertainty.
+本项目在 F1/10 自主赛车平台上实现了 Shield-MPPI，这是一种将 Control Barrier Functions (CBFs) 与 Model Predictive Path Integral (MPPI) 控制相结合的新方法，旨在实现真实世界不确定性条件下的鲁棒安全导航。
 
 <!--more-->
 
-Key contributions include:
-- **Safety Assurance**: Enforced via discrete-time CBFs ensuring forward invariance of a predefined safe set.
-- **Cost Augmentation and Control Filtering**: Augmented MPPI trajectory costs with CBF penalties and applied gradient-based filtering to guarantee real-time safety.
-- **Robustness Evaluation**: Assessed system under disturbances, noise, and model mismatch in simulated and physical racing environments.
-- **Computational Feasibility**: Validated Shield-MPPI’s real-time performance on resource-limited platforms.
+主要贡献包括：
+- **安全保障**：通过离散时间 CBFs 确保预定义安全集的前向不变性。
+- **代价增强与控制滤波**：在 MPPI 轨迹代价中加入 CBF 惩罚项，并应用基于梯度的滤波方法以保证实时安全性。
+- **鲁棒性评估**：在仿真和实际赛车环境中评估了系统在扰动、噪声和模型失配下的表现。
+- **计算可行性**：验证了 Shield-MPPI 在资源受限平台上的实时性能。
 
-The approach demonstrates significant improvement over baseline MPPI in terms of collision avoidance, track adherence, and robustness.
+该方法在碰撞避免、赛道跟踪和鲁棒性方面较基准 MPPI 有显著提升。

@@ -1,5 +1,5 @@
 ---
-title: "Undergraduate Thesis - Scheduling in Serverless Computing for Solar-Powered IoT Networks"
+title: "本科毕业论文 - Scheduling in Serverless Computing for Solar-Powered IoT Networks"
 date: 2024-04-30
 external_link: "https://junfei-z.github.io/undergraduate_thesis.pdf"
 tags:
@@ -9,6 +9,6 @@ tags:
   - Optimization
 ---
 
-This undergraduate thesis proposes a two-phase optimization framework for solar-powered IoT networks, focusing on dynamic task allocation and energy-aware function configuration. A MILP benchmark and a GMM-enhanced Receding Horizon Control algorithm were developed to improve efficiency and adapt to fluctuating energy and computation conditions.
+本科毕业论文提出了一种面向太阳能供电 IoT 网络的两阶段优化框架，重点研究动态任务分配和能量感知的函数配置。开发了 MILP 基准测试和基于 GMM 增强的 Receding Horizon Control 算法，以提升效率并适应波动的能量和计算条件。
 
 <!--more-->

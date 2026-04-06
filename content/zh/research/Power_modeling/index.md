@@ -1,6 +1,6 @@
 ---
 title: Stochastic Power Modeling and Constrained MDP Optimization for On-Device SLM Inference
-summary: Proposed a unified stochastic framework combining HSMM-based power modeling and constrained MDP optimization to enable sustainable deployment of small language models (SLMs) on edge devices.
+summary: 提出了一个统一的随机框架，结合基于 HSMM 的功耗建模和约束 MDP 优化，以实现 small language models (SLMs) 在边缘设备上的可持续部署。
 date: 2025-09-22
 type: docs
 tags:
@@ -10,47 +10,47 @@ tags:
   - Constrained MDP
   - Energy–Quality Trade-off
 image:
-  caption: 'Energy-aware SLM inference with HSMM-driven CMDP optimization'
+  caption: '基于 HSMM 驱动的 CMDP 优化的能耗感知 SLM 推理'
 ---
 
-📄 [ICASSP 2026 Submission] — In Review
+[ICASSP 2026 投稿] — 审稿中
 
-This research introduces a **stochastic and interpretable framework** for sustainable **on-device inference of small language models (SLMs)** under strict energy and hardware constraints. By capturing fine-grained CPU/GPU power dynamics and optimizing inference scheduling with constrained MDPs, the work provides a principled foundation for **adaptive, resource-aware AI at the edge**.
+本研究提出了一个**随机且可解释的框架**，用于在严格的能耗和硬件约束下实现 **small language models (SLMs)** 的可持续**设备端推理**。通过捕获细粒度的 CPU/GPU 功耗动态，并利用约束 MDP 优化推理调度，本工作为**边缘端自适应、资源感知的 AI** 提供了原则性基础。
 
-## Problem and Motivation
+## 问题与动机
 
-Running SLMs locally on smartphones, laptops, or IoT nodes promises **low-latency and privacy-preserving AI services**, but these devices face **finite battery budgets** and **strict power caps**. Traditional energy models fail to capture the stochastic, phase-wise CPU/GPU behaviors of SLM inference, making them unsuitable for **multi-task adaptive deployment**.
+在智能手机、笔记本电脑或 IoT 节点上本地运行 SLM 可提供**低延迟和隐私保护的 AI 服务**，但这些设备面临**有限的电池预算**和**严格的功率上限**。传统能耗模型无法捕获 SLM 推理中随机的、分阶段的 CPU/GPU 行为，使其不适用于**多任务自适应部署**。
 
-## Technical Contributions
+## 技术贡献
 
-### 1. HSMM-Based Energy Modeling
-- Conducted fine-grained power measurements of **Gemma2-2B** and **Qwen3-4B** on MT-Bench.
-- Modeled CPU and GPU traces separately with **Hidden Semi-Markov Models (HSMMs)**:
-  - GPU: ramp-up, plateau, decay phases.
-  - CPU: low-load and high-load bursts.
-- Achieved **higher fidelity than HMM and TCN baselines** in predicting power fluctuations.
+### 1. 基于 HSMM 的能耗建模
+- 对 **Gemma2-2B** 和 **Qwen3-4B** 在 MT-Bench 上进行了细粒度功耗测量。
+- 分别使用 **Hidden Semi-Markov Models (HSMMs)** 对 CPU 和 GPU 功耗轨迹建模：
+  - GPU：上升、平稳、衰减阶段。
+  - CPU：低负载和高负载突发。
+- 在预测功耗波动方面**优于 HMM 和 TCN 基线**。
 
-### 2. Constrained MDP Formulation
-- Defined a **CMDP** where each inference task selects an SLM configuration (model + quantization).
-- State: remaining energy budget.
-- Actions: candidate SLM setups.
-- Reward: **LLM-as-a-Judge quality scores**.
-- Constraints: **finite energy budget** and **instantaneous device-level power cap**.
+### 2. 约束 MDP 建模
+- 定义了一个 **CMDP**，其中每个推理任务选择一种 SLM 配置（模型 + 量化方案）。
+- 状态：剩余能量预算。
+- 动作：候选 SLM 配置。
+- 奖励：**LLM-as-a-Judge 质量评分**。
+- 约束：**有限能量预算**和**瞬时设备级功率上限**。
 
-### 3. Policy Optimization with Q-Learning
-- Constructed cost–reward pairs for six candidate actions.
-- Solved CMDP with tabular Q-learning:
-  - Improved average reward from **~9 to ~15** over 300 episodes.
-  - Maintained energy usage within **85–90% of budget**.
-  - Guaranteed no violation of power caps.
+### 3. 基于 Q-Learning 的策略优化
+- 为六个候选动作构建了成本-奖励对。
+- 使用表格式 Q-learning 求解 CMDP：
+  - 在 300 个回合中将平均奖励从 **约 9 提升至约 15**。
+  - 将能耗维持在**预算的 85–90%**。
+  - 保证不违反功率上限。
 
-## Results and Insights
+## 结果与洞察
 
-- HSMMs effectively capture **piecewise-stationary phases** in edge inference.
-- CMDP optimization reveals clear **energy–quality trade-offs**.
-- Learned policies significantly improve cumulative inference quality while **respecting real-world constraints**.
+- HSMM 有效捕获了边缘推理中的**分段平稳阶段**。
+- CMDP 优化揭示了清晰的**能耗-质量权衡**。
+- 学习到的策略在**遵守现实约束**的同时显著提升了累计推理质量。
 
-## Conclusion
+## 结论
 
-This study establishes the first **unified mathematical framework** linking SLM parameters, stochastic energy consumption, and inference quality. By integrating HSMM-based cost modeling with CMDP optimization, it enables **sustainable, adaptive deployment** of SLMs in edge and IoT environments, paving the way for future extensions with deep RL and collaborative multi-device scheduling.
+本研究建立了首个**统一数学框架**，将 SLM 参数、随机能耗和推理质量联系起来。通过将基于 HSMM 的成本建模与 CMDP 优化相结合，实现了 SLM 在边缘和 IoT 环境中的**可持续、自适应部署**，为未来基于 deep RL 和多设备协同调度的扩展奠定了基础。
 

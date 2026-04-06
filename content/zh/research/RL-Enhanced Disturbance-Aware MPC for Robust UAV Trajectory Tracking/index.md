@@ -1,6 +1,6 @@
 ---
 title: RL-Enhanced Disturbance-Aware MPC for Robust UAV Trajectory Tracking
-summary: Developed a hybrid control framework integrating reinforcement learning and sliding mode observer into MPC for disturbance-aware UAV tracking.
+summary: 开发了一种混合控制框架，将强化学习和滑模观测器集成到 MPC 中，实现扰动感知的 UAV 轨迹跟踪。
 date: 2025-05-07
 type: docs
 tags:
@@ -10,50 +10,50 @@ tags:
   - Disturbance Observer
   - Sliding Mode Control
 image:
-  caption: 'Robust trajectory tracking via RL-MPC and AST-SMO integration'
+  caption: '通过 RL-MPC 与 AST-SMO 集成实现鲁棒轨迹跟踪'
 ---
 <a href="https://junfei-z.github.io/uav_control.pdf" target="_blank">
   <img src="https://img.shields.io/badge/View%20Full%20Paper-PDF-red?logo=adobeacrobatreader&logoColor=white" alt="PDF">
 </a>
 
-📄[Accepted at IEEE SMC 2025] — To appear
+[已被 IEEE SMC 2025 录用] — 即将发表
 
-This research introduces **ROAM**, a novel RL-enhanced, disturbance-aware MPC framework for **precise UAV trajectory tracking** in uncertain and dynamic environments. The method combines the predictive strengths of MPC with the fast response of reinforcement learning (RL) and the robustness of an adaptive sliding mode observer (SMO).
+本研究提出了 **ROAM**，一种新颖的 RL 增强、扰动感知的 MPC 框架，用于不确定和动态环境中的**精确 UAV 轨迹跟踪**。该方法结合了 MPC 的预测优势、reinforcement learning (RL) 的快速响应能力以及自适应 sliding mode observer (SMO) 的鲁棒性。
 
-## Problem and Motivation
+## 问题与动机
 
-Traditional UAV controllers using MPC struggle under **model mismatch**, **wind disturbances**, and **computational delays**, resulting in residual tracking errors and slow convergence. This work addresses those challenges via two innovations:
-- An **offline-trained RL warm-start policy** to accelerate MPC convergence
-- An **Adaptive Super-Twisting Sliding Mode Observer (AST-SMO)** to estimate and reject real-time disturbances
+使用 MPC 的传统 UAV 控制器在**模型失配**、**风扰动**和**计算延迟**下表现不佳，导致残余跟踪误差和收敛缓慢。本工作通过两项创新解决这些挑战：
+- **离线训练的 RL 热启动策略**以加速 MPC 收敛
+- **Adaptive Super-Twisting Sliding Mode Observer (AST-SMO)** 以估计和抑制实时扰动
 
-## Technical Contributions
+## 技术贡献
 
-### 1. RL-Based Warm Start
-- A **direction-conditioned policy** is trained via imitation learning on expert MPC trajectories.
-- During real-time control, it provides **trajectory-consistent initial guesses** to the MPC solver, reducing early-stage tracking error by **16.9%** and computation time by **38.7%**.
+### 1. 基于 RL 的热启动
+- 通过在专家 MPC 轨迹上进行模仿学习，训练了一个**方向条件策略**。
+- 在实时控制中，它为 MPC 求解器提供**与轨迹一致的初始猜测**，将早期跟踪误差降低了 **16.9%**，计算时间减少了 **38.7%**。
 
-### 2. AST-SMO for Disturbance Estimation
-- The SMO estimates external disturbances in real time using a smooth hyperbolic function to avoid chattering.
-- An adaptive gain tuning mechanism adjusts sensitivity dynamically for better convergence.
+### 2. 用于扰动估计的 AST-SMO
+- SMO 使用平滑双曲函数实时估计外部扰动，以避免抖振。
+- 自适应增益调节机制动态调整灵敏度以实现更好的收敛。
 
-### 3. Disturbance-Aware MPC
-- MPC is reformulated to incorporate real-time estimates from AST-SMO:
+### 3. 扰动感知 MPC
+- MPC 被重新构建以纳入来自 AST-SMO 的实时估计：
   \[
   x_{k+1} = Ax_k + Bu_k + E(\hat{d}_k)
   \]
-- Objective: minimize both tracking error and control effort, while maintaining system constraints.
+- 目标：最小化跟踪误差和控制能耗，同时维持系统约束。
 
-## Simulation Results
+## 仿真结果
 
-- Evaluated on a 12-DOF quadrotor model under sinusoidal and noisy disturbances.
-- ROAM achieved:
-  - 16.9% improvement in early-stage tracking accuracy
-  - 38.7% reduction in computation time
-  - Superior trajectory adherence under heavy external disturbances compared to classical MPC
+- 在正弦和噪声扰动下的 12 自由度四旋翼模型上进行了评估。
+- ROAM 实现了：
+  - 早期跟踪精度提升 16.9%
+  - 计算时间减少 38.7%
+  - 在强外部扰动下相比经典 MPC 具有更优的轨迹跟随性能
 
-## Conclusion
+## 结论
 
-ROAM demonstrates that **deep integration of RL, observers, and MPC** yields a control system with faster convergence, better stability, and higher resilience. Its lightweight and modular design makes it highly suitable for **real-time deployment** on embedded UAV platforms.
+ROAM 表明，**RL、观测器与 MPC 的深度集成**可产生具有更快收敛速度、更好稳定性和更高韧性的控制系统。其轻量化和模块化设计使其非常适合在嵌入式 UAV 平台上进行**实时部署**。
 
 
 
