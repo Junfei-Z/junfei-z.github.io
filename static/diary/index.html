@@ -141,10 +141,10 @@
             border-radius: 0.5rem; overflow: hidden;
         }
         .timeline-phase-wrapper { position: relative; }
-        .timeline-phase-segment.phase-morning { background: #fafafa; border-color: var(--border); }
-        .timeline-phase-segment.phase-afternoon { background: #fafafa; border-color: var(--border); }
-        .timeline-phase-segment.phase-evening { background: #fafafa; border-color: var(--border); }
-        .timeline-phase-segment.phase-latenight { background: #f5f5f5; border-color: var(--border); }
+        .timeline-phase-segment.phase-morning { background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%); border-color: #fef08a; }
+        .timeline-phase-segment.phase-afternoon { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-color: #bfdbfe; }
+        .timeline-phase-segment.phase-evening { background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-color: #ddd6fe; }
+        .timeline-phase-segment.phase-latenight { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); border-color: #4338ca; }
         .timeline-phase-block {
             position: absolute; top: 3px; bottom: 3px; border-radius: 3px;
             min-width: 2px; transition: opacity 0.15s;
@@ -1238,14 +1238,22 @@ function renderFocusTimeline() {
         }
     });
 
-    // Build blocks from sessions
+    // Build blocks from sessions — use actual duration, clamp to today
     const blocks = [];
+    const nowDate = new Date();
+    const nowMin = nowDate.getHours() * 60 + nowDate.getMinutes();
+    const todayStart = new Date(nowDate); todayStart.setHours(0,0,0,0);
+    const todayEnd = new Date(todayStart); todayEnd.setDate(todayEnd.getDate() + 1);
+
     sessions.forEach((s, si) => {
         if (!s.startTs || !s.endTs) return;
-        const st = new Date(s.startTs), en = new Date(s.endTs);
+        // Clamp session to today's boundaries
+        const clampedStart = Math.max(s.startTs, todayStart.getTime());
+        const clampedEnd = Math.min(s.endTs, todayEnd.getTime());
+        if (clampedStart >= clampedEnd) return; // session not in today
+        const st = new Date(clampedStart), en = new Date(clampedEnd);
         const startMin = st.getHours() * 60 + st.getMinutes();
-        let endMin = en.getHours() * 60 + en.getMinutes();
-        if (endMin <= startMin) endMin += 1440;
+        const endMin = en.getHours() * 60 + en.getMinutes() || 1440; // midnight = 1440
         const owner = sessionOwners[si];
         if (owner) {
             blocks.push({ startMin, endMin, color: getTaskColor(owner.id), label: owner.text, type: 'task' });
@@ -1254,13 +1262,12 @@ function renderFocusTimeline() {
         }
     });
 
-    // Currently running session
+    // Currently running session — from start to right now
     if (rec && rec.currentStart) {
-        const st = new Date(rec.currentStart), now = new Date();
+        const clampedStart = Math.max(rec.currentStart, todayStart.getTime());
+        const st = new Date(clampedStart);
         const startMin = st.getHours() * 60 + st.getMinutes();
-        let endMin = now.getHours() * 60 + now.getMinutes();
-        if (endMin <= startMin) endMin += 1440;
-        blocks.push({ startMin, endMin, color: '#6b7280', label: t('generalWork'), type: 'general', active: true });
+        blocks.push({ startMin, endMin: nowMin, color: '#6b7280', label: t('generalWork'), type: 'general', active: true });
     }
 
     // Phase definitions for 4-segment layout
