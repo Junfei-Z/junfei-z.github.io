@@ -1,7 +1,7 @@
 ---
 title: "Seeing is Free, Speaking is Not: Uncovering the True Energy Bottleneck in Edge VLM Inference"
 summary: Conducted the first systematic energy profiling of on-device VLM inference, revealing that autoregressive decoding—not visual token processing—dominates energy consumption (86–97%), overturning conventional assumptions about visual token reduction as the primary efficiency strategy.
-date: 2025-06-01
+date: 2026-03-27
 type: docs
 tags:
   - Vision-Language Models
