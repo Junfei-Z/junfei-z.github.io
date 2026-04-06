@@ -133,6 +133,30 @@
         }
         .task-completed span.task-text { text-decoration: line-through; color: var(--text-tertiary); }
 
+        /* 24h Task Timeline */
+        .timeline-24h { position: relative; height: 36px; background: var(--surface); border: 1px solid var(--border); border-radius: 0.5rem; overflow: hidden; }
+        .timeline-24h-block {
+            position: absolute; top: 2px; bottom: 2px; border-radius: 3px;
+            min-width: 2px; cursor: default; transition: opacity 0.15s;
+        }
+        .timeline-24h-block:hover { opacity: 0.85; }
+        .timeline-24h-ticks { position: absolute; inset: 0; pointer-events: none; }
+        .timeline-24h-tick {
+            position: absolute; top: 0; bottom: 0; width: 1px;
+            background: var(--border); opacity: 0.5;
+        }
+        .timeline-24h-label {
+            position: absolute; bottom: -16px; font-size: 0.5625rem;
+            color: var(--text-tertiary); transform: translateX(-50%);
+        }
+        .timeline-24h-now {
+            position: absolute; top: 0; bottom: 0; width: 2px;
+            background: #ef4444; z-index: 2; border-radius: 1px;
+        }
+        .timeline-legend { display: flex; flex-wrap: wrap; gap: 0.625rem; margin-top: 1.25rem; }
+        .timeline-legend-item { display: flex; align-items: center; gap: 0.25rem; font-size: 0.6875rem; color: var(--text-secondary); }
+        .timeline-legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
         /* Session picker dropdown */
         .session-picker {
             background: white; border: 1px solid var(--border); border-radius: 0.5rem;
@@ -659,10 +683,10 @@
                 <ul id="taskList" class="space-y-2 max-h-[340px] overflow-y-auto pr-1"></ul>
 
                 <div class="mt-3 bg-indigo-50/60 rounded-lg p-3 flex justify-between items-center border border-indigo-100/50">
-                    <span class="text-xs font-medium text-indigo-600"><i class="fas fa-brain mr-1"></i><span data-i18n="todayFocus"></span></span>
+                    <span class="text-xs font-medium text-indigo-600"><i class="fas fa-check-double mr-1"></i><span data-i18n="todayFocus"></span></span>
                     <div>
                         <span class="text-lg font-bold timer-display text-indigo-600" id="focusTotalToday">0</span>
-                        <span class="text-xs text-indigo-400 ml-0.5" data-i18n="minUnit"></span>
+                        <span class="text-xs text-indigo-400 ml-0.5" data-i18n="todayDoneUnit"></span>
                     </div>
                 </div>
 
@@ -675,7 +699,7 @@
                             <i class="fas fa-eraser mr-1"></i><span data-i18n="clear"></span>
                         </button>
                     </div>
-                    <div id="focusTimelineList" class="max-h-40 overflow-y-auto space-y-1.5"></div>
+                    <div id="focusTimelineList" class="pb-4"></div>
                 </div>
             </section>
 
@@ -810,11 +834,12 @@
 // ======================== I18N ========================
 const I18N = {
     zh: {
-        mood: "心情", diary: "日记", workClock: "今日工作", morning: "上午", afternoon: "下午",
-        clockIn: "开始工作", clockOut: "结束工作",
+        mood: "心情", diary: "日记", workClock: "今日专注", morning: "上午", afternoon: "下午",
+        clockIn: "开始专注", clockOut: "结束专注",
         todayTotal: "今日合计", minUnit: "分钟", tasksFocus: "任务列表",
         history: "历史", addTaskPlaceholder: "添加新任务...", add: "添加",
-        todayFocus: "今日专注", focusTimeline: "专注时间轴", clear: "清空",
+        todayFocus: "今日完成", focusTimeline: "任务时间轴", clear: "清空",
+        todayDoneUnit: "件任务",
         notes: "笔记 & 反思", notesPlaceholder: "记录灵感、科研心得、每日感悟...",
         autoSaved: "自动保存", calendar: "日历", calendarHint: "高亮 = 有记录",
         dashboard: "数据看板", week: "本周", month: "本月", year: "本年",
@@ -836,7 +861,7 @@ const I18N = {
         minWorked: "分钟工作", minFocused: "分钟专注",
         chartTasks: "完成任务数", chartFocus: "专注时长(分钟)", chartWorkdays: "打卡天数",
         defaultTheme: "今日科研冲锋",
-        workReady: "准备就绪，随时开始", workingNow: "正在工作",
+        workReady: "准备就绪，随时开始", workingNow: "正在专注",
         sessionLog: "今日打卡记录", noSessions: "暂无打卡记录",
         session: "第{n}段", sessionTime: "{start} → {end}",
         quotes: ["慢慢来，会很快。","今天又是突破边界的一天。","科研如登山，步步风景。","保持好奇，心向璀璨。","一杯咖啡，一篇好文。","灵感来自持续思考。","行动是治愈焦虑的良药。","每一个小进步都值得庆祝。"],
@@ -847,7 +872,7 @@ const I18N = {
         exitZen: "退出专注",
         focusBtn: "专注", unfocusBtn: "取消专注",
         focusingOn: "正在专注：",
-        startWorkFirst: "请先开始工作",
+        startWorkFirst: "请先开始专注",
         generalWork: "通用工作时间",
         streak: "连续 {n} 天",
         flashNotes: "闪念",
@@ -862,11 +887,12 @@ const I18N = {
         phaseChanging: "时段即将切换，自动结束工作",
     },
     en: {
-        mood: "Mood", diary: "Diary", workClock: "Today's Work", morning: "Morning", afternoon: "Afternoon",
-        clockIn: "Start Work", clockOut: "End Work",
+        mood: "Mood", diary: "Diary", workClock: "Today's Focus", morning: "Morning", afternoon: "Afternoon",
+        clockIn: "Start Focus", clockOut: "End Focus",
         todayTotal: "Today Total", minUnit: "min", tasksFocus: "Tasks",
         history: "History", addTaskPlaceholder: "Add a new task...", add: "Add",
-        todayFocus: "Today's Focus", focusTimeline: "Focus Timeline", clear: "Clear",
+        todayFocus: "Completed Today", focusTimeline: "Task Timeline", clear: "Clear",
+        todayDoneUnit: "tasks",
         notes: "Notes & Reflections", notesPlaceholder: "Capture thoughts, research insights, reflections...",
         autoSaved: "Auto-saved", calendar: "Calendar", calendarHint: "Highlighted = has records",
         dashboard: "Dashboard", week: "Week", month: "Month", year: "Year",
@@ -889,7 +915,7 @@ const I18N = {
         minWorked: "min worked", minFocused: "min focused",
         chartTasks: "Tasks Completed", chartFocus: "Focus (min)", chartWorkdays: "Work Days",
         defaultTheme: "Today's Focus",
-        workReady: "Ready to go", workingNow: "Working now",
+        workReady: "Ready to go", workingNow: "Focusing",
         sessionLog: "Today's sessions", noSessions: "No sessions yet",
         session: "Session {n}", sessionTime: "{start} → {end}",
         quotes: ["Slow and steady wins the race.","Another day of pushing boundaries.","Research is like climbing — every step reveals a new view.","Stay curious, stay brilliant.","A cup of coffee, a great paper.","Inspiration comes from persistent thinking.","Action is the antidote to anxiety.","Every small step forward counts."],
@@ -900,7 +926,7 @@ const I18N = {
         exitZen: "Exit Focus",
         focusBtn: "Focus", unfocusBtn: "Unfocus",
         focusingOn: "Focusing on:",
-        startWorkFirst: "Start work first",
+        startWorkFirst: "Start focus first",
         generalWork: "General work time",
         streak: "{n} day streak",
         flashNotes: "Quick Notes",
@@ -1149,18 +1175,116 @@ function addTimelineRecord(taskId, taskName, startDT, endDT, durSec) {
     focusTimeline.push({ id: Date.now()+Math.random(), taskId, taskName, startTime: startDT, endTime: endDT, durationSec: durSec, dateStr: getTodayStr() });
     saveAll(); renderFocusTimeline();
 }
-function updateFocusTodayUI() { document.getElementById("focusTotalToday").innerText = focusMap.get(getTodayStr()) || 0; }
+function updateFocusTodayUI() {
+    const today = getTodayStr();
+    const doneCount = tasks.filter(tk => tk.status === 'done' && tk.completedDate === today).length;
+    document.getElementById("focusTotalToday").innerText = doneCount;
+}
+
+const TASK_COLORS = ['#6366f1','#f59e0b','#10b981','#ef4444','#8b5cf6','#ec4899','#14b8a6','#f97316','#06b6d4','#84cc16'];
+function getTaskColor(taskId) {
+    const idx = tasks.findIndex(tk => tk.id === taskId);
+    return TASK_COLORS[idx >= 0 ? idx % TASK_COLORS.length : 0];
+}
 
 function renderFocusTimeline() {
     const c = document.getElementById("focusTimelineList"); if (!c) return;
-    const recs = focusTimeline.filter(r => r.dateStr === getTodayStr()).sort((a,b) => (a.startTime||'').localeCompare(b.startTime||''));
-    if (!recs.length) { c.innerHTML = `<div class="text-center text-zinc-300 py-3 text-xs">${t('noFocusYet')}</div>`; return; }
-    c.innerHTML = recs.map((r,i) => `
-        <div class="timeline-entry flex justify-between items-center text-xs" style="animation-delay:${i*0.05}s">
-            <div class="font-medium text-zinc-600 flex-1"><i class="fas fa-brain text-indigo-400 mr-1"></i>${r.taskName}</div>
-            <div class="text-zinc-400 mx-2 timer-display">${r.startTime?.split(' ')[1]||'--'} → ${r.endTime?.split(' ')[1]||'--'}</div>
-            <div class="badge bg-indigo-50 text-indigo-500 timer-display">${Math.floor(r.durationSec/60)}m ${r.durationSec%60}s</div>
-        </div>`).join('');
+    const today = getTodayStr();
+
+    // Collect all work sessions and focus timeline records
+    const rec = workMap.get(today);
+    const sessions = (rec && rec.sessions) ? rec.sessions : [];
+    const focusRecs = focusTimeline.filter(r => r.dateStr === today);
+
+    // Build blocks: work sessions as general, focus records overlaid
+    const blocks = [];
+    const MINUTES_IN_DAY = 1440;
+
+    // Add work sessions as "general" blocks
+    sessions.forEach(s => {
+        if (!s.startTs || !s.endTs) return;
+        const st = new Date(s.startTs), en = new Date(s.endTs);
+        const startMin = st.getHours() * 60 + st.getMinutes();
+        const endMin = en.getHours() * 60 + en.getMinutes();
+        blocks.push({ startMin, endMin: endMin > startMin ? endMin : endMin + MINUTES_IN_DAY, color: '#d4d4d8', label: t('generalWork'), type: 'general' });
+    });
+
+    // Add focus records as task-specific blocks (overlay on top)
+    focusRecs.forEach(r => {
+        if (!r.startTime || !r.endTime) return;
+        // Parse time from "2026/4/6 14:32:00" format
+        const stParts = r.startTime.match(/(\d+):(\d+)/);
+        const enParts = r.endTime.match(/(\d+):(\d+)/);
+        if (!stParts || !enParts) return;
+        const startMin = parseInt(stParts[1]) * 60 + parseInt(stParts[2]);
+        const endMin = parseInt(enParts[1]) * 60 + parseInt(enParts[2]);
+        blocks.push({ startMin, endMin: endMin > startMin ? endMin : endMin + MINUTES_IN_DAY, color: getTaskColor(r.taskId), label: r.taskName, type: 'task', taskId: r.taskId });
+    });
+
+    // Also add currently running session
+    if (rec && rec.currentStart) {
+        const st = new Date(rec.currentStart);
+        const now = new Date();
+        const startMin = st.getHours() * 60 + st.getMinutes();
+        const endMin = now.getHours() * 60 + now.getMinutes();
+        blocks.push({ startMin, endMin: endMin > startMin ? endMin : endMin + MINUTES_IN_DAY, color: '#d4d4d8', label: t('generalWork'), type: 'general', active: true });
+
+        // If focusing on a task, overlay that
+        const focusTask = getActiveFocusTask();
+        if (focusTask && activeFocusStartTs) {
+            const fst = new Date(activeFocusStartTs);
+            const fStartMin = fst.getHours() * 60 + fst.getMinutes();
+            blocks.push({ startMin: fStartMin, endMin, color: getTaskColor(focusTask.id), label: focusTask.text, type: 'task', active: true });
+        }
+    }
+
+    if (blocks.length === 0) {
+        c.innerHTML = `<div class="text-center text-zinc-300 py-3 text-xs">${t('noFocusYet')}</div>`;
+        return;
+    }
+
+    // Render 24h bar
+    const tickHours = [0, 3, 6, 9, 12, 15, 18, 21];
+    let ticksHtml = tickHours.map(h => {
+        const pct = (h / 24) * 100;
+        return `<div class="timeline-24h-tick" style="left:${pct}%"></div><div class="timeline-24h-label" style="left:${pct}%">${String(h).padStart(2,'0')}</div>`;
+    }).join('');
+
+    // Current time indicator
+    const nowDate = new Date();
+    const nowMin = nowDate.getHours() * 60 + nowDate.getMinutes();
+    const nowPct = (nowMin / MINUTES_IN_DAY) * 100;
+    ticksHtml += `<div class="timeline-24h-now" style="left:${nowPct}%"></div>`;
+
+    // Sort: general first, then task blocks on top
+    const sortedBlocks = blocks.sort((a, b) => a.type === 'general' ? -1 : 1);
+    const blocksHtml = sortedBlocks.map(b => {
+        const leftPct = (Math.min(b.startMin, MINUTES_IN_DAY) / MINUTES_IN_DAY) * 100;
+        const widthPct = (Math.min(b.endMin - b.startMin, MINUTES_IN_DAY) / MINUTES_IN_DAY) * 100;
+        const opacity = b.type === 'general' ? '0.4' : '0.85';
+        const zIndex = b.type === 'general' ? '0' : '1';
+        const pulse = b.active ? 'animation:focusPulse 2s infinite;' : '';
+        return `<div class="timeline-24h-block" style="left:${leftPct}%;width:${widthPct}%;background:${b.color};opacity:${opacity};z-index:${zIndex};${pulse}" title="${b.label}"></div>`;
+    }).join('');
+
+    // Legend: unique task names
+    const seen = new Set();
+    const legendItems = [];
+    blocks.filter(b => b.type === 'task').forEach(b => {
+        const key = b.label;
+        if (!seen.has(key)) {
+            seen.add(key);
+            legendItems.push(`<div class="timeline-legend-item"><div class="timeline-legend-dot" style="background:${b.color}"></div>${b.label}</div>`);
+        }
+    });
+    if (blocks.some(b => b.type === 'general')) {
+        legendItems.unshift(`<div class="timeline-legend-item"><div class="timeline-legend-dot" style="background:#d4d4d8"></div>${t('generalWork')}</div>`);
+    }
+
+    c.innerHTML = `
+        <div class="timeline-24h">${ticksHtml}${blocksHtml}</div>
+        ${legendItems.length ? `<div class="timeline-legend">${legendItems.join('')}</div>` : ''}
+    `;
 }
 
 // Called every second by the work live timer
@@ -2233,9 +2357,9 @@ function renderDayPhases() {
         const locked = !isActive && !worked;
         let statusHtml;
         if (isActive && !isWorking && !worked) {
-            statusHtml = `<div class="phase-status" style="color:var(--accent)"><i class="fas fa-play text-[0.5rem] mr-0.5"></i>${currentLang === 'zh' ? '点击开工' : 'Click to start'}</div>`;
+            statusHtml = `<div class="phase-status" style="color:var(--accent)"><i class="fas fa-play text-[0.5rem] mr-0.5"></i>${currentLang === 'zh' ? '点击专注' : 'Click to focus'}</div>`;
         } else if (isActive && isWorking) {
-            statusHtml = `<div class="phase-status" style="color:var(--accent)"><i class="fas fa-circle text-[0.4rem] mr-0.5 animate-pulse"></i>${currentLang === 'zh' ? '进行中' : 'Working'}</div>`;
+            statusHtml = `<div class="phase-status" style="color:var(--accent)"><i class="fas fa-circle text-[0.4rem] mr-0.5 animate-pulse"></i>${currentLang === 'zh' ? '专注中' : 'Focusing'}</div>`;
         } else if (worked) {
             statusHtml = `<div class="phase-status worked"><i class="fas fa-check-circle text-[0.5rem] mr-0.5"></i>${t('phaseWorked').replace('{n}', mins)}</div>`;
         } else {
