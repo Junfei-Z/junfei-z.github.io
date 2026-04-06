@@ -399,9 +399,70 @@
             text-transform: uppercase; min-width: 32px; text-align: center;
         }
 
+        /* === Streak Badge === */
+        .streak-badge {
+            display: inline-flex; align-items: center; gap: 0.35rem;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 1px solid #fcd34d; border-radius: 9999px;
+            padding: 0.2rem 0.625rem; font-size: 0.75rem; font-weight: 600;
+            color: #92400e; white-space: nowrap;
+        }
+
+        /* === Flash Notes === */
+        .flash-note-item {
+            display: flex; align-items: flex-start; gap: 0.5rem;
+            padding: 0.5rem 0.625rem; background: var(--surface-secondary);
+            border: 1px solid var(--border); border-radius: 0.5rem;
+            animation: fadeInUp 0.3s ease both;
+        }
+        .flash-note-item:hover { border-color: var(--border-strong); }
+        .flash-note-item .flash-time {
+            font-size: 0.6875rem; color: var(--text-tertiary);
+            font-variant-numeric: tabular-nums; flex-shrink: 0; padding-top: 0.1rem;
+        }
+        .flash-note-item .flash-text {
+            flex: 1; font-size: 0.8125rem; color: var(--text-primary); line-height: 1.5;
+            word-break: break-word;
+        }
+        .flash-note-item .flash-del {
+            flex-shrink: 0; width: 20px; height: 20px; border-radius: 0.25rem;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-tertiary); cursor: pointer; transition: all 0.15s ease;
+            font-size: 0.6rem; opacity: 0; padding-top: 0.1rem;
+        }
+        .flash-note-item:hover .flash-del { opacity: 1; }
+        .flash-note-item .flash-del:hover { color: #ef4444; background: #fef2f2; }
+
+        /* === Day Phases === */
+        .phase-bar {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;
+        }
+        .phase-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 0.625rem; padding: 0.5rem 0.625rem;
+            text-align: center; transition: all 0.2s ease;
+        }
+        .phase-card.phase-active {
+            border-color: var(--accent-light); box-shadow: 0 0 0 2px rgba(99,102,241,0.08);
+            cursor: pointer;
+        }
+        .phase-card.phase-active:hover {
+            background: rgba(99,102,241,0.06); transform: translateY(-1px);
+        }
+        .phase-card.phase-locked {
+            opacity: 0.45;
+        }
+        .phase-card .phase-icon { font-size: 1.125rem; line-height: 1; }
+        .phase-card .phase-name { font-size: 0.625rem; font-weight: 600; color: var(--text-secondary); margin-top: 0.25rem; }
+        .phase-card .phase-range { font-size: 0.5625rem; color: var(--text-tertiary); }
+        .phase-card .phase-status { margin-top: 0.25rem; font-size: 0.625rem; font-weight: 600; }
+        .phase-card .phase-status.worked { color: #059669; }
+        .phase-card .phase-status.idle { color: var(--text-tertiary); }
+
         @media (max-width: 768px) {
             .work-timer-big { font-size: 1.75rem; } .header-clock { font-size: 1.125rem; }
             .zen-audio { left: 50%; transform: translateX(-50%); bottom: 7rem; }
+            .phase-bar { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -465,7 +526,10 @@
                             <input type="text" id="dailyThemeInput" class="text-base font-semibold bg-transparent outline-none w-full text-zinc-800 placeholder-zinc-300 border-b border-transparent hover:border-zinc-200 focus:border-indigo-400 transition-colors" value="">
                             <i class="fas fa-pen text-[0.5rem] text-zinc-300 group-hover:text-indigo-400 transition-colors flex-shrink-0"></i>
                         </div>
-                        <div class="text-xs text-zinc-400 mt-0.5" id="dateDisplay"></div>
+                        <div class="flex items-center gap-2 mt-0.5">
+                            <div class="text-xs text-zinc-400" id="dateDisplay"></div>
+                            <span id="streakBadge" class="streak-badge" style="display:none;"></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -533,6 +597,15 @@
                     </div>
                 </div>
 
+                <!-- Day Phases -->
+                <div class="mb-4">
+                    <div class="text-xs font-semibold text-zinc-500 uppercase tracking-wide flex items-center gap-1.5 mb-2">
+                        <i class="fas fa-sun text-amber-400"></i>
+                        <span data-i18n="dayPhases"></span>
+                    </div>
+                    <div id="dayPhasesBar" class="phase-bar"></div>
+                </div>
+
                 <!-- Task list (unified into the same section) -->
                 <div class="flex flex-wrap justify-between items-center mb-3">
                     <div class="text-xs font-semibold text-zinc-500 uppercase tracking-wide flex items-center gap-1.5">
@@ -572,15 +645,28 @@
                 </div>
             </section>
 
-            <!-- Notes -->
+            <!-- Flash Notes -->
             <section class="card p-5 animate-fadein-up stagger-2">
-                <div class="section-title mb-3">
-                    <i class="fas fa-pen-nib text-indigo-400"></i>
-                    <span data-i18n="notes"></span>
+                <div class="flex justify-between items-center mb-3">
+                    <div class="section-title">
+                        <i class="fas fa-bolt text-amber-400"></i>
+                        <span data-i18n="flashNotes"></span>
+                    </div>
+                    <button id="flashHistoryBtn" class="btn-ghost px-2 py-1 text-xs">
+                        <i class="fas fa-archive mr-1"></i><span data-i18n="flashHistory"></span>
+                    </button>
                 </div>
-                <textarea id="inspirationText" rows="3" class="input-field resize-none" data-i18n-placeholder="notesPlaceholder"></textarea>
-                <p class="text-right text-[0.6875rem] text-zinc-300 mt-1" data-i18n="autoSaved"></p>
+                <div class="flex gap-2 mb-2">
+                    <input type="text" id="flashNoteInput" class="input-field flex-1" data-i18n-placeholder="flashPlaceholder">
+                    <button id="flashNoteAddBtn" class="btn-primary px-4 py-2 text-sm">
+                        <i class="fas fa-paper-plane text-xs"></i>
+                    </button>
+                </div>
+                <p class="text-[0.6875rem] text-zinc-300 mb-2" data-i18n="flashHint"></p>
+                <div id="flashNotesList" class="space-y-1.5 max-h-[260px] overflow-y-auto"></div>
             </section>
+            <!-- Hidden textarea for backwards compat -->
+            <textarea id="inspirationText" class="hidden"></textarea>
         </div>
 
         <!-- Right Column -->
@@ -673,6 +759,18 @@
             <div id="taskHistoryContent" class="max-h-96 overflow-auto"></div>
         </div>
     </div>
+    <div id="flashHistoryModal" class="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 hidden modal-backdrop">
+        <div class="bg-white rounded-xl max-w-lg w-full p-5 m-4 max-h-[80vh] overflow-auto shadow-lg modal-content border border-zinc-200">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-sm font-semibold text-zinc-700 flex items-center gap-2">
+                    <i class="fas fa-archive text-amber-400"></i>
+                    <span data-i18n="flashHistory"></span>
+                </h3>
+                <button id="closeFlashModal" class="w-7 h-7 rounded-md bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center text-zinc-400 transition text-sm">&times;</button>
+            </div>
+            <div id="flashHistoryContent" class="space-y-3"></div>
+        </div>
+    </div>
 
 <script>
 // ======================== I18N ========================
@@ -717,6 +815,15 @@ const I18N = {
         focusingOn: "正在专注：",
         startWorkFirst: "请先开始工作",
         generalWork: "通用工作时间",
+        streak: "连续 {n} 天",
+        flashNotes: "闪念",
+        flashPlaceholder: "记录瞬间的想法...",
+        flashHint: "随时记录奇思妙想~",
+        noFlashNotes: "暂无闪念记录",
+        flashHistory: "闪念归档",
+        dayPhases: "今日时段",
+        phaseMorning: "早起卷王", phaseAfternoon: "午后续命", phaseEvening: "挑灯夜战", phaseLateNight: "修仙时刻",
+        phaseWorked: "{n}分钟", phaseIdle: "—",
     },
     en: {
         mood: "Mood", diary: "Diary", workClock: "Today's Work", morning: "Morning", afternoon: "Afternoon",
@@ -759,6 +866,15 @@ const I18N = {
         focusingOn: "Focusing on:",
         startWorkFirst: "Start work first",
         generalWork: "General work time",
+        streak: "{n} day streak",
+        flashNotes: "Quick Notes",
+        flashPlaceholder: "Capture a thought...",
+        flashHint: "Jot down ideas anytime",
+        noFlashNotes: "No notes yet",
+        flashHistory: "Notes Archive",
+        dayPhases: "Day Phases",
+        phaseMorning: "Early Grinder", phaseAfternoon: "Afternoon Recharge", phaseEvening: "Night Owl", phaseLateNight: "Ascension Mode",
+        phaseWorked: "{n} min", phaseIdle: "—",
     }
 };
 let currentLang = localStorage.getItem('diary_lang') || 'zh';
@@ -772,6 +888,7 @@ function applyI18n() {
     updateDateDisplay();
     updateWorkUI();
     renderTasks(); renderFocusTimeline(); renderCalendar(); updateLineChart();
+    updateStreakDisplay(); renderFlashNotes(); renderDayPhases();
 }
 
 function toggleLang() {
@@ -797,9 +914,11 @@ const STORAGE = {
     dailyFocus: SP+"focus_records", dailyTheme: SP+"theme",
     focusTimeline: SP+"focus_timeline_v7", completedTasksHistory: SP+"completed_history_v7",
     activeFocusTaskId: SP+"active_focus_task_id",
-    activeFocusStartTs: SP+"active_focus_start_ts"
+    activeFocusStartTs: SP+"active_focus_start_ts",
+    flashNotes: SP+"flash_notes"
 };
 let tasks=[], workMap=new Map(), moodEntries=[], inspirationMap=new Map(), focusMap=new Map(), focusTimeline=[], completedHistory=[];
+let flashNotes = [];
 
 // Active focus state: which task is currently focused while the global work timer runs
 let activeFocusTaskId = null;
@@ -819,6 +938,7 @@ function saveAll() {
     localStorage.setItem(STORAGE.dailyTheme, document.getElementById("dailyThemeInput").value);
     localStorage.setItem(STORAGE.focusTimeline, JSON.stringify(focusTimeline));
     localStorage.setItem(STORAGE.completedTasksHistory, JSON.stringify(completedHistory));
+    localStorage.setItem(STORAGE.flashNotes, JSON.stringify(flashNotes));
     // Persist active focus state
     if (activeFocusTaskId !== null) {
         localStorage.setItem(STORAGE.activeFocusTaskId, activeFocusTaskId);
@@ -836,6 +956,7 @@ function loadAll() {
     const foc=localStorage.getItem(STORAGE.dailyFocus); focusMap=foc?new Map(JSON.parse(foc)):new Map();
     const tl=localStorage.getItem(STORAGE.focusTimeline); focusTimeline=tl?JSON.parse(tl):[];
     const ch=localStorage.getItem(STORAGE.completedTasksHistory); completedHistory=ch?JSON.parse(ch):[];
+    const fn=localStorage.getItem(STORAGE.flashNotes); flashNotes=fn?JSON.parse(fn):[];
     document.getElementById("dailyThemeInput").value = localStorage.getItem(STORAGE.dailyTheme) || t('defaultTheme');
     // Restore active focus state
     const storedFocusId = localStorage.getItem(STORAGE.activeFocusTaskId);
@@ -879,9 +1000,11 @@ function workStartClick() {
     const rec = getTodayWork();
     if (rec.currentStart) return;
     rec.currentStart = Date.now();
+    rec.currentPhase = getCurrentPhaseKey();
     saveAll();
     startWorkLiveTimer();
     updateWorkUI();
+    renderDayPhases();
     enterZenMode();
 }
 
@@ -1233,7 +1356,7 @@ function updateLineChart() {
     document.getElementById("statFocusCount").innerText = getMetricData(currentPeriod,"focus").reduce((a,b)=>a+b,0);
     document.getElementById("statWorkDaysCount").innerText = getMetricData(currentPeriod,"workdays").reduce((a,b)=>a+b,0);
 }
-function updateStatsAndCalendar(p=currentPeriod) { currentPeriod=p; updateLineChart(); renderCalendar(); }
+function updateStatsAndCalendar(p=currentPeriod) { currentPeriod=p; updateLineChart(); renderCalendar(); updateStreakDisplay(); renderDayPhases(); }
 
 // ======================== MODALS ========================
 function showTaskHistory() {
@@ -1251,12 +1374,12 @@ function showMoodHistory() {
 
 // ======================== EXPORT/IMPORT ========================
 function exportData() {
-    const d={tasks,workMap:[...workMap.entries()],moodEntries,inspirationMap:[...inspirationMap.entries()],focusMap:[...focusMap.entries()],focusTimeline,completedHistory};
+    const d={tasks,workMap:[...workMap.entries()],moodEntries,inspirationMap:[...inspirationMap.entries()],focusMap:[...focusMap.entries()],focusTimeline,completedHistory,flashNotes};
     const b=new Blob([JSON.stringify(d,null,2)],{type:"application/json"});
     const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download=`diary_backup_${getTodayStr()}.json`; a.click();
 }
 function importData(f) {
-    const r=new FileReader(); r.onload=e=>{const d=JSON.parse(e.target.result);tasks=d.tasks||[];workMap=new Map(d.workMap||[]);moodEntries=d.moodEntries||[];inspirationMap=new Map(d.inspirationMap||[]);focusMap=new Map(d.focusMap||[]);focusTimeline=d.focusTimeline||[];completedHistory=d.completedHistory||[];saveAll();location.reload();}; if(f) r.readAsText(f);
+    const r=new FileReader(); r.onload=e=>{const d=JSON.parse(e.target.result);tasks=d.tasks||[];workMap=new Map(d.workMap||[]);moodEntries=d.moodEntries||[];inspirationMap=new Map(d.inspirationMap||[]);focusMap=new Map(d.focusMap||[]);focusTimeline=d.focusTimeline||[];completedHistory=d.completedHistory||[];flashNotes=d.flashNotes||[];saveAll();location.reload();}; if(f) r.readAsText(f);
 }
 
 // ======================== AMBIENT SOUND ENGINE ========================
@@ -1769,6 +1892,199 @@ function exitZenMode() {
     stopAllSounds();
 }
 
+// ======================== STREAK ========================
+function calculateStreak() {
+    let streak = 0;
+    const today = new Date();
+    const todayStr = getTodayStr();
+    const todayHasWork = workMap.has(todayStr) && (workMap.get(todayStr).totalMinutes > 0 || workMap.get(todayStr).currentStart);
+    let checkDate = new Date(today);
+    if (!todayHasWork) {
+        checkDate.setDate(checkDate.getDate() - 1);
+    }
+    while (true) {
+        const ds = toLocalDateStr(checkDate);
+        const rec = workMap.get(ds);
+        if (rec && rec.totalMinutes > 0) {
+            streak++;
+            checkDate.setDate(checkDate.getDate() - 1);
+        } else {
+            break;
+        }
+    }
+    if (todayHasWork && streak === 0) streak = 0; // currentStart but no totalMinutes yet counts visually
+    return streak;
+}
+
+function updateStreakDisplay() {
+    const badge = document.getElementById('streakBadge');
+    const streak = calculateStreak();
+    if (streak > 0) {
+        badge.style.display = 'inline-flex';
+        badge.textContent = '\uD83D\uDD25 ' + t('streak').replace('{n}', streak);
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+// ======================== FLASH NOTES ========================
+function addFlashNote() {
+    const input = document.getElementById('flashNoteInput');
+    const text = input.value.trim();
+    if (!text) return;
+    const now = new Date();
+    const note = {
+        id: Date.now() + Math.random(),
+        text: text,
+        dateStr: getTodayStr(),
+        time: now.toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'}),
+        createdAt: now.toISOString()
+    };
+    flashNotes.push(note);
+    saveAll();
+    input.value = '';
+    renderFlashNotes();
+}
+
+function deleteFlashNote(id) {
+    flashNotes = flashNotes.filter(n => n.id !== id);
+    saveAll();
+    renderFlashNotes();
+}
+
+function renderFlashNotes() {
+    const container = document.getElementById('flashNotesList');
+    if (!container) return;
+    const todayNotes = flashNotes.filter(n => n.dateStr === getTodayStr()).sort((a, b) => b.id - a.id);
+    if (!todayNotes.length) {
+        container.innerHTML = `<div class="text-center text-zinc-300 py-3 text-xs">${t('noFlashNotes')}</div>`;
+        return;
+    }
+    container.innerHTML = todayNotes.map((n, i) => `
+        <div class="flash-note-item" style="animation-delay:${i * 0.04}s">
+            <span class="flash-time">${n.time}</span>
+            <span class="flash-text">${escapeHtml(n.text)}</span>
+            <span class="flash-del" onclick="deleteFlashNote(${n.id})" title="Delete"><i class="fas fa-times"></i></span>
+        </div>
+    `).join('');
+}
+
+function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+}
+
+function showFlashHistory() {
+    const grouped = {};
+    flashNotes.forEach(n => {
+        if (!grouped[n.dateStr]) grouped[n.dateStr] = [];
+        grouped[n.dateStr].push(n);
+    });
+    const dates = Object.keys(grouped).sort().reverse();
+    const container = document.getElementById('flashHistoryContent');
+    if (!dates.length) {
+        container.innerHTML = `<div class="text-center text-zinc-400 py-4 text-sm">${t('noFlashNotes')}</div>`;
+    } else {
+        container.innerHTML = dates.map(date => {
+            const notes = grouped[date].sort((a, b) => b.id - a.id);
+            return `
+                <div class="mb-2">
+                    <div class="text-xs font-semibold text-zinc-500 mb-1.5 flex items-center gap-1.5">
+                        <i class="fas fa-calendar-day text-indigo-300"></i> ${date}
+                        <span class="text-zinc-300 font-normal">(${notes.length})</span>
+                    </div>
+                    <div class="space-y-1">
+                        ${notes.map(n => `
+                            <div class="flex items-start gap-2 text-xs p-2 bg-zinc-50 rounded-md">
+                                <span class="text-zinc-400 flex-shrink-0" style="font-variant-numeric:tabular-nums">${n.time}</span>
+                                <span class="text-zinc-600">${escapeHtml(n.text)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>`;
+        }).join('');
+    }
+    document.getElementById('flashHistoryModal').classList.remove('hidden');
+}
+
+// ======================== DAY PHASES ========================
+const DAY_PHASES = [
+    { key: 'morning',   icon: '💪', i18n: 'phaseMorning',   startH: 6,  endH: 12 },
+    { key: 'afternoon', icon: '☕', i18n: 'phaseAfternoon', startH: 12, endH: 18 },
+    { key: 'evening',   icon: '🔥', i18n: 'phaseEvening',   startH: 18, endH: 23 },
+    { key: 'latenight', icon: '🧘', i18n: 'phaseLateNight', startH: 23, endH: 6  },
+];
+
+function getPhaseMinutes(phase, rec) {
+    if (!rec || !rec.sessions || !rec.sessions.length) return 0;
+    let total = 0;
+    rec.sessions.forEach(s => {
+        if (!s.startTs || !s.endTs) return;
+        const start = new Date(s.startTs);
+        const end = new Date(s.endTs);
+        // For each minute of the session, check if it falls in this phase
+        let cur = new Date(start);
+        while (cur < end) {
+            const h = cur.getHours();
+            let inPhase = false;
+            if (phase.startH < phase.endH) {
+                inPhase = (h >= phase.startH && h < phase.endH);
+            } else {
+                // wraps midnight (23-6)
+                inPhase = (h >= phase.startH || h < phase.endH);
+            }
+            if (inPhase) total++;
+            cur = new Date(cur.getTime() + 60000); // advance 1 min
+        }
+    });
+    return total;
+}
+
+function getCurrentPhaseKey() {
+    const h = new Date().getHours();
+    if (h >= 6 && h < 12) return 'morning';
+    if (h >= 12 && h < 18) return 'afternoon';
+    if (h >= 18 && h < 23) return 'evening';
+    return 'latenight';
+}
+
+function renderDayPhases() {
+    const bar = document.getElementById('dayPhasesBar');
+    if (!bar) return;
+    const rec = workMap.get(getTodayStr());
+    const currentPhase = getCurrentPhaseKey();
+    const isWorking = rec && !!rec.currentStart;
+    const rangeStr = (p) => {
+        const sh = String(p.startH).padStart(2,'0');
+        const eh = String(p.endH).padStart(2,'0');
+        return `${sh}:00-${eh}:00`;
+    };
+    bar.innerHTML = DAY_PHASES.map(p => {
+        const mins = getPhaseMinutes(p, rec);
+        const isActive = p.key === currentPhase;
+        const worked = mins > 0;
+        const locked = !isActive && !worked;
+        let statusHtml;
+        if (isActive && !isWorking && !worked) {
+            statusHtml = `<div class="phase-status" style="color:var(--accent)"><i class="fas fa-play text-[0.5rem] mr-0.5"></i>${currentLang === 'zh' ? '点击开工' : 'Click to start'}</div>`;
+        } else if (isActive && isWorking) {
+            statusHtml = `<div class="phase-status" style="color:var(--accent)"><i class="fas fa-circle text-[0.4rem] mr-0.5 animate-pulse"></i>${currentLang === 'zh' ? '进行中' : 'Working'}</div>`;
+        } else if (worked) {
+            statusHtml = `<div class="phase-status worked"><i class="fas fa-check-circle text-[0.5rem] mr-0.5"></i>${t('phaseWorked').replace('{n}', mins)}</div>`;
+        } else {
+            statusHtml = `<div class="phase-status idle">${locked ? '🔒' : t('phaseIdle')}</div>`;
+        }
+        return `
+            <div class="phase-card ${isActive ? 'phase-active' : ''} ${locked ? 'phase-locked' : ''}" ${isActive && !isWorking ? 'onclick="workStartClick()"' : ''}>
+                <div class="phase-icon">${p.icon}</div>
+                <div class="phase-name">${t(p.i18n)}</div>
+                <div class="phase-range">${rangeStr(p)}</div>
+                ${statusHtml}
+            </div>`;
+    }).join('');
+}
+
 // ======================== INIT ========================
 function init() {
     loadAll();
@@ -1793,6 +2109,8 @@ function init() {
     }
     updateWorkUI();
     updateFocusTodayUI();
+    updateStreakDisplay();
+    renderDayPhases();
 
     document.getElementById("langToggleBtn").onclick = toggleLang;
     document.getElementById("workStartBtn").onclick = workStartClick;
@@ -1816,10 +2134,16 @@ function init() {
     document.querySelectorAll(".mood-btn").forEach(btn => btn.addEventListener("click", () => recordMood(btn.getAttribute("data-mood"))));
     document.getElementById("inspirationText").addEventListener("input", () => { inspirationMap.set(getTodayStr(), document.getElementById("inspirationText").value); saveAll(); });
     document.getElementById("inspirationText").value = inspirationMap.get(getTodayStr()) || "";
+    // Flash notes
+    document.getElementById("flashNoteAddBtn").onclick = addFlashNote;
+    document.getElementById("flashNoteInput").addEventListener("keydown", e => { if(e.key==="Enter") addFlashNote(); });
+    document.getElementById("flashHistoryBtn").onclick = showFlashHistory;
+    document.getElementById("closeFlashModal").onclick = () => document.getElementById("flashHistoryModal").classList.add("hidden");
+    renderFlashNotes();
     document.getElementById("dailyThemeInput").addEventListener("change", () => saveAll());
     document.querySelectorAll('[data-period]').forEach(btn => { btn.onclick=()=>{document.querySelectorAll('[data-period]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateStatsAndCalendar(btn.dataset.period);}; });
     document.querySelectorAll('[data-metric]').forEach(btn => { btn.onclick=()=>{document.querySelectorAll('[data-metric]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentMetric=btn.dataset.metric;updateLineChart();}; });
-    ['moodModal','taskHistoryModal'].forEach(id => { document.getElementById(id).addEventListener("click", e => { if(e.target.id===id) e.target.classList.add("hidden"); }); });
+    ['moodModal','taskHistoryModal','flashHistoryModal'].forEach(id => { document.getElementById(id).addEventListener("click", e => { if(e.target.id===id) e.target.classList.add("hidden"); }); });
     document.querySelector('[data-period="week"]').classList.add('active');
     updateStatsAndCalendar("week");
 }
