@@ -889,7 +889,7 @@ const I18N = {
         focusBtn: "专注", unfocusBtn: "取消专注",
         focusingOn: "正在专注：",
         startWorkFirst: "请先开始专注",
-        generalWork: "通用工作时间",
+        generalWork: "通用专注",
         streak: "连续 {n} 天",
         flashNotes: "闪念",
         flashPlaceholder: "记录瞬间的想法...",
@@ -943,7 +943,7 @@ const I18N = {
         focusBtn: "Focus", unfocusBtn: "Unfocus",
         focusingOn: "Focusing on:",
         startWorkFirst: "Start focus first",
-        generalWork: "General work time",
+        generalWork: "General Focus",
         streak: "{n} day streak",
         flashNotes: "Quick Notes",
         flashPlaceholder: "Capture a thought...",
@@ -1109,10 +1109,13 @@ function workStopClick() {
 
 function startWorkLiveTimer() {
     stopWorkLiveTimer();
+    let tickCount = 0;
     workLiveTimer = setInterval(() => {
         updateWorkUI();
         tickActiveFocus();
         checkPhaseChange();
+        // Update timeline every 30s to show growing current session block
+        if (++tickCount % 30 === 0) renderFocusTimeline();
     }, 1000);
 }
 
@@ -1176,13 +1179,23 @@ function updateWorkUI() {
     if (rec.sessions.length === 0) {
         logEl.innerHTML = `<div class="text-xs text-zinc-300 text-center py-1">${t('noSessions')}</div>`;
     } else {
-        logEl.innerHTML = rec.sessions.map((s, i) => `
-            <div class="session-log-item flex items-center justify-between text-xs bg-zinc-50 rounded-md px-2.5 py-1 border border-zinc-100" style="animation-delay:${i*0.05}s">
-                <span class="font-medium text-zinc-500"><i class="fas fa-circle text-[5px] text-indigo-300 mr-1.5"></i>${t('session').replace('{n}', i+1)}</span>
-                <span class="text-zinc-400 timer-display">${s.start} → ${s.end}</span>
-                <span class="badge bg-indigo-50 text-indigo-500">${s.duration} ${t('minUnit')}</span>
-            </div>
-        `).join('');
+        // Build session-owner map for display
+        const sessOwners = {};
+        tasks.forEach(tk => {
+            if (tk.assignedSessions) tk.assignedSessions.forEach(si => { sessOwners[si] = tk; });
+        });
+        logEl.innerHTML = rec.sessions.map((s, i) => {
+            const owner = sessOwners[i];
+            const ownerColor = owner ? getTaskColor(owner.id) : '#a1a1aa';
+            const ownerName = owner ? owner.text : t('generalWork');
+            return `
+            <div class="session-log-item flex items-center gap-2 text-xs bg-zinc-50 rounded-md px-2.5 py-1.5 border border-zinc-100" style="animation-delay:${i*0.05}s">
+                <span style="width:6px;height:6px;border-radius:2px;background:${ownerColor};flex-shrink:0;"></span>
+                <span class="font-medium text-zinc-600 flex-1 truncate" title="${ownerName}">${ownerName}</span>
+                <span class="text-zinc-400 timer-display flex-shrink-0">${s.start} → ${s.end}</span>
+                <span class="badge bg-indigo-50 text-indigo-500 flex-shrink-0">${s.duration}${t('minUnit')}</span>
+            </div>`;
+        }).join('');
     }
 }
 
