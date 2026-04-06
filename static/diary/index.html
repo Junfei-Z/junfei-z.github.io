@@ -140,10 +140,11 @@
             background: var(--surface); border: 1px solid var(--border);
             border-radius: 0.5rem; overflow: hidden;
         }
-        .timeline-phase-segment.phase-morning { background: linear-gradient(135deg, #fffde7 0%, #fef9c3 100%); border-color: #fef08a; }
-        .timeline-phase-segment.phase-afternoon { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-color: #bfdbfe; }
-        .timeline-phase-segment.phase-evening { background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-color: #ddd6fe; }
-        .timeline-phase-segment.phase-latenight { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); border-color: #4338ca; }
+        .timeline-phase-wrapper { position: relative; }
+        .timeline-phase-segment.phase-morning { background: #fafafa; border-color: var(--border); }
+        .timeline-phase-segment.phase-afternoon { background: #fafafa; border-color: var(--border); }
+        .timeline-phase-segment.phase-evening { background: #fafafa; border-color: var(--border); }
+        .timeline-phase-segment.phase-latenight { background: #f5f5f5; border-color: var(--border); }
         .timeline-phase-block {
             position: absolute; top: 3px; bottom: 3px; border-radius: 3px;
             min-width: 2px; transition: opacity 0.15s;
@@ -166,6 +167,13 @@
             position: absolute; top: 0; bottom: 0; width: 2px;
             background: #ef4444; z-index: 3; border-radius: 1px;
             box-shadow: 0 0 4px rgba(239,68,68,0.5);
+        }
+        .timeline-phase-now-label {
+            position: absolute; z-index: 4;
+            font-size: 0.5rem; font-weight: 600; color: #ef4444;
+            white-space: nowrap; transform: translateX(-50%);
+            font-variant-numeric: tabular-nums;
+            font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
         }
         .timeline-legend { display: flex; flex-wrap: wrap; gap: 0.625rem; margin-top: 0.75rem; }
         .timeline-legend-item { display: flex; align-items: center; gap: 0.25rem; font-size: 0.6875rem; color: var(--text-secondary); }
@@ -1325,25 +1333,25 @@ function renderFocusTimeline() {
         // Now-line within this phase
         const nowDate = new Date();
         const nowMin = nowDate.getHours() * 60 + nowDate.getMinutes();
-        let nowHtml = '';
+        const nowTimeStr = String(nowDate.getHours()).padStart(2,'0') + ':' + String(nowDate.getMinutes()).padStart(2,'0');
+        let nowHtml = '', nowLabelHtml = '';
+        const nowLine = (pos) => { nowLabelHtml = `<div class="timeline-phase-now-label" style="left:${pos}%;bottom:100%;margin-bottom:2px;">${nowTimeStr}</div>`; return `<div class="timeline-phase-now" style="left:${pos}%"></div>`; };
         if (spansMidnight) {
             if (nowMin >= p.startH * 60) {
-                const pos = ((nowMin - p.startH * 60) / phaseDuration) * 100;
-                nowHtml = `<div class="timeline-phase-now" style="left:${pos}%"></div>`;
+                nowHtml = nowLine(((nowMin - p.startH * 60) / phaseDuration) * 100);
             } else if (nowMin < p.endH * 60) {
                 const offset = (24 - p.startH) * 60;
-                const pos = ((offset + nowMin) / phaseDuration) * 100;
-                nowHtml = `<div class="timeline-phase-now" style="left:${pos}%"></div>`;
+                nowHtml = nowLine(((offset + nowMin) / phaseDuration) * 100);
             }
         } else {
             if (nowMin >= phaseStartMin && nowMin < phaseEndMin) {
-                const pos = ((nowMin - phaseStartMin) / phaseDuration) * 100;
-                nowHtml = `<div class="timeline-phase-now" style="left:${pos}%"></div>`;
+                nowHtml = nowLine(((nowMin - phaseStartMin) / phaseDuration) * 100);
             }
         }
 
         const sh = String(p.startH).padStart(2,'0'), eh = String(p.endH).padStart(2,'0');
-        return `<div>
+        return `<div class="timeline-phase-wrapper">
+            ${nowLabelHtml}
             <div class="timeline-phase-segment ${p.css}">
                 ${segBlocksHtml}${nowHtml}
             </div>
