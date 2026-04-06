@@ -133,27 +133,41 @@
         }
         .task-completed span.task-text { text-decoration: line-through; color: var(--text-tertiary); }
 
-        /* 24h Task Timeline */
-        .timeline-24h { position: relative; height: 36px; background: var(--surface); border: 1px solid var(--border); border-radius: 0.5rem; overflow: hidden; }
-        .timeline-24h-block {
-            position: absolute; top: 2px; bottom: 2px; border-radius: 3px;
-            min-width: 2px; cursor: default; transition: opacity 0.15s;
+        /* 24h Task Timeline — 4-phase segmented */
+        .timeline-phases { display: flex; gap: 3px; }
+        .timeline-phase-segment {
+            flex: 1; position: relative; height: 40px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 0.5rem; overflow: hidden;
         }
-        .timeline-24h-block:hover { opacity: 0.85; }
-        .timeline-24h-ticks { position: absolute; inset: 0; pointer-events: none; }
-        .timeline-24h-tick {
-            position: absolute; top: 0; bottom: 0; width: 1px;
-            background: var(--border); opacity: 0.5;
+        .timeline-phase-segment.phase-morning { background: linear-gradient(135deg, #fef9c3 0%, #fef3c7 100%); border-color: #fde68a; }
+        .timeline-phase-segment.phase-afternoon { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-color: #93c5fd; }
+        .timeline-phase-segment.phase-evening { background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%); border-color: #c4b5fd; }
+        .timeline-phase-segment.phase-latenight { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); border-color: #4338ca; }
+        .timeline-phase-block {
+            position: absolute; top: 3px; bottom: 3px; border-radius: 3px;
+            min-width: 2px; transition: opacity 0.15s;
         }
-        .timeline-24h-label {
-            position: absolute; bottom: -16px; font-size: 0.5625rem;
-            color: var(--text-tertiary); transform: translateX(-50%);
+        .timeline-phase-block:hover { opacity: 0.9; filter: brightness(1.1); }
+        .timeline-phase-header {
+            font-size: 0.5625rem; font-weight: 600; text-align: center;
+            padding: 0 2px; margin-bottom: 2px; line-height: 1;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-        .timeline-24h-now {
+        .timeline-phase-header.dark { color: rgba(255,255,255,0.6); }
+        .timeline-phase-header.light { color: var(--text-tertiary); }
+        .timeline-phase-time {
+            display: flex; justify-content: space-between;
+            font-size: 0.5rem; padding: 0 3px; margin-top: 2px;
+        }
+        .timeline-phase-time.dark { color: rgba(255,255,255,0.4); }
+        .timeline-phase-time.light { color: var(--text-tertiary); opacity: 0.7; }
+        .timeline-phase-now {
             position: absolute; top: 0; bottom: 0; width: 2px;
-            background: #ef4444; z-index: 2; border-radius: 1px;
+            background: #ef4444; z-index: 3; border-radius: 1px;
+            box-shadow: 0 0 4px rgba(239,68,68,0.5);
         }
-        .timeline-legend { display: flex; flex-wrap: wrap; gap: 0.625rem; margin-top: 1.25rem; }
+        .timeline-legend { display: flex; flex-wrap: wrap; gap: 0.625rem; margin-top: 0.75rem; }
         .timeline-legend-item { display: flex; align-items: center; gap: 0.25rem; font-size: 0.6875rem; color: var(--text-secondary); }
         .timeline-legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
 
@@ -174,13 +188,15 @@
         .session-picker-item .session-info { flex: 1; color: var(--text-secondary); }
         .session-picker-item .session-dur { color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; }
         .btn-clock {
-            width: 26px; height: 26px; border-radius: 0.375rem; border: 1px solid var(--border);
-            background: var(--surface); color: var(--text-tertiary); font-size: 0.6rem;
-            display: flex; align-items: center; justify-content: center;
+            height: 28px; border-radius: 0.375rem; border: 1px solid var(--border);
+            background: var(--surface); color: var(--text-tertiary); font-size: 0.65rem;
+            display: inline-flex; align-items: center; gap: 0.25rem;
+            padding: 0 0.5rem;
             cursor: pointer; transition: all 0.15s ease; flex-shrink: 0;
+            white-space: nowrap;
         }
         .btn-clock:hover { border-color: var(--accent-light); color: var(--accent); background: var(--accent-bg); }
-        .btn-clock.has-sessions { color: var(--accent); border-color: var(--accent-light); }
+        .btn-clock.has-sessions { color: var(--accent); border-color: var(--accent-light); background: var(--accent-bg); }
         .btn-complete {
             width: 26px; height: 26px; border-radius: 0.375rem; border: 1px solid var(--border);
             background: var(--surface); color: var(--text-tertiary); font-size: 0.6rem;
@@ -1190,99 +1206,159 @@ function getTaskColor(taskId) {
 function renderFocusTimeline() {
     const c = document.getElementById("focusTimelineList"); if (!c) return;
     const today = getTodayStr();
-
-    // Collect all work sessions and focus timeline records
     const rec = workMap.get(today);
     const sessions = (rec && rec.sessions) ? rec.sessions : [];
-    const focusRecs = focusTimeline.filter(r => r.dateStr === today);
 
-    // Build blocks: work sessions as general, focus records overlaid
+    // Build session-owner map from task assignments
+    const sessionOwners = {};
+    tasks.forEach(tk => {
+        if (tk.assignedSessions) {
+            tk.assignedSessions.forEach(si => { sessionOwners[si] = tk; });
+        }
+    });
+
+    // Build blocks from sessions
     const blocks = [];
-    const MINUTES_IN_DAY = 1440;
-
-    // Add work sessions as "general" blocks
-    sessions.forEach(s => {
+    sessions.forEach((s, si) => {
         if (!s.startTs || !s.endTs) return;
         const st = new Date(s.startTs), en = new Date(s.endTs);
         const startMin = st.getHours() * 60 + st.getMinutes();
-        const endMin = en.getHours() * 60 + en.getMinutes();
-        blocks.push({ startMin, endMin: endMin > startMin ? endMin : endMin + MINUTES_IN_DAY, color: '#d4d4d8', label: t('generalWork'), type: 'general' });
-    });
-
-    // Add focus records as task-specific blocks (overlay on top)
-    focusRecs.forEach(r => {
-        if (!r.startTime || !r.endTime) return;
-        // Parse time from "2026/4/6 14:32:00" format
-        const stParts = r.startTime.match(/(\d+):(\d+)/);
-        const enParts = r.endTime.match(/(\d+):(\d+)/);
-        if (!stParts || !enParts) return;
-        const startMin = parseInt(stParts[1]) * 60 + parseInt(stParts[2]);
-        const endMin = parseInt(enParts[1]) * 60 + parseInt(enParts[2]);
-        blocks.push({ startMin, endMin: endMin > startMin ? endMin : endMin + MINUTES_IN_DAY, color: getTaskColor(r.taskId), label: r.taskName, type: 'task', taskId: r.taskId });
-    });
-
-    // Also add currently running session
-    if (rec && rec.currentStart) {
-        const st = new Date(rec.currentStart);
-        const now = new Date();
-        const startMin = st.getHours() * 60 + st.getMinutes();
-        const endMin = now.getHours() * 60 + now.getMinutes();
-        blocks.push({ startMin, endMin: endMin > startMin ? endMin : endMin + MINUTES_IN_DAY, color: '#d4d4d8', label: t('generalWork'), type: 'general', active: true });
-
-        // If focusing on a task, overlay that
-        const focusTask = getActiveFocusTask();
-        if (focusTask && activeFocusStartTs) {
-            const fst = new Date(activeFocusStartTs);
-            const fStartMin = fst.getHours() * 60 + fst.getMinutes();
-            blocks.push({ startMin: fStartMin, endMin, color: getTaskColor(focusTask.id), label: focusTask.text, type: 'task', active: true });
+        let endMin = en.getHours() * 60 + en.getMinutes();
+        if (endMin <= startMin) endMin += 1440;
+        const owner = sessionOwners[si];
+        if (owner) {
+            blocks.push({ startMin, endMin, color: getTaskColor(owner.id), label: owner.text, type: 'task' });
+        } else {
+            blocks.push({ startMin, endMin, color: '#a1a1aa', label: t('generalWork'), type: 'general' });
         }
+    });
+
+    // Currently running session
+    if (rec && rec.currentStart) {
+        const st = new Date(rec.currentStart), now = new Date();
+        const startMin = st.getHours() * 60 + st.getMinutes();
+        let endMin = now.getHours() * 60 + now.getMinutes();
+        if (endMin <= startMin) endMin += 1440;
+        blocks.push({ startMin, endMin, color: '#a1a1aa', label: t('generalWork'), type: 'general', active: true });
     }
 
-    if (blocks.length === 0) {
-        c.innerHTML = `<div class="text-center text-zinc-300 py-3 text-xs">${t('noFocusYet')}</div>`;
-        return;
-    }
+    // Phase definitions for 4-segment layout
+    const phases = [
+        { key: 'morning',   startH: 6,  endH: 12, css: 'phase-morning',   dark: false, label: t('phaseMorning') },
+        { key: 'afternoon', startH: 12, endH: 18, css: 'phase-afternoon', dark: false, label: t('phaseAfternoon') },
+        { key: 'evening',   startH: 18, endH: 23, css: 'phase-evening',   dark: false, label: t('phaseEvening') },
+        { key: 'latenight', startH: 23, endH: 6,  css: 'phase-latenight', dark: true,  label: t('phaseLateNight') },
+    ];
 
-    // Render 24h bar
-    const tickHours = [0, 3, 6, 9, 12, 15, 18, 21];
-    let ticksHtml = tickHours.map(h => {
-        const pct = (h / 24) * 100;
-        return `<div class="timeline-24h-tick" style="left:${pct}%"></div><div class="timeline-24h-label" style="left:${pct}%">${String(h).padStart(2,'0')}</div>`;
+    // Render 4-segment timeline
+    const phaseHtml = phases.map(p => {
+        const phaseStartMin = p.startH * 60;
+        let phaseEndMin = p.endH * 60;
+        const spansMidnight = p.startH >= p.endH;
+        if (spansMidnight) phaseEndMin = p.endH * 60 + 1440; // e.g., 23*60 to 6*60+1440
+        const phaseDuration = spansMidnight ? (24 - p.startH + p.endH) * 60 : (p.endH - p.startH) * 60;
+        const textCls = p.dark ? 'dark' : 'light';
+
+        // Filter blocks that overlap this phase
+        let segBlocksHtml = '';
+        blocks.forEach(b => {
+            let bStart = b.startMin, bEnd = b.endMin;
+            // Calculate overlap with this phase
+            let overlapStart, overlapEnd;
+            if (spansMidnight) {
+                // Phase 23:00-06:00 — check two ranges: 23:00-24:00 and 0:00-6:00
+                const r1Start = p.startH * 60, r1End = 1440;
+                const r2Start = 0, r2End = p.endH * 60;
+                // Normalize block for overnight
+                const bStartNorm = bStart, bEndNorm = bEnd > 1440 ? bEnd : bEnd;
+
+                let os1 = Math.max(bStartNorm, r1Start), oe1 = Math.min(bEndNorm, r1End);
+                let os2 = Math.max(bStartNorm, r2Start), oe2 = Math.min(bEndNorm, r2End);
+                // Also handle block wrapping: e.g., block 23:30-01:30 → part1: 23:30-24:00, part2: 0:00-1:30
+                if (bEnd > 1440) {
+                    os2 = Math.max(0, r2Start);
+                    oe2 = Math.min(bEnd - 1440, r2End);
+                }
+
+                // Render part in first range (23:00-24:00)
+                if (os1 < oe1) {
+                    const left = ((os1 - r1Start) / phaseDuration) * 100;
+                    const width = ((oe1 - os1) / phaseDuration) * 100;
+                    const opacity = b.type === 'general' ? '0.5' : '0.9';
+                    const pulse = b.active ? 'animation:focusPulse 2s infinite;' : '';
+                    segBlocksHtml += `<div class="timeline-phase-block" style="left:${left}%;width:${width}%;background:${b.color};opacity:${opacity};${pulse}" title="${b.label}"></div>`;
+                }
+                // Render part in second range (0:00-6:00)
+                if (os2 < oe2 && oe2 > 0) {
+                    const offset = (24 - p.startH) * 60; // minutes from phase start to midnight
+                    const left = ((offset + os2) / phaseDuration) * 100;
+                    const width = ((oe2 - os2) / phaseDuration) * 100;
+                    const opacity = b.type === 'general' ? '0.5' : '0.9';
+                    segBlocksHtml += `<div class="timeline-phase-block" style="left:${left}%;width:${width}%;background:${b.color};opacity:${opacity}" title="${b.label}"></div>`;
+                }
+            } else {
+                overlapStart = Math.max(bStart, phaseStartMin);
+                overlapEnd = Math.min(bEnd, phaseEndMin);
+                if (overlapStart < overlapEnd) {
+                    const left = ((overlapStart - phaseStartMin) / phaseDuration) * 100;
+                    const width = ((overlapEnd - overlapStart) / phaseDuration) * 100;
+                    const opacity = b.type === 'general' ? '0.5' : '0.9';
+                    const pulse = b.active ? 'animation:focusPulse 2s infinite;' : '';
+                    segBlocksHtml += `<div class="timeline-phase-block" style="left:${left}%;width:${width}%;background:${b.color};opacity:${opacity};${pulse}" title="${b.label}"></div>`;
+                }
+            }
+        });
+
+        // Now-line within this phase
+        const nowDate = new Date();
+        const nowMin = nowDate.getHours() * 60 + nowDate.getMinutes();
+        let nowHtml = '';
+        if (spansMidnight) {
+            if (nowMin >= p.startH * 60) {
+                const pos = ((nowMin - p.startH * 60) / phaseDuration) * 100;
+                nowHtml = `<div class="timeline-phase-now" style="left:${pos}%"></div>`;
+            } else if (nowMin < p.endH * 60) {
+                const offset = (24 - p.startH) * 60;
+                const pos = ((offset + nowMin) / phaseDuration) * 100;
+                nowHtml = `<div class="timeline-phase-now" style="left:${pos}%"></div>`;
+            }
+        } else {
+            if (nowMin >= phaseStartMin && nowMin < phaseEndMin) {
+                const pos = ((nowMin - phaseStartMin) / phaseDuration) * 100;
+                nowHtml = `<div class="timeline-phase-now" style="left:${pos}%"></div>`;
+            }
+        }
+
+        const sh = String(p.startH).padStart(2,'0'), eh = String(p.endH).padStart(2,'0');
+        return `<div>
+            <div class="timeline-phase-segment ${p.css}">
+                ${segBlocksHtml}${nowHtml}
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.55rem;margin-top:2px;padding:0 2px;color:var(--text-tertiary);">
+                <span>${sh}:00</span>
+                <span style="font-size:0.5rem;font-weight:500;opacity:0.8">${p.label}</span>
+                <span>${eh}:00</span>
+            </div>
+        </div>`;
     }).join('');
 
-    // Current time indicator
-    const nowDate = new Date();
-    const nowMin = nowDate.getHours() * 60 + nowDate.getMinutes();
-    const nowPct = (nowMin / MINUTES_IN_DAY) * 100;
-    ticksHtml += `<div class="timeline-24h-now" style="left:${nowPct}%"></div>`;
-
-    // Sort: general first, then task blocks on top
-    const sortedBlocks = blocks.sort((a, b) => a.type === 'general' ? -1 : 1);
-    const blocksHtml = sortedBlocks.map(b => {
-        const leftPct = (Math.min(b.startMin, MINUTES_IN_DAY) / MINUTES_IN_DAY) * 100;
-        const widthPct = (Math.min(b.endMin - b.startMin, MINUTES_IN_DAY) / MINUTES_IN_DAY) * 100;
-        const opacity = b.type === 'general' ? '0.4' : '0.85';
-        const zIndex = b.type === 'general' ? '0' : '1';
-        const pulse = b.active ? 'animation:focusPulse 2s infinite;' : '';
-        return `<div class="timeline-24h-block" style="left:${leftPct}%;width:${widthPct}%;background:${b.color};opacity:${opacity};z-index:${zIndex};${pulse}" title="${b.label}"></div>`;
-    }).join('');
-
-    // Legend: unique task names
+    // Legend
     const seen = new Set();
     const legendItems = [];
     blocks.filter(b => b.type === 'task').forEach(b => {
-        const key = b.label;
-        if (!seen.has(key)) {
-            seen.add(key);
+        if (!seen.has(b.label)) {
+            seen.add(b.label);
             legendItems.push(`<div class="timeline-legend-item"><div class="timeline-legend-dot" style="background:${b.color}"></div>${b.label}</div>`);
         }
     });
     if (blocks.some(b => b.type === 'general')) {
-        legendItems.unshift(`<div class="timeline-legend-item"><div class="timeline-legend-dot" style="background:#d4d4d8"></div>${t('generalWork')}</div>`);
+        legendItems.unshift(`<div class="timeline-legend-item"><div class="timeline-legend-dot" style="background:#a1a1aa"></div>${t('generalWork')}</div>`);
     }
 
     c.innerHTML = `
-        <div class="timeline-24h">${ticksHtml}${blocksHtml}</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;">
+            ${phaseHtml}
+        </div>
         ${legendItems.length ? `<div class="timeline-legend">${legendItems.join('')}</div>` : ''}
     `;
 }
@@ -1400,6 +1476,14 @@ function showSessionPicker(taskId, anchorEl) {
     title.innerHTML = `<i class="fas fa-clock mr-1"></i>${t('assignSessions')}`;
     picker.appendChild(title);
 
+    // Build a map: sessionIndex -> owning task (for exclusive assignment)
+    const sessionOwners = {};
+    tasks.forEach(tk => {
+        if (tk.assignedSessions) {
+            tk.assignedSessions.forEach(si => { sessionOwners[si] = tk; });
+        }
+    });
+
     if (sessions.length === 0) {
         const empty = document.createElement('div');
         empty.className = 'text-xs text-zinc-400 text-center py-3';
@@ -1408,29 +1492,34 @@ function showSessionPicker(taskId, anchorEl) {
     } else {
         sessions.forEach((s, si) => {
             const checked = task.assignedSessions.includes(si);
+            const owner = sessionOwners[si];
+            const takenByOther = owner && owner.id !== task.id;
+
             const item = document.createElement('label');
             item.className = 'session-picker-item';
+            if (takenByOther) item.style.opacity = '0.5';
+
             const cb = document.createElement('input');
             cb.type = 'checkbox';
             cb.checked = checked;
-            cb.onchange = () => {
-                const idx = task.assignedSessions.indexOf(si);
-                if (idx >= 0) task.assignedSessions.splice(idx, 1);
-                else task.assignedSessions.push(si);
-                saveAll();
-                // Update the timer display in the task row
-                const assignedMins = getTaskAssignedMinutes(task);
-                const timerEl = anchorEl.closest('.task-item').querySelector('.timer-display');
-                if (timerEl) {
-                    timerEl.textContent = assignedMins > 0 ? `${assignedMins}m` : formatSecs(task.focusSecs || 0);
-                    timerEl.style.color = assignedMins > 0 ? 'var(--accent)' : 'var(--text-tertiary)';
-                }
-                const clockEl = anchorEl;
-                if (clockEl) clockEl.className = `btn-clock ${assignedMins > 0 ? 'has-sessions' : ''}`;
-            };
+            cb.disabled = takenByOther;
+            if (!takenByOther) {
+                cb.onchange = () => {
+                    const idx = task.assignedSessions.indexOf(si);
+                    if (idx >= 0) task.assignedSessions.splice(idx, 1);
+                    else task.assignedSessions.push(si);
+                    saveAll();
+                    renderTasks();
+                    renderFocusTimeline();
+                };
+            }
             const info = document.createElement('span');
             info.className = 'session-info';
-            info.innerHTML = `<i class="fas fa-circle text-[5px] text-indigo-300 mr-1"></i>${s.start} → ${s.end}`;
+            if (takenByOther) {
+                info.innerHTML = `<i class="fas fa-lock text-[5px] text-zinc-400 mr-1"></i>${s.start} → ${s.end} <span style="color:var(--text-tertiary);font-size:0.65rem;margin-left:4px;">(${owner.text})</span>`;
+            } else {
+                info.innerHTML = `<i class="fas fa-circle text-[5px] text-indigo-300 mr-1"></i>${s.start} → ${s.end}`;
+            }
             const dur = document.createElement('span');
             dur.className = 'session-dur';
             dur.textContent = `${s.duration} ${t('minUnit')}`;
@@ -1496,49 +1585,18 @@ function renderTasks() {
         const taskText = document.createElement("span");
         taskText.innerText = task.text;
         taskText.className = "task-text flex-1 font-medium text-sm text-zinc-700 break-words";
-        if (isFocused) {
-            const b = document.createElement("span");
-            b.className = "ml-2 inline-flex items-center gap-1 bg-amber-400 text-white text-[0.6rem] font-medium px-1.5 py-0.5 rounded focus-pulse";
-            b.innerHTML = `<i class="fas fa-fire text-[0.5rem]"></i> ${t('focusing')}`;
-            taskText.appendChild(b);
-        }
 
         // Assigned time display
         const assignedMins = getTaskAssignedMinutes(task);
-        const timerSpan = document.createElement("span");
-        timerSpan.className = "timer-display text-xs font-semibold min-w-[44px] text-center flex-shrink-0";
-        if (assignedMins > 0) {
-            timerSpan.textContent = `${assignedMins}m`;
-            timerSpan.style.color = 'var(--accent)';
-        } else {
-            timerSpan.textContent = formatSecs(task.focusSecs || 0);
-            timerSpan.style.color = 'var(--text-tertiary)';
-        }
 
-        // Clock button (assign sessions)
+        // Clock button (assign sessions) — with text label
         const clockBtn = document.createElement("button");
         clockBtn.className = `btn-clock ${assignedMins > 0 ? 'has-sessions' : ''}`;
-        clockBtn.innerHTML = '<i class="fas fa-clock"></i>';
-        clockBtn.title = t('assignSessions');
+        const clockLabel = assignedMins > 0
+            ? `<i class="fas fa-clock"></i> ${assignedMins}${t('minUnit')}`
+            : `<i class="fas fa-clock"></i> ${currentLang === 'zh' ? '分配时段' : 'Assign'}`;
+        clockBtn.innerHTML = clockLabel;
         clockBtn.onclick = (e) => { e.stopPropagation(); showSessionPicker(task.id, clockBtn); };
-
-        // Focus button
-        const focusBtn = document.createElement("button");
-        if (working && task.status !== 'done') {
-            if (isFocused) {
-                focusBtn.className = "btn-focus active-focus";
-                focusBtn.innerHTML = `<i class="fas fa-pause text-[0.6rem]"></i> ${t('unfocusBtn')}`;
-            } else {
-                focusBtn.className = "btn-focus";
-                focusBtn.innerHTML = `<i class="fas fa-crosshairs text-[0.6rem]"></i> ${t('focusBtn')}`;
-            }
-            focusBtn.onclick = (e) => { e.stopPropagation(); startFocusOnTask(task.id); };
-        } else if (!working && task.status !== 'done') {
-            focusBtn.className = "btn-focus";
-            focusBtn.innerHTML = `<i class="fas fa-crosshairs text-[0.6rem]"></i> ${t('focusBtn')}`;
-            focusBtn.disabled = true; focusBtn.title = t('startWorkFirst');
-            focusBtn.style.opacity = '0.35'; focusBtn.style.cursor = 'not-allowed';
-        }
 
         // Delete button
         const delBtn = document.createElement("button");
@@ -1553,7 +1611,6 @@ function renderTasks() {
         };
 
         row.append(completeBtn, taskText, timerSpan, clockBtn);
-        if (task.status !== 'done') row.append(focusBtn);
         row.append(delBtn);
         li.appendChild(row);
 
