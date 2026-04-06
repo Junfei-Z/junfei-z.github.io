@@ -715,13 +715,10 @@
                 </div>
 
                 <div class="mt-4 pt-3 border-t border-zinc-100">
-                    <div class="flex items-center justify-between mb-2">
+                    <div class="mb-2">
                         <h3 class="text-xs font-medium text-zinc-400">
                             <i class="fas fa-stream text-indigo-400 mr-1"></i><span data-i18n="focusTimeline"></span>
                         </h3>
-                        <button id="clearTimelineBtn" class="text-xs text-zinc-300 hover:text-red-400 transition">
-                            <i class="fas fa-eraser mr-1"></i><span data-i18n="clear"></span>
-                        </button>
                     </div>
                     <div id="focusTimelineList" class="pb-4"></div>
                 </div>
@@ -2505,7 +2502,7 @@ function init() {
     document.getElementById("importDataBtn").onclick = () => document.getElementById("importFile").click();
     document.getElementById("importFile").onchange = e => importData(e.target.files[0]);
     document.getElementById("clearAllDataBtn").onclick = () => { if(confirm(t('clearAllConfirm'))&&confirm(t('clearAllConfirm2'))){localStorage.clear();location.reload();} };
-    document.getElementById("clearTimelineBtn").onclick = () => { if(confirm(t('clearTimeline'))){focusTimeline=focusTimeline.filter(r=>r.dateStr!==getTodayStr());saveAll();renderFocusTimeline();} };
+    // clearTimelineBtn removed
     document.querySelectorAll(".mood-btn").forEach(btn => btn.addEventListener("click", () => recordMood(btn.getAttribute("data-mood"))));
     document.getElementById("inspirationText").addEventListener("input", () => { inspirationMap.set(getTodayStr(), document.getElementById("inspirationText").value); saveAll(); });
     document.getElementById("inspirationText").value = inspirationMap.get(getTodayStr()) || "";
