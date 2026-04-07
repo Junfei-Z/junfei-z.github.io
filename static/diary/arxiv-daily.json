@@ -1,9 +1,431 @@
 {
   "date": "2026-04-07",
-  "updated_at": "2026-04-07T00:00:00Z",
+  "updated_at": "2026-04-07T20:06:26.267570Z",
   "tracks": {
-    "edge_ai": {"name_zh": "Edge AI", "name_en": "Edge AI", "count": 0, "papers": []},
-    "agent_memory": {"name_zh": "Agent Memory", "name_en": "Agent Memory", "count": 0, "papers": []}
+    "edge_ai": {
+      "name_zh": "Edge AI",
+      "name_en": "Edge AI",
+      "count": 10,
+      "papers": [
+        {
+          "id": "2604.04722v1",
+          "title": "Don't Waste Bits! Adaptive KV-Cache Quantization for Lightweight On-Device LLMs",
+          "abstract": "Large Language Models (LLMs) have achieved remarkable progress across reasoning, generation, and decision-making tasks, yet deploying them on mobile, embedded, and edge devices remains particularly challenging. On-device LLM inference is heavily constrained by the memory and bandwidth overhead of the key-value (KV) cache, which grows linearly with context length and often dominates decoding cost. Existing KV-cache quantization schemes typically rely on fixed precision or hand-crafted heuristics, thereby wasting bits on low-impact tokens while over-compressing informative ones, leading to avoid",
+          "authors": [
+            "Sayed Pedram Haeri Boroujeni",
+            "Niloufar Mehrabi",
+            "Patrick Woods",
+            "Gabriel Hillesheim",
+            "Abolfazl Razi"
+          ],
+          "published": "2026-04-06",
+          "categories": [
+            "cs.CV"
+          ],
+          "link": "https://arxiv.org/abs/2604.04722v1",
+          "pdf": "https://arxiv.org/pdf/2604.04722v1",
+          "priority": "高",
+          "one_line_zh": "提出了一种自适应KV缓存量化方法以优化轻量级LLM的边缘推理。",
+          "why_relevant_zh": "该论文关注在边缘设备上部署LLM的能耗和效率问题，符合能耗profiling与建模的研究方向。",
+          "summary_zh": "一句话：提出了一种自适应KV缓存量化方法以优化轻量级LLM的边缘推理。\n相关性：该论文关注在边缘设备上部署LLM的能耗和效率问题，符合能耗profiling与建模的研究方向。"
+        },
+        {
+          "id": "2604.03143v1",
+          "title": "TokenDance: Scaling Multi-Agent LLM Serving via Collective KV Cache Sharing",
+          "abstract": "Multi-agent LLM applications organize execution in synchronized rounds where a central scheduler gathers outputs from all agents and redistributes the combined context. This All-Gather communication pattern creates massive KV Cache redundancy, because every agent's prompt contains the same shared output blocks, yet existing reuse methods fail to exploit it efficiently. We present TokenDance, a system that scales the number of concurrent agents by exploiting the All-Gather pattern for collective KV Cache sharing. TokenDance's KV Collector performs KV Cache reuse over the full round in one colle",
+          "authors": [
+            "Zhuohang Bian",
+            "Feiyang Wu",
+            "Chengrui Zhang",
+            "Hangcheng Dong",
+            "Yun Liang"
+          ],
+          "published": "2026-04-03",
+          "categories": [
+            "cs.DC"
+          ],
+          "link": "https://arxiv.org/abs/2604.03143v1",
+          "pdf": "https://arxiv.org/pdf/2604.03143v1",
+          "priority": "高",
+          "one_line_zh": "通过集体KV缓存共享实现多代理LLM的高效服务。",
+          "why_relevant_zh": "涉及分布式LLM服务和边缘协同推理，符合分布式协同推理类的筛选标准。",
+          "summary_zh": "一句话：通过集体KV缓存共享实现多代理LLM的高效服务。\n相关性：涉及分布式LLM服务和边缘协同推理，符合分布式协同推理类的筛选标准。"
+        },
+        {
+          "id": "2604.02047v1",
+          "title": "Goose: Anisotropic Speculation Trees for Training-Free Speculative Decoding",
+          "abstract": "Speculative decoding accelerates large language model inference by drafting multiple candidate tokens and verifying them in a single forward pass. Candidates are organized as a tree: deeper trees accept more tokens per step, but adding depth requires sacrificing breadth (fallback options) under a fixed verification budget. Existing training-free methods draft from a single token source and shape their trees without distinguishing candidate quality across origins. We observe that two common training-free token sources - n-gram matches copied from the input context, and statistical predictions f",
+          "authors": [
+            "Tao Jin",
+            "Phuong Minh Nguyen",
+            "Naoya Inoue"
+          ],
+          "published": "2026-04-02",
+          "categories": [
+            "cs.CL",
+            "cs.AI"
+          ],
+          "link": "https://arxiv.org/abs/2604.02047v1",
+          "pdf": "https://arxiv.org/pdf/2604.02047v1",
+          "priority": "高",
+          "one_line_zh": "提出了一种无训练的投机解码方法以加速LLM推理。",
+          "why_relevant_zh": "该论文涉及推理优化技术，特别是投机解码，符合推理优化技术类的筛选标准。",
+          "summary_zh": "一句话：提出了一种无训练的投机解码方法以加速LLM推理。\n相关性：该论文涉及推理优化技术，特别是投机解码，符合推理优化技术类的筛选标准。"
+        },
+        {
+          "id": "2603.28149v1",
+          "title": "BlankSkip: Early-exit Object Detection onboard Nano-drones",
+          "abstract": "Deploying tiny computer vision Deep Neural Networks (DNNs) on-board nano-sized drones is key for achieving autonomy, but is complicated by the extremely tight constraints of their computational platforms (approximately 10 MiB memory, 1 W power budget). Early-exit adaptive DNNs that dial down the computational effort for \"easy-to-process\" input frames represent a promising way to reduce the average inference latency. However, while this approach is extensively studied for classification, its application to dense tasks like object detection (OD) is not straightforward. In this paper, we propose ",
+          "authors": [
+            "Carlo Marra",
+            "Beatrice Alessandra Motetti",
+            "Alessio Burrello",
+            "Enrico Macii",
+            "Massimo Poncino"
+          ],
+          "published": "2026-03-30",
+          "categories": [
+            "cs.CV"
+          ],
+          "link": "https://arxiv.org/abs/2603.28149v1",
+          "pdf": "https://arxiv.org/pdf/2603.28149v1",
+          "priority": "中",
+          "one_line_zh": "在纳米无人机上实现早期退出的目标检测以优化推理效率。",
+          "why_relevant_zh": "该研究关注于资源受限设备上的推理优化，符合推理优化技术类的筛选标准。",
+          "summary_zh": "一句话：在纳米无人机上实现早期退出的目标检测以优化推理效率。\n相关性：该研究关注于资源受限设备上的推理优化，符合推理优化技术类的筛选标准。"
+        },
+        {
+          "id": "2603.27420v2",
+          "title": "CarbonEdge: Carbon-Aware Deep Learning Inference Framework for Sustainable Edge Computing",
+          "abstract": "Deep learning applications at the network edge lead to a significant growth in AI-related carbon emissions, presenting a critical sustainability challenge. The existing edge computing frameworks optimize for latency and throughput, but they largely ignore the environmental impact of inference workloads. This paper introduces CarbonEdge, a carbon-aware deep learning inference framework that extends adaptive model partitioning with carbon footprint estimation and green scheduling apabilities. We propose a carbon-aware scheduling algorithm that extends traditional weighted scoring with a carbon e",
+          "authors": [
+            "Guilin Zhang",
+            "Wulan Guo",
+            "Ziqi Tan",
+            "Chuanyi Sun",
+            "Hailong Jiang"
+          ],
+          "published": "2026-03-28",
+          "categories": [
+            "cs.DC",
+            "cs.AI",
+            "cs.LG"
+          ],
+          "link": "https://arxiv.org/abs/2603.27420v2",
+          "pdf": "https://arxiv.org/pdf/2603.27420v2",
+          "priority": "中",
+          "one_line_zh": "提出了一种碳意识的深度学习推理框架以实现可持续边缘计算。",
+          "why_relevant_zh": "关注边缘计算中的能耗问题，符合能耗profiling与建模的研究方向。",
+          "summary_zh": "一句话：提出了一种碳意识的深度学习推理框架以实现可持续边缘计算。\n相关性：关注边缘计算中的能耗问题，符合能耗profiling与建模的研究方向。"
+        },
+        {
+          "id": "2603.27138v1",
+          "title": "ScoutAttention: Efficient KV Cache Offloading via Layer-Ahead CPU Pre-computation for LLM Inference",
+          "abstract": "Large language models encounter critical GPU memory capacity constraints during long-context inference, where KV cache memory consumption severely limits decode batch sizes. While existing research has explored offloading KV cache to DRAM, these approaches either demand frequent GPU-CPU data transfers or impose extensive CPU computation requirements, resulting in poor GPU utilization as the system waits for I/O operations or CPU processing to complete.   We propose ScoutAttention, a novel KV cache offloading framework that accelerates LLM inference through collaborative GPU-CPU attention compu",
+          "authors": [
+            "Qiuyang Zhang",
+            "Kai Zhou",
+            "Ding Tang",
+            "Kai Lu",
+            "Cheng Li"
+          ],
+          "published": "2026-03-28",
+          "categories": [
+            "cs.LG"
+          ],
+          "link": "https://arxiv.org/abs/2603.27138v1",
+          "pdf": "https://arxiv.org/pdf/2603.27138v1",
+          "priority": "中",
+          "one_line_zh": "通过层前CPU预计算实现高效的KV缓存卸载以优化LLM推理。",
+          "why_relevant_zh": "该论文关注于KV缓存的优化，符合推理优化技术类的筛选标准。",
+          "summary_zh": "一句话：通过层前CPU预计算实现高效的KV缓存卸载以优化LLM推理。\n相关性：该论文关注于KV缓存的优化，符合推理优化技术类的筛选标准。"
+        },
+        {
+          "id": "2604.00136v1",
+          "title": "ParetoBandit: Budget-Paced Adaptive Routing for Non-Stationary LLM Serving",
+          "abstract": "Production LLM serving often relies on multi-model portfolios spanning a ~530x cost range, where routing decisions trade off quality against cost. This trade-off is non-stationary: providers revise pricing, model quality can regress silently, and new models must be integrated without downtime. We present ParetoBandit, an open-source adaptive router built on cost-aware contextual bandits that is the first to simultaneously enforce dollar-denominated budgets, adapt online to such shifts, and onboard new models at runtime.   ParetoBandit closes these gaps through three mechanisms. An online prima",
+          "authors": [
+            "Annette Taberner-Miller"
+          ],
+          "published": "2026-03-31",
+          "categories": [
+            "cs.LG",
+            "cs.CL"
+          ],
+          "link": "https://arxiv.org/abs/2604.00136v1",
+          "pdf": "https://arxiv.org/pdf/2604.00136v1",
+          "priority": "中",
+          "one_line_zh": "提出了一种预算适应性路由方法以优化LLM服务的成本与质量。",
+          "why_relevant_zh": "涉及系统调度与建模，符合系统调度与建模类的筛选标准。",
+          "summary_zh": "一句话：提出了一种预算适应性路由方法以优化LLM服务的成本与质量。\n相关性：涉及系统调度与建模，符合系统调度与建模类的筛选标准。"
+        },
+        {
+          "id": "2604.00368v1",
+          "title": "TENT: A Declarative Slice Spraying Engine for Performant and Resilient Data Movement in Disaggregated LLM Serving",
+          "abstract": "Modern GPU clusters are built upon a complex hierarchy of heterogeneous interconnects, ranging from multi-rail RDMA to proprietary fabrics such as Multi-Node NVLink and Ascend UB. Orchestrating these diverse links effectively remains a critical challenge in disaggregated LLM serving. Operating Mooncake TE on thousands of GPUs exposed a critical limitation shared by existing frameworks: imperative, statically bound path selection. This rigidity forces engines to rely on state-blind striping that ignores congestion signals, creating communication silos, wasting multi-rail bandwidth due to head-o",
+          "authors": [
+            "Feng Ren",
+            "Ruoyu Qin",
+            "Teng Ma",
+            "Shangming Cai",
+            "Zheng Liu"
+          ],
+          "published": "2026-04-01",
+          "categories": [
+            "cs.DC"
+          ],
+          "link": "https://arxiv.org/abs/2604.00368v1",
+          "pdf": "https://arxiv.org/pdf/2604.00368v1",
+          "priority": "中",
+          "one_line_zh": "开发了一种切片喷洒引擎以优化分散LLM服务的数据移动。",
+          "why_relevant_zh": "该论文涉及分布式LLM服务，符合分布式协同推理类的筛选标准。",
+          "summary_zh": "一句话：开发了一种切片喷洒引擎以优化分散LLM服务的数据移动。\n相关性：该论文涉及分布式LLM服务，符合分布式协同推理类的筛选标准。"
+        },
+        {
+          "id": "2603.27819v1",
+          "title": "KVSculpt: KV Cache Compression as Distillation",
+          "abstract": "KV cache compression is critical for efficient long-context LLM inference. Approaches that reduce the per-pair footprint -- quantization and low-rank decomposition -- are orthogonal to those that reduce the sequence length of the cache. Along the sequence-length dimension, existing methods range from pure eviction -- selecting which KV pairs to keep -- to merging, which combines similar pairs into fewer ones. Both remain anchored to the original cache entries. We propose KVSculpt, which moves to the other end of this spectrum: instead of selecting or combining original pairs, we optimize a sma",
+          "authors": [
+            "Bo Jiang",
+            "Sian Jin"
+          ],
+          "published": "2026-03-29",
+          "categories": [
+            "cs.LG",
+            "cs.AI",
+            "cs.CL"
+          ],
+          "link": "https://arxiv.org/abs/2603.27819v1",
+          "pdf": "https://arxiv.org/pdf/2603.27819v1",
+          "priority": "中",
+          "one_line_zh": "将KV缓存压缩视为蒸馏以提高LLM推理效率。",
+          "why_relevant_zh": "关注KV缓存的优化，符合推理优化技术类的筛选标准。",
+          "summary_zh": "一句话：将KV缓存压缩视为蒸馏以提高LLM推理效率。\n相关性：关注KV缓存的优化，符合推理优化技术类的筛选标准。"
+        },
+        {
+          "id": "2603.26498v1",
+          "title": "Rocks, Pebbles and Sand: Modality-aware Scheduling for Multimodal Large Language Model Inference",
+          "abstract": "Multimodal Large Language Models (MLLMs) power platforms like ChatGPT, Gemini, and Copilot, enabling richer interactions with text, images, and videos. These heterogeneous workloads introduce additional inference stages, such as vision preprocessing and encoding, that inflate latency and memory demand. Existing LLM serving systems, optimized for text-only workloads, fail under multimodality: large requests (e.g., videos) monopolize resources, causing severe head-of-line blocking and performance degradation. Our key insight is that multimodal requests differ by orders of magnitude in resource d",
+          "authors": [
+            "Konstantinos Papaioannou",
+            "Thaleia Dimitra Doudali"
+          ],
+          "published": "2026-03-27",
+          "categories": [
+            "cs.DC",
+            "cs.AI"
+          ],
+          "link": "https://arxiv.org/abs/2603.26498v1",
+          "pdf": "https://arxiv.org/pdf/2603.26498v1",
+          "priority": "中",
+          "one_line_zh": "提出了一种模态感知调度方法以优化多模态LLM推理。",
+          "why_relevant_zh": "涉及系统调度与建模，符合系统调度与建模类的筛选标准。",
+          "summary_zh": "一句话：提出了一种模态感知调度方法以优化多模态LLM推理。\n相关性：涉及系统调度与建模，符合系统调度与建模类的筛选标准。"
+        }
+      ]
+    },
+    "agent_memory": {
+      "name_zh": "Agent Memory",
+      "name_en": "Agent Memory",
+      "count": 9,
+      "papers": [
+        {
+          "id": "2604.04514v1",
+          "title": "SuperLocalMemory V3.3: The Living Brain -- Biologically-Inspired Forgetting, Cognitive Quantization, and Multi-Channel Retrieval for Zero-LLM Agent Memory Systems",
+          "abstract": "AI coding agents operate in a paradox: they possess vast parametric knowledge yet cannot remember a conversation from an hour ago. Existing memory systems store text in vector databases with single-channel retrieval, require cloud LLMs for core operations, and implement none of the cognitive processes that make human memory effective.   We present SuperLocalMemory V3.3 (\"The Living Brain\"), a local-first agent memory system implementing the full cognitive memory taxonomy with mathematical lifecycle dynamics. Building on the information-geometric foundations of V3.2 (arXiv:2603.14588), we intro",
+          "authors": [
+            "Varun Pratap Bhardwaj"
+          ],
+          "published": "2026-04-06",
+          "categories": [
+            "cs.AI",
+            "cs.CL",
+            "cs.IR"
+          ],
+          "link": "https://arxiv.org/abs/2604.04514v1",
+          "pdf": "https://arxiv.org/pdf/2604.04514v1",
+          "priority": "高",
+          "one_line_zh": "提出生物启发的遗忘机制以优化LLM代理的记忆系统。",
+          "why_relevant_zh": "该论文探讨了记忆系统的计算效率，特别是在多通道检索和认知量化方面，符合计算效率的分析要求。",
+          "summary_zh": "一句话：提出生物启发的遗忘机制以优化LLM代理的记忆系统。\n相关性：该论文探讨了记忆系统的计算效率，特别是在多通道检索和认知量化方面，符合计算效率的分析要求。"
+        },
+        {
+          "id": "2604.01707v1",
+          "title": "Memory in the LLM Era: Modular Architectures and Strategies in a Unified Framework",
+          "abstract": "Memory emerges as the core module in the large language model (LLM)-based agents for long-horizon complex tasks (e.g., multi-turn dialogue, game playing, scientific discovery), where memory can enable knowledge accumulation, iterative reasoning and self-evolution. A number of memory methods have been proposed in the literature. However, these methods have not been systematically and comprehensively compared under the same experimental settings. In this paper, we first summarize a unified framework that incorporates all the existing agent memory methods from a high-level perspective. We then ex",
+          "authors": [
+            "Yanchen Wu",
+            "Tenghui Lin",
+            "Yingli Zhou",
+            "Fangyuan Zhang",
+            "Qintian Guo"
+          ],
+          "published": "2026-04-02",
+          "categories": [
+            "cs.CL",
+            "cs.DB"
+          ],
+          "link": "https://arxiv.org/abs/2604.01707v1",
+          "pdf": "https://arxiv.org/pdf/2604.01707v1",
+          "priority": "高",
+          "one_line_zh": "提出模块化架构以增强LLM代理的记忆能力。",
+          "why_relevant_zh": "该论文讨论了记忆在复杂任务中的核心作用，涉及计算效率和性能权衡，符合筛选条件。",
+          "summary_zh": "一句话：提出模块化架构以增强LLM代理的记忆能力。\n相关性：该论文讨论了记忆在复杂任务中的核心作用，涉及计算效率和性能权衡，符合筛选条件。"
+        },
+        {
+          "id": "2604.01670v1",
+          "title": "Hierarchical Memory Orchestration for Personalized Persistent Agents",
+          "abstract": "While long-term memory is essential for intelligent agents to maintain consistent historical awareness, the accumulation of extensive interaction data often leads to performance bottlenecks. Naive storage expansion increases retrieval noise and computational latency, overwhelming the reasoning capacity of models deployed on constrained personal devices. To address this, we propose Hierarchical Memory Orchestration (HMO), a framework that organizes interaction history into a three-tiered directory driven by user-centric contextual relevance. Our system maintains a compact primary cache, couplin",
+          "authors": [
+            "Junming Liu",
+            "Yifei Sun",
+            "Weihua Cheng",
+            "Haodong Lei",
+            "Yuqi Li"
+          ],
+          "published": "2026-04-02",
+          "categories": [
+            "cs.AI"
+          ],
+          "link": "https://arxiv.org/abs/2604.01670v1",
+          "pdf": "https://arxiv.org/pdf/2604.01670v1",
+          "priority": "高",
+          "one_line_zh": "提出分层记忆管理以减少代理的计算延迟。",
+          "why_relevant_zh": "该论文关注长时记忆的存储和检索效率，涉及计算效率的分析，符合筛选条件。",
+          "summary_zh": "一句话：提出分层记忆管理以减少代理的计算延迟。\n相关性：该论文关注长时记忆的存储和检索效率，涉及计算效率的分析，符合筛选条件。"
+        },
+        {
+          "id": "2604.01560v1",
+          "title": "DeltaMem: Towards Agentic Memory Management via Reinforcement Learning",
+          "abstract": "Recent advances in persona-centric memory have revealed the powerful capability of multi-agent systems in managing persona memory, especially in conversational scenarios. However, these complex frameworks often suffer from information loss and are fragile across varying scenarios, resulting in suboptimal performance. In this paper, we propose DeltaMem, an agentic memory management system that formulates persona-centric memory management as an end-to-end task within a single-agent setting. To further improve the performance of our agentic memory manager, we draw inspiration from the evolution o",
+          "authors": [
+            "Qi Zhang",
+            "Shen Huang",
+            "Chu Liu",
+            "Shouqing Yang",
+            "Junbo Zhao"
+          ],
+          "published": "2026-04-02",
+          "categories": [
+            "cs.CL"
+          ],
+          "link": "https://arxiv.org/abs/2604.01560v1",
+          "pdf": "https://arxiv.org/pdf/2604.01560v1",
+          "priority": "中",
+          "one_line_zh": "利用强化学习优化代理的记忆管理。",
+          "why_relevant_zh": "该论文探讨了动态记忆管理的计算效率，符合计算效率的分析要求。",
+          "summary_zh": "一句话：利用强化学习优化代理的记忆管理。\n相关性：该论文探讨了动态记忆管理的计算效率，符合计算效率的分析要求。"
+        },
+        {
+          "id": "2603.29193v1",
+          "title": "Developing Adaptive Context Compression Techniques for Large Language Models (LLMs) in Long-Running Interactions",
+          "abstract": "Large Language Models (LLMs) often experience performance degradation during long-running interactions due to increasing context length, memory saturation, and computational overhead. This paper presents an adaptive context compression framework that integrates importance-aware memory selection, coherence-sensitive filtering, and dynamic budget allocation to retain essential conversational information while controlling context growth. The approach is evaluated on LOCOMO, LOCCO, and LongBench benchmarks to assess answer quality, retrieval accuracy, coherence preservation, and efficiency. Experi",
+          "authors": [
+            "Payal Fofadiya",
+            "Sunil Tiwari"
+          ],
+          "published": "2026-03-31",
+          "categories": [
+            "cs.CV",
+            "cs.AI"
+          ],
+          "link": "https://arxiv.org/abs/2603.29193v1",
+          "pdf": "https://arxiv.org/pdf/2603.29193v1",
+          "priority": "中",
+          "one_line_zh": "提出自适应上下文压缩技术以提高LLM的交互性能。",
+          "why_relevant_zh": "该论文关注长时间交互中的计算效率，涉及上下文压缩和记忆选择，符合筛选条件。",
+          "summary_zh": "一句话：提出自适应上下文压缩技术以提高LLM的交互性能。\n相关性：该论文关注长时间交互中的计算效率，涉及上下文压缩和记忆选择，符合筛选条件。"
+        },
+        {
+          "id": "2603.29023v1",
+          "title": "Human-Like Lifelong Memory: A Neuroscience-Grounded Architecture for Infinite Interaction",
+          "abstract": "Large language models lack persistent, structured memory for long-term interaction and context-sensitive retrieval. Expanding context windows does not solve this: recent evidence shows that context length alone degrades reasoning by up to 85% - even with perfect retrieval. We propose a bio-inspired memory framework grounded in complementary learning systems theory, cognitive behavioral therapy's belief hierarchy, dual-process cognition, and fuzzy-trace theory, organized around three principles: (1) Memory has valence, not just content - pre-computed emotional-associative summaries (valence vec",
+          "authors": [
+            "Diego C. Lerma-Torres"
+          ],
+          "published": "2026-03-30",
+          "categories": [
+            "cs.CL",
+            "cs.AI"
+          ],
+          "link": "https://arxiv.org/abs/2603.29023v1",
+          "pdf": "https://arxiv.org/pdf/2603.29023v1",
+          "priority": "中",
+          "one_line_zh": "提出生物启发的架构以实现人类般的长期记忆。",
+          "why_relevant_zh": "该论文探讨了长期记忆的结构化和检索效率，符合计算效率的分析要求。",
+          "summary_zh": "一句话：提出生物启发的架构以实现人类般的长期记忆。\n相关性：该论文探讨了长期记忆的结构化和检索效率，符合计算效率的分析要求。"
+        },
+        {
+          "id": "2603.29002v1",
+          "title": "Understand and Accelerate Memory Processing Pipeline for Disaggregated LLM Inference",
+          "abstract": "Modern large language models (LLMs) increasingly depends on efficient long-context processing and generation mechanisms, including sparse attention, retrieval-augmented generation (RAG), and compressed contextual memory, to support complex reasoning. We show that these optimizations can be unified into a four-step memory processing pipeline: Prepare Memory, Compute Relevancy, Retrieval, and Apply to Inference. Through systematic profiling, we identify a 22%-97% memory processing overhead in LLM inference and strong heterogeneity in its computational characteristics. Motivated by this insight, ",
+          "authors": [
+            "Zifan He",
+            "Rui Ma",
+            "Yizhou Sun",
+            "Jason Cong"
+          ],
+          "published": "2026-03-30",
+          "categories": [
+            "cs.DC",
+            "cs.AI"
+          ],
+          "link": "https://arxiv.org/abs/2603.29002v1",
+          "pdf": "https://arxiv.org/pdf/2603.29002v1",
+          "priority": "中",
+          "one_line_zh": "展示了优化LLM推理的记忆处理管道。",
+          "why_relevant_zh": "该论文讨论了长上下文处理的计算效率，涉及稀疏注意力和压缩记忆，符合筛选条件。",
+          "summary_zh": "一句话：展示了优化LLM推理的记忆处理管道。\n相关性：该论文讨论了长上下文处理的计算效率，涉及稀疏注意力和压缩记忆，符合筛选条件。"
+        },
+        {
+          "id": "2603.21564v1",
+          "title": "Toward a Theory of Hierarchical Memory for Language Agents",
+          "abstract": "Many recent long-context and agentic systems address context-length limitations by adding hierarchical memory: they extract atomic units from raw data, build multi-level representatives by grouping and compression, and traverse this structure to retrieve content under a token budget. Despite recurring implementations, there is no shared formalism for comparing design choices. We propose a unifying theory in terms of three operators. Extraction ($α$) maps raw data to atomic information units; coarsening ($C = (π, ρ)$) partitions units and assigns a representative to each group; and traversal ($",
+          "authors": [
+            "Yashar Talebirad",
+            "Ali Parsaee",
+            "Csongor Y. Szepesvari",
+            "Amirhossein Nadiri",
+            "Osmar Zaiane"
+          ],
+          "published": "2026-03-23",
+          "categories": [
+            "cs.IR",
+            "cs.AI",
+            "cs.IT",
+            "cs.SI"
+          ],
+          "link": "https://arxiv.org/abs/2603.21564v1",
+          "pdf": "https://arxiv.org/pdf/2603.21564v1",
+          "priority": "中",
+          "one_line_zh": "探讨分层记忆在语言代理中的应用。",
+          "why_relevant_zh": "该论文分析了分层记忆的计算效率，符合计算效率的分析要求。",
+          "summary_zh": "一句话：探讨分层记忆在语言代理中的应用。\n相关性：该论文分析了分层记忆的计算效率，符合计算效率的分析要求。"
+        },
+        {
+          "id": "2603.19733v1",
+          "title": "PoC: Performance-oriented Context Compression for Large Language Models via Performance Prediction",
+          "abstract": "While context compression can mitigate the growing inference costs of Large Language Models (LLMs) by shortening contexts, existing methods that specify a target compression ratio or length suffer from unpredictable performance degradation, hindering their reliable deployment. We introduce a paradigm shift to Performance-oriented Context Compression (PoC), where developers specify an acceptable performance floor instead of a compression ratio. PoC employs a lightweight performance predictor to automatically find the most aggressive compression ratio that satisfies this constraint before steeri",
+          "authors": [
+            "Runsong Zhao",
+            "Shilei Liu",
+            "Jiwei Tang",
+            "Langming Liu",
+            "Haibin Chen"
+          ],
+          "published": "2026-03-20",
+          "categories": [
+            "cs.CL"
+          ],
+          "link": "https://arxiv.org/abs/2603.19733v1",
+          "pdf": "https://arxiv.org/pdf/2603.19733v1",
+          "priority": "中",
+          "one_line_zh": "提出性能导向的上下文压缩方法以降低LLM的推理成本。",
+          "why_relevant_zh": "该论文关注上下文压缩对计算效率的影响，符合筛选条件。",
+          "summary_zh": "一句话：提出性能导向的上下文压缩方法以降低LLM的推理成本。\n相关性：该论文关注上下文压缩对计算效率的影响，符合筛选条件。"
+        }
+      ]
+    }
   },
-  "total_count": 0
+  "total_count": 19
 }
