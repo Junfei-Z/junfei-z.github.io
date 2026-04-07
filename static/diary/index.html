@@ -2734,10 +2734,10 @@ function renderArxivTrack(trackKey) {
         let summaryHtml;
         if (p.problem_zh || p.method_zh || p.result_zh) {
             const lines = [];
-            if (p.problem_zh) lines.push(`<span class="text-rose-400">🎯</span> ${escapeHtml(p.problem_zh)}`);
-            if (p.method_zh) lines.push(`<span class="text-indigo-400">🔧</span> ${escapeHtml(p.method_zh)}`);
-            if (p.result_zh) lines.push(`<span class="text-emerald-400">✨</span> ${escapeHtml(p.result_zh)}`);
-            summaryHtml = `<div class="text-sm text-zinc-500 mt-1.5 leading-relaxed space-y-0.5">${lines.map(l=>`<div>${l}</div>`).join('')}</div>`;
+            if (p.problem_zh) lines.push(`<span class="inline-block px-1 py-0 rounded text-[0.6rem] font-semibold bg-rose-50 text-rose-400 mr-1">${currentLang==='zh'?'问题':'Problem'}</span>${escapeHtml(p.problem_zh)}`);
+            if (p.method_zh) lines.push(`<span class="inline-block px-1 py-0 rounded text-[0.6rem] font-semibold bg-indigo-50 text-indigo-400 mr-1">${currentLang==='zh'?'方法':'Method'}</span>${escapeHtml(p.method_zh)}`);
+            if (p.result_zh) lines.push(`<span class="inline-block px-1 py-0 rounded text-[0.6rem] font-semibold bg-emerald-50 text-emerald-400 mr-1">${currentLang==='zh'?'亮点':'Result'}</span>${escapeHtml(p.result_zh)}`);
+            summaryHtml = `<div class="text-sm text-zinc-500 mt-1.5 leading-relaxed space-y-1">${lines.map(l=>`<div>${l}</div>`).join('')}</div>`;
         } else if (p.summary_zh) {
             summaryHtml = `<div class="text-sm text-zinc-500 mt-1.5 leading-relaxed whitespace-pre-line">${escapeHtml(p.summary_zh)}</div>`;
         } else {
