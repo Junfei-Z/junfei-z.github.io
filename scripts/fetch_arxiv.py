@@ -204,7 +204,7 @@ def filter_and_summarize(papers, track_key, track_info, providers, provider_idx)
         {"role": "user", "content": f"""以下是今天的{len(papers)}篇候选论文。请筛选出相关的（最多{MAX_PER_TRACK}篇），按推荐优先级排序。
 
 对每篇相关论文，输出JSON数组格式：
-[{{"index": 0, "priority": "高", "method": "提出了什么方法/框架？核心思路是什么？（中文一句话，30-50字）", "relevance": "为什么和我的研究方向相关？（中文一句话，20-40字）"}}]
+[{{"index": 0, "priority": "高", "problem": "这篇论文要解决什么问题？（中文一句话，20-40字）", "method": "提出了什么方法/框架？核心思路是什么？如果摘要中有具体数值结果请包含，如延迟降低30%、内存减少2倍等（中文一句话，40-60字）", "relevance": "为什么和我的研究方向相关？这篇文章最大的创新点是什么？（中文一句话，30-50字）"}}]
 
 只输出JSON数组，不要其他文字。如果没有相关论文，输出空数组[]。
 
@@ -237,9 +237,10 @@ def filter_and_summarize(papers, track_key, track_info, providers, provider_idx)
         if 0 <= idx < len(papers):
             p = papers[idx].copy()
             p["priority"] = item.get("priority", "中")
+            p["problem_zh"] = item.get("problem", "")
             p["method_zh"] = item.get("method", "")
             p["relevance_zh"] = item.get("relevance", "")
-            p["summary_zh"] = f"方法：{p['method_zh']}\n相关性：{p['relevance_zh']}"
+            p["summary_zh"] = f"问题：{p['problem_zh']}\n方法：{p['method_zh']}\n相关性：{p['relevance_zh']}"
             result.append(p)
 
     return result, provider_idx
