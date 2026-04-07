@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRISM - Privacy-Aware Routing for Adaptive Cloud-Edge LLM Inference</title>
+<meta name="description" content="PRISM: Privacy-Aware Routing for Adaptive Cloud-Edge LLM Inference via Semantic Sketch Collaboration. Published at AAAI 2026.">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --accent: #06b6d4;
+  --accent2: #f59e0b;
+  --rose: #f43f5e;
+  --emerald: #10b981;
+  --bg: #fafbff;
+  --text: #1e293b;
+  --text-light: #64748b;
+  --card-bg: #ffffff;
+  --border: #e2e8f0;
+  --gradient-1: linear-gradient(135deg, #6366f1 0%, #06b6d4 50%, #10b981 100%);
+  --gradient-2: linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #4338ca 60%, #0e7490 100%);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ─── Utility ─── */
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+.section { padding: 80px 0; }
+.section-title {
+  font-size: 2rem; font-weight: 800; text-align: center; margin-bottom: 16px;
+  background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.section-subtitle { text-align: center; color: var(--text-light); font-size: 1.05rem; max-width: 700px; margin: 0 auto 48px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 16px; border-radius: 100px; font-size: 0.8rem; font-weight: 600;
+}
+.badge-primary { background: rgba(99,102,241,0.1); color: var(--primary); }
+.badge-accent { background: rgba(6,182,212,0.1); color: var(--accent); }
+.badge-rose { background: rgba(244,63,94,0.1); color: var(--rose); }
+.badge-emerald { background: rgba(16,185,129,0.1); color: var(--emerald); }
+.badge-amber { background: rgba(245,158,11,0.1); color: var(--accent2); }
+
+/* ─── Hero ─── */
+.hero {
+  position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: var(--gradient-2); overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(99,102,241,0.3) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(6,182,212,0.2) 0%, transparent 40%),
+              radial-gradient(circle at 60% 80%, rgba(16,185,129,0.15) 0%, transparent 40%);
+}
+.hero-content { position: relative; z-index: 2; text-align: center; padding: 40px 24px; max-width: 900px; }
+.hero-venue {
+  display: inline-block; padding: 8px 24px; border-radius: 100px;
+  background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+  color: rgba(255,255,255,0.9); font-size: 0.9rem; font-weight: 600;
+  letter-spacing: 0.5px; margin-bottom: 32px; border: 1px solid rgba(255,255,255,0.15);
+}
+.hero h1 {
+  font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 900; color: #fff;
+  line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.5px;
+}
+.hero h1 .highlight {
+  background: linear-gradient(90deg, #a5b4fc, #67e8f9, #6ee7b7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero-sub { font-size: 1.15rem; color: rgba(255,255,255,0.7); margin-bottom: 40px; max-width: 700px; margin-left: auto; margin-right: auto; }
+.hero-authors { color: rgba(255,255,255,0.8); font-size: 0.95rem; margin-bottom: 8px; }
+.hero-authors a { color: rgba(255,255,255,0.95); text-decoration: none; font-weight: 600; }
+.hero-authors a:hover { text-decoration: underline; }
+.hero-affil { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 36px; }
+.hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px;
+  border-radius: 12px; font-size: 0.9rem; font-weight: 600; text-decoration: none;
+  transition: all 0.3s ease; border: none; cursor: pointer;
+}
+.btn-white { background: #fff; color: var(--primary); }
+.btn-white:hover { background: #f0f0ff; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+.btn-outline { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.3); }
+.btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+.btn-dark { background: var(--text); color: #fff; }
+.btn-dark:hover { background: #334155; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.15); }
+
+/* Floating particles */
+.particles { position: absolute; inset: 0; z-index: 1; overflow: hidden; }
+.particle {
+  position: absolute; border-radius: 50%; opacity: 0.15;
+  animation: float-particle linear infinite;
+}
+@keyframes float-particle {
+  0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.15; }
+  90% { opacity: 0.15; }
+  100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
+}
+
+/* ─── Problem ─── */
+.problem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+.problem-card {
+  background: var(--card-bg); border-radius: 16px; padding: 32px; border: 1px solid var(--border);
+  transition: all 0.3s ease; position: relative; overflow: hidden;
+}
+.problem-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(99,102,241,0.1); }
+.problem-card .icon {
+  width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; margin-bottom: 16px;
+}
+.problem-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+.problem-card p { color: var(--text-light); font-size: 0.9rem; }
+
+/* ─── Pipeline ─── */
+.pipeline-bg { background: linear-gradient(180deg, #f8faff 0%, #eef2ff 100%); }
+.pipeline-steps { display: flex; flex-direction: column; gap: 0; position: relative; }
+.pipeline-steps::before {
+  content: ''; position: absolute; left: 36px; top: 40px; bottom: 40px; width: 3px;
+  background: linear-gradient(180deg, var(--primary), var(--accent), var(--emerald));
+  border-radius: 3px;
+}
+.step {
+  display: flex; gap: 32px; align-items: flex-start; padding: 32px 0;
+  opacity: 0; transform: translateX(-30px);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.step.visible { opacity: 1; transform: translateX(0); }
+.step-number {
+  flex-shrink: 0; width: 72px; height: 72px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; font-weight: 900; color: #fff; position: relative; z-index: 2;
+}
+.step-content {
+  flex: 1; background: var(--card-bg); border-radius: 16px; padding: 28px;
+  border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+.step-content h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+.step-content p { color: var(--text-light); font-size: 0.9rem; margin-bottom: 12px; }
+.step-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ─── Modes ─── */
+.modes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.mode-card {
+  background: var(--card-bg); border-radius: 20px; padding: 36px 28px; text-align: center;
+  border: 2px solid var(--border); transition: all 0.4s ease; position: relative; overflow: hidden;
+}
+.mode-card:hover { transform: translateY(-6px); }
+.mode-card.cloud:hover { border-color: var(--accent); box-shadow: 0 12px 40px rgba(6,182,212,0.15); }
+.mode-card.edge:hover { border-color: var(--emerald); box-shadow: 0 12px 40px rgba(16,185,129,0.15); }
+.mode-card.collab:hover { border-color: var(--primary); box-shadow: 0 12px 40px rgba(99,102,241,0.15); }
+.mode-icon {
+  width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px;
+  display: flex; align-items: center; justify-content: center; font-size: 2rem;
+}
+.mode-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+.mode-card p { color: var(--text-light); font-size: 0.85rem; margin-bottom: 16px; }
+.mode-meter { height: 6px; border-radius: 3px; background: #f1f5f9; overflow: hidden; margin-bottom: 6px; }
+.mode-meter-fill { height: 100%; border-radius: 3px; transition: width 1.5s ease; width: 0; }
+.mode-meter-label { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-light); }
+
+/* ─── Demo Animation ─── */
+.demo-section { background: var(--gradient-2); padding: 80px 0; }
+.demo-section .section-title { -webkit-text-fill-color: #fff; background: none; }
+.demo-section .section-subtitle { color: rgba(255,255,255,0.6); }
+.demo-container {
+  max-width: 800px; margin: 0 auto; position: relative;
+  background: rgba(255,255,255,0.05); border-radius: 20px; padding: 40px;
+  border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+}
+.demo-prompt {
+  background: rgba(255,255,255,0.08); border-radius: 12px; padding: 20px;
+  color: rgba(255,255,255,0.9); font-size: 0.9rem; line-height: 1.8; margin-bottom: 24px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.demo-prompt .sensitive {
+  background: rgba(244,63,94,0.2); color: #fda4af; padding: 2px 6px; border-radius: 4px;
+  border-bottom: 2px solid rgba(244,63,94,0.5); position: relative;
+}
+.demo-prompt .safe { color: rgba(255,255,255,0.5); }
+.demo-flow { display: flex; flex-direction: column; gap: 16px; }
+.demo-step {
+  display: flex; align-items: center; gap: 16px; padding: 16px 20px;
+  background: rgba(255,255,255,0.05); border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  opacity: 0; transform: translateY(10px);
+  transition: all 0.5s ease;
+}
+.demo-step.active { opacity: 1; transform: translateY(0); }
+.demo-step-icon {
+  width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+}
+.demo-step-text { color: rgba(255,255,255,0.8); font-size: 0.85rem; }
+.demo-step-text strong { color: #fff; }
+
+/* ─── Results ─── */
+.results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 40px; }
+.result-card {
+  background: var(--card-bg); border-radius: 16px; padding: 28px; text-align: center;
+  border: 1px solid var(--border); transition: all 0.3s ease;
+}
+.result-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.06); }
+.result-number {
+  font-size: 2.5rem; font-weight: 900; margin-bottom: 4px;
+  background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.result-label { font-size: 0.8rem; color: var(--text-light); font-weight: 500; }
+.result-bar-group { max-width: 700px; margin: 0 auto; }
+.result-bar-item { margin-bottom: 20px; }
+.result-bar-header { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.85rem; }
+.result-bar-header span:first-child { font-weight: 600; }
+.result-bar-header span:last-child { color: var(--text-light); }
+.result-bar { height: 10px; border-radius: 5px; background: #f1f5f9; overflow: hidden; }
+.result-bar-fill { height: 100%; border-radius: 5px; transition: width 1.5s ease; width: 0; }
+
+/* ─── Domains ─── */
+.domains-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.domain-card {
+  background: var(--card-bg); border-radius: 16px; padding: 28px 20px; text-align: center;
+  border: 1px solid var(--border); transition: all 0.3s ease;
+}
+.domain-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.06); }
+.domain-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.domain-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+.domain-card p { color: var(--text-light); font-size: 0.78rem; }
+
+/* ─── Citation ─── */
+.citation-bg { background: linear-gradient(180deg, #f8faff 0%, #eef2ff 100%); }
+.cite-box {
+  background: var(--card-bg); border-radius: 16px; padding: 28px; border: 1px solid var(--border);
+  max-width: 800px; margin: 0 auto; position: relative;
+}
+.cite-box pre {
+  background: #1e293b; color: #e2e8f0; border-radius: 12px; padding: 24px;
+  font-size: 0.8rem; overflow-x: auto; line-height: 1.6; white-space: pre-wrap;
+}
+.cite-copy {
+  position: absolute; top: 40px; right: 40px; background: rgba(255,255,255,0.1);
+  color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+  padding: 6px 14px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s;
+}
+.cite-copy:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+/* ─── Footer ─── */
+.footer {
+  padding: 40px 0; text-align: center; border-top: 1px solid var(--border);
+  color: var(--text-light); font-size: 0.85rem;
+}
+.footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 16px; }
+.footer-links a { color: var(--primary); text-decoration: none; font-weight: 600; }
+.footer-links a:hover { text-decoration: underline; }
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .section { padding: 60px 0; }
+  .section-title { font-size: 1.6rem; }
+  .modes-grid { grid-template-columns: 1fr; }
+  .domains-grid { grid-template-columns: repeat(2, 1fr); }
+  .pipeline-steps::before { left: 20px; }
+  .step { gap: 16px; }
+  .step-number { width: 48px; height: 48px; font-size: 1rem; }
+  .hero h1 { font-size: 1.8rem; }
+  .demo-container { padding: 20px; }
+}
+
+/* ─── Scroll Animations ─── */
+.fade-in {
+  opacity: 0; transform: translateY(30px);
+  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+.fade-in-left { opacity: 0; transform: translateX(-40px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-in-left.visible { opacity: 1; transform: translateX(0); }
+.fade-in-right { opacity: 0; transform: translateX(40px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-in-right.visible { opacity: 1; transform: translateX(0); }
+
+/* Stagger children */
+.stagger-children > * { opacity: 0; transform: translateY(20px); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.stagger-children.visible > *:nth-child(1) { transition-delay: 0s; }
+.stagger-children.visible > *:nth-child(2) { transition-delay: 0.1s; }
+.stagger-children.visible > *:nth-child(3) { transition-delay: 0.2s; }
+.stagger-children.visible > *:nth-child(4) { transition-delay: 0.3s; }
+.stagger-children.visible > * { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+  <div class="particles" id="particles"></div>
+  <div class="hero-content">
+    <div class="hero-venue">AAAI 2026 &mdash; Technical Track on Machine Learning</div>
+    <h1><span class="highlight">PRISM</span>: Privacy-Aware Routing for Adaptive Cloud&ndash;Edge LLM Inference</h1>
+    <p class="hero-sub">A context-aware framework that dynamically balances privacy and inference quality through semantic sketch collaboration between cloud LLMs and edge SLMs.</p>
+    <p class="hero-authors">
+      <a href="https://junfei-z.github.io" target="_blank">Junfei Zhan</a><sup>1*</sup> &nbsp;
+      <a href="#">Haoxun Shen</a><sup>1*</sup> &nbsp;
+      <a href="#">Zheng Lin</a><sup>2</sup> &nbsp;
+      <a href="#">Tengjiao He</a><sup>3&dagger;</sup>
+    </p>
+    <p class="hero-affil">
+      <sup>1</sup>University of Pennsylvania &nbsp; <sup>2</sup>University of Hong Kong &nbsp; <sup>3</sup>Jinan University<br>
+      <small>* Equal contribution &nbsp; &dagger; Corresponding author</small>
+    </p>
+    <div class="hero-buttons">
+      <a href="https://ojs.aaai.org/index.php/AAAI/article/view/40041/44002" target="_blank" class="btn btn-white">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+        Paper (PDF)
+      </a>
+      <a href="https://github.com/Junfei-Z/PRISM" target="_blank" class="btn btn-outline">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        Code
+      </a>
+      <a href="https://ojs.aaai.org/index.php/AAAI/article/view/40041" target="_blank" class="btn btn-outline">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        AAAI Proceedings
+      </a>
+      <a href="https://ojs.aaai.org/index.php/AAAI/article/view/40041/49562" target="_blank" class="btn btn-outline">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Poster
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PROBLEM ═══════════════ -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title fade-in">The Privacy-Performance Dilemma</h2>
+    <p class="section-subtitle fade-in">
+      LLMs excel at understanding natural language, but deploying them raises a fundamental tension between privacy protection and inference quality.
+    </p>
+    <div class="problem-grid stagger-children">
+      <div class="problem-card">
+        <div class="icon" style="background:rgba(244,63,94,0.1)">&#x1F512;</div>
+        <h3>Privacy Risks in the Cloud</h3>
+        <p>User prompts in sensitive domains (medical, financial) contain personal information. Sending full prompts to cloud LLMs exposes private data to potential breaches.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon" style="background:rgba(245,158,11,0.1)">&#x26A1;</div>
+        <h3>Edge Device Constraints</h3>
+        <p>Running large models locally preserves privacy but is limited by compute, memory, and energy. Edge SLMs cannot match cloud LLM quality on complex queries.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon" style="background:rgba(99,102,241,0.1)">&#x1F504;</div>
+        <h3>Coarse-Grained Protection</h3>
+        <p>Existing approaches apply uniform privacy noise to all tokens regardless of sensitivity, degrading utility unnecessarily for benign content.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PIPELINE ═══════════════ -->
+<section class="section pipeline-bg">
+  <div class="container">
+    <h2 class="section-title fade-in">How PRISM Works</h2>
+    <p class="section-subtitle fade-in">
+      PRISM executes in four stages, combining entity-level sensitivity profiling with adaptive privacy protection and semantic sketch collaboration.
+    </p>
+    <div class="pipeline-steps">
+      <div class="step">
+        <div class="step-number" style="background:linear-gradient(135deg,#6366f1,#818cf8)">1</div>
+        <div class="step-content">
+          <h3>Sensitivity Profiling</h3>
+          <p>The edge device analyzes the user prompt using NER (Named Entity Recognition) to extract entities and compute a category-weighted risk score. Each entity type (PERSON, LOCATION, DATE, etc.) carries a predefined sensitivity weight.</p>
+          <div class="step-tags">
+            <span class="badge badge-rose">PERSON: 0.9</span>
+            <span class="badge badge-accent">LOCATION: 0.4</span>
+            <span class="badge badge-amber">DATE: 0.3</span>
+            <span class="badge badge-primary">NER + Risk Score</span>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa)">2</div>
+        <div class="step-content">
+          <h3>Soft Gating Router</h3>
+          <p>An entropy-regularized neural router maps sensitivity indicators to a probability distribution over three execution modes. Unlike hard thresholds, soft gating produces nuanced, context-aware routing decisions.</p>
+          <div class="step-tags">
+            <span class="badge badge-emerald">Edge-Only</span>
+            <span class="badge badge-primary">Collaborative</span>
+            <span class="badge badge-accent">Cloud-Only</span>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number" style="background:linear-gradient(135deg,#06b6d4,#22d3ee)">3</div>
+        <div class="step-content">
+          <h3>Adaptive Two-Layer LDP</h3>
+          <p>For collaborative paths, PRISM applies entity-level local differential privacy with two layers: (1) category obfuscation and (2) value perturbation. Privacy budget is adaptively allocated based on each entity's sensitivity weight.</p>
+          <div class="step-tags">
+            <span class="badge badge-rose">&epsilon;-LDP Guarantee</span>
+            <span class="badge badge-amber">Category-Aware Budget</span>
+            <span class="badge badge-primary">Fine-Grained Control</span>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number" style="background:linear-gradient(135deg,#10b981,#34d399)">4</div>
+        <div class="step-content">
+          <h3>Semantic Sketch Collaboration</h3>
+          <p>The cloud LLM receives the perturbed prompt and generates a <strong>semantic sketch</strong> &mdash; a structured outline preserving task structure while hiding sensitive details. The edge SLM then refines this sketch using the original unperturbed context to produce the final response.</p>
+          <div class="step-tags">
+            <span class="badge badge-accent">Cloud Sketch Generation</span>
+            <span class="badge badge-emerald">Edge Refinement</span>
+            <span class="badge badge-primary">Privacy-Preserved Quality</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ THREE MODES ═══════════════ -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title fade-in">Three Execution Modes</h2>
+    <p class="section-subtitle fade-in">
+      PRISM dynamically routes each query to the optimal execution path based on its privacy risk profile.
+    </p>
+    <div class="modes-grid stagger-children">
+      <div class="mode-card cloud">
+        <div class="mode-icon" style="background:rgba(6,182,212,0.1)">&#x2601;&#xFE0F;</div>
+        <h3>Cloud-Only</h3>
+        <p>Low-risk queries like general knowledge questions are sent directly to the cloud LLM for maximum quality.</p>
+        <div style="margin-top:16px">
+          <div class="mode-meter-label"><span>Privacy</span><span>Low</span></div>
+          <div class="mode-meter"><div class="mode-meter-fill" data-width="25%" style="background:var(--accent)"></div></div>
+          <div class="mode-meter-label"><span>Quality</span><span>High</span></div>
+          <div class="mode-meter"><div class="mode-meter-fill" data-width="95%" style="background:var(--accent)"></div></div>
+        </div>
+      </div>
+      <div class="mode-card collab">
+        <div class="mode-icon" style="background:rgba(99,102,241,0.1)">&#x1F91D;</div>
+        <h3>Collaborative</h3>
+        <p>Moderately sensitive queries use adaptive LDP + semantic sketch collaboration for balanced privacy and quality.</p>
+        <div style="margin-top:16px">
+          <div class="mode-meter-label"><span>Privacy</span><span>Medium-High</span></div>
+          <div class="mode-meter"><div class="mode-meter-fill" data-width="75%" style="background:var(--primary)"></div></div>
+          <div class="mode-meter-label"><span>Quality</span><span>Good</span></div>
+          <div class="mode-meter"><div class="mode-meter-fill" data-width="80%" style="background:var(--primary)"></div></div>
+        </div>
+      </div>
+      <div class="mode-card edge">
+        <div class="mode-icon" style="background:rgba(16,185,129,0.1)">&#x1F4F1;</div>
+        <h3>Edge-Only</h3>
+        <p>Highly sensitive queries (e.g., medical records) are processed entirely on-device for maximum privacy protection.</p>
+        <div style="margin-top:16px">
+          <div class="mode-meter-label"><span>Privacy</span><span>Maximum</span></div>
+          <div class="mode-meter"><div class="mode-meter-fill" data-width="98%" style="background:var(--emerald)"></div></div>
+          <div class="mode-meter-label"><span>Quality</span><span>Moderate</span></div>
+          <div class="mode-meter"><div class="mode-meter-fill" data-width="55%" style="background:var(--emerald)"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ LIVE DEMO ═══════════════ -->
+<section class="demo-section">
+  <div class="container">
+    <h2 class="section-title" style="margin-bottom:16px">See PRISM in Action</h2>
+    <p class="section-subtitle">Watch how PRISM processes a privacy-sensitive tourism query through the collaborative pipeline.</p>
+    <div class="demo-container" id="demoContainer">
+      <div style="font-size:0.7rem;color:rgba(255,255,255,0.4);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">User Prompt</div>
+      <div class="demo-prompt">
+        "I'm considering traveling to <span class="sensitive" data-label="LOCATION">New York</span> in <span class="sensitive" data-label="DATE">August</span> with my friend <span class="sensitive" data-label="PERSON">Alice</span>. It's a <span class="sensitive" data-label="MONEY">6-day, 3481 EUR</span> trip. Please help me plan my days off."
+      </div>
+      <div class="demo-flow">
+        <div class="demo-step" data-delay="0">
+          <div class="demo-step-icon" style="background:rgba(99,102,241,0.2)">&#x1F50D;</div>
+          <div class="demo-step-text"><strong>Step 1 &mdash; Sensitivity Profiling:</strong> Detected 4 entities (PERSON, LOCATION, DATE, MONEY). Risk score: 0.62. Route: <strong>Collaborative</strong></div>
+        </div>
+        <div class="demo-step" data-delay="800">
+          <div class="demo-step-icon" style="background:rgba(244,63,94,0.2)">&#x1F6E1;&#xFE0F;</div>
+          <div class="demo-step-text"><strong>Step 2 &mdash; Adaptive LDP:</strong> "New York" &rarr; "Bilbury Town", "Alice" &rarr; "Emily", "August" &rarr; "September", "3481 EUR" &rarr; "White trip"</div>
+        </div>
+        <div class="demo-step" data-delay="1600">
+          <div class="demo-step-icon" style="background:rgba(6,182,212,0.2)">&#x2601;&#xFE0F;</div>
+          <div class="demo-step-text"><strong>Step 3 &mdash; Cloud Sketch:</strong> Cloud LLM generates structured itinerary outline from perturbed prompt (no real user data seen)</div>
+        </div>
+        <div class="demo-step" data-delay="2400">
+          <div class="demo-step-icon" style="background:rgba(16,185,129,0.2)">&#x2728;</div>
+          <div class="demo-step-text"><strong>Step 4 &mdash; Edge Refinement:</strong> Edge SLM restores original entities and produces personalized 6-day New York itinerary for Alice</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ EVALUATION DOMAINS ═══════════════ -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title fade-in">Evaluation Across Four Domains</h2>
+    <p class="section-subtitle fade-in">PRISM is validated on a synthetic, context-rich instruction dataset spanning diverse privacy scenarios.</p>
+    <div class="domains-grid stagger-children">
+      <div class="domain-card">
+        <div class="domain-icon">&#x1F3E5;</div>
+        <h3>Medical</h3>
+        <p>Patient demographics, symptoms, diagnosis history, treatment plans</p>
+      </div>
+      <div class="domain-card">
+        <div class="domain-icon">&#x2708;&#xFE0F;</div>
+        <h3>Tourism</h3>
+        <p>Travel plans, budgets, destinations, companion details, itineraries</p>
+      </div>
+      <div class="domain-card">
+        <div class="domain-icon">&#x1F4B3;</div>
+        <h3>Banking</h3>
+        <p>Transaction histories, card disputes, account information, balances</p>
+      </div>
+      <div class="domain-card">
+        <div class="domain-icon">&#x1F4DA;</div>
+        <h3>General Knowledge</h3>
+        <p>Non-sensitive factual queries, benchmarking cloud-only quality</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ RESULTS ═══════════════ -->
+<section class="section pipeline-bg">
+  <div class="container">
+    <h2 class="section-title fade-in">Key Results</h2>
+    <p class="section-subtitle fade-in">PRISM consistently achieves superior privacy-utility trade-offs across all evaluation scenarios.</p>
+    <div class="results-grid stagger-children">
+      <div class="result-card">
+        <div class="result-number">40-50%</div>
+        <div class="result-label">Reduction in energy &amp; latency<br>vs. baseline LDP methods</div>
+      </div>
+      <div class="result-card">
+        <div class="result-number">&epsilon;-LDP</div>
+        <div class="result-label">Provable privacy guarantee<br>with adaptive budget allocation</div>
+      </div>
+      <div class="result-card">
+        <div class="result-number">3</div>
+        <div class="result-label">Adaptive execution modes<br>context-aware routing</div>
+      </div>
+      <div class="result-card">
+        <div class="result-number">4</div>
+        <div class="result-label">Evaluation domains<br>medical, tourism, banking, general</div>
+      </div>
+    </div>
+    <div class="result-bar-group fade-in">
+      <h3 style="text-align:center;margin-bottom:24px;font-size:1.1rem">Inference Quality Under Privacy Constraints</h3>
+      <div class="result-bar-item">
+        <div class="result-bar-header"><span>PRISM (Ours)</span><span>Best trade-off</span></div>
+        <div class="result-bar"><div class="result-bar-fill" data-width="92%" style="background:var(--gradient-1)"></div></div>
+      </div>
+      <div class="result-bar-item">
+        <div class="result-bar-header"><span>Selective LDP</span><span>Baseline</span></div>
+        <div class="result-bar"><div class="result-bar-fill" data-width="68%" style="background:#94a3b8"></div></div>
+      </div>
+      <div class="result-bar-item">
+        <div class="result-bar-header"><span>Uniform LDP</span><span>Baseline</span></div>
+        <div class="result-bar"><div class="result-bar-fill" data-width="52%" style="background:#cbd5e1"></div></div>
+      </div>
+      <div class="result-bar-item">
+        <div class="result-bar-header"><span>Edge-Only (No Privacy Loss)</span><span>Lower bound</span></div>
+        <div class="result-bar"><div class="result-bar-fill" data-width="45%" style="background:#e2e8f0"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CITATION ═══════════════ -->
+<section class="section citation-bg">
+  <div class="container">
+    <h2 class="section-title fade-in">Citation</h2>
+    <p class="section-subtitle fade-in">If you find PRISM useful in your research, please consider citing our paper.</p>
+    <div class="cite-box fade-in">
+      <button class="cite-copy" onclick="copyCite()">Copy BibTeX</button>
+      <pre id="bibtex">@inproceedings{zhan2026prism,
+  title     = {PRISM: Privacy-Aware Routing for Adaptive Cloud-Edge
+               LLM Inference via Semantic Sketch Collaboration},
+  author    = {Zhan, Junfei and Shen, Haoxun and Lin, Zheng and He, Tengjiao},
+  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume    = {40},
+  number    = {33},
+  pages     = {28150--28158},
+  year      = {2026},
+  doi       = {10.1609/aaai.v40i33.40041},
+  url       = {https://ojs.aaai.org/index.php/AAAI/article/view/40041}
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-links">
+      <a href="https://ojs.aaai.org/index.php/AAAI/article/view/40041" target="_blank">AAAI Proceedings</a>
+      <a href="https://ojs.aaai.org/index.php/AAAI/article/view/40041/44002" target="_blank">Paper PDF</a>
+      <a href="https://github.com/Junfei-Z/PRISM" target="_blank">GitHub</a>
+      <a href="https://doi.org/10.1609/aaai.v40i33.40041" target="_blank">DOI</a>
+    </div>
+    <p>&copy; 2026 PRISM Authors. Published at AAAI-26.</p>
+  </div>
+</footer>
+
+<script>
+// ─── Particles ───
+(function() {
+  const container = document.getElementById('particles');
+  const colors = ['#6366f1','#06b6d4','#10b981','#f59e0b','#f43f5e'];
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 8 + 3;
+    p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;background:${colors[i%5]};animation-duration:${Math.random()*15+10}s;animation-delay:${Math.random()*10}s;`;
+    container.appendChild(p);
+  }
+})();
+
+// ─── Scroll Animations ───
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right, .stagger-children, .step').forEach(el => observer.observe(el));
+
+// ─── Mode meter bars ───
+const meterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.mode-meter-fill').forEach(fill => {
+        fill.style.width = fill.dataset.width;
+      });
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.mode-card').forEach(el => meterObserver.observe(el));
+
+// ─── Result bars ───
+const barObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.result-bar-fill').forEach(fill => {
+        fill.style.width = fill.dataset.width;
+      });
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.result-bar-group').forEach(el => barObserver.observe(el));
+
+// ─── Demo animation ───
+const demoObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const steps = entry.target.querySelectorAll('.demo-step');
+      steps.forEach(step => {
+        const delay = parseInt(step.dataset.delay) || 0;
+        setTimeout(() => step.classList.add('active'), delay);
+      });
+      demoObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('#demoContainer').forEach(el => demoObserver.observe(el));
+
+// ─── Copy BibTeX ───
+function copyCite() {
+  const text = document.getElementById('bibtex').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.cite-copy');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy BibTeX', 2000);
+  });
+}
+</script>
+</body>
+</html>
