@@ -245,6 +245,55 @@ def filter_and_summarize(papers, track_key, track_info, providers, provider_idx)
     return result, provider_idx
 
 
+# ─── Word Cloud ───
+
+def generate_wordclouds(all_tracks):
+    """Generate a word cloud image for each track from paper titles + abstracts."""
+    try:
+        from wordcloud import WordCloud
+    except ImportError:
+        print("wordcloud not installed, skipping word cloud generation")
+        return
+
+    # Common stopwords for academic papers
+    stopwords = set("the a an and or of to in for on with is are was were be been by that this it its from at as we our which their can will has have do does not but also more than into such using used based use these those between however both most each".split())
+
+    colors = {
+        "edge_ai": {"colormap": "cool", "bg": "#fafafa"},
+        "agent_memory": {"colormap": "autumn", "bg": "#fafafa"},
+    }
+
+    for track_key, track_data in all_tracks.items():
+        papers = track_data.get("papers", [])
+        if not papers:
+            continue
+
+        # Build text corpus from titles (2x weight) + abstracts
+        text_parts = []
+        for p in papers:
+            text_parts.append(p["title"] + " " + p["title"])  # title 2x
+            text_parts.append(p.get("abstract", ""))
+        text = " ".join(text_parts)
+
+        style = colors.get(track_key, {"colormap": "viridis", "bg": "#fafafa"})
+        wc = WordCloud(
+            width=800, height=300,
+            background_color=style["bg"],
+            colormap=style["colormap"],
+            max_words=60,
+            stopwords=stopwords,
+            min_font_size=10,
+            max_font_size=80,
+            prefer_horizontal=0.8,
+            margin=8
+        ).generate(text)
+
+        out_path = f"static/diary/wordcloud_{track_key}.png"
+        wc.to_file(out_path)
+        track_data["wordcloud"] = f"wordcloud_{track_key}.png"
+        print(f"  Generated word cloud: {out_path}")
+
+
 # ─── Main ───
 
 def main():
@@ -282,6 +331,10 @@ def main():
             "papers": filtered
         }
         time.sleep(3)  # respect arXiv rate limit
+
+    # Generate word clouds
+    print("\nGenerating word clouds...")
+    generate_wordclouds(all_tracks)
 
     output = {
         "date": datetime.utcnow().strftime("%Y-%m-%d"),
