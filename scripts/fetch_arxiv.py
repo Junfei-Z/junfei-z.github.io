@@ -204,7 +204,7 @@ def filter_and_summarize(papers, track_key, track_info, providers, provider_idx)
         {"role": "user", "content": f"""以下是今天的{len(papers)}篇候选论文。请筛选出相关的（最多{MAX_PER_TRACK}篇），按推荐优先级排序。
 
 对每篇相关论文，输出JSON数组格式：
-[{{"index": 0, "priority": "高", "one_line": "一句话核心贡献（中文30字内）", "why": "为什么相关（中文1-2句）"}}]
+[{{"index": 0, "priority": "高", "problem": "解决什么问题（中文15字内）", "method": "提出什么方法（中文25字内）", "result": "关键结果或亮点（中文20字内）"}}]
 
 只输出JSON数组，不要其他文字。如果没有相关论文，输出空数组[]。
 
@@ -212,7 +212,7 @@ def filter_and_summarize(papers, track_key, track_info, providers, provider_idx)
 {paper_list}"""}
     ]
 
-    resp, provider_idx = llm_call_with_fallback(filter_msg, providers, provider_idx, max_tokens=1500)
+    resp, provider_idx = llm_call_with_fallback(filter_msg, providers, provider_idx, max_tokens=2000)
     if not resp:
         print(f"  [{track_key}] LLM filtering failed, returning top papers by recency")
         return papers[:MAX_PER_TRACK], provider_idx
@@ -237,9 +237,10 @@ def filter_and_summarize(papers, track_key, track_info, providers, provider_idx)
         if 0 <= idx < len(papers):
             p = papers[idx].copy()
             p["priority"] = item.get("priority", "中")
-            p["one_line_zh"] = item.get("one_line", "")
-            p["why_relevant_zh"] = item.get("why", "")
-            p["summary_zh"] = f"一句话：{p['one_line_zh']}\n相关性：{p['why_relevant_zh']}"
+            p["problem_zh"] = item.get("problem", "")
+            p["method_zh"] = item.get("method", "")
+            p["result_zh"] = item.get("result", "")
+            p["summary_zh"] = f"🎯 问题：{p['problem_zh']}\n🔧 方法：{p['method_zh']}\n✨ 亮点：{p['result_zh']}"
             result.append(p)
 
     return result, provider_idx
