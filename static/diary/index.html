@@ -2642,8 +2642,9 @@ function renderArxivTrack(trackKey) {
     const wcEl = document.getElementById('arxivWordcloud');
     const wcImg = document.getElementById('arxivWordcloudImg');
     if (wcEl && wcImg && track && track.wordcloud) {
-        wcImg.src = track.wordcloud + '?' + Date.now();
-        wcEl.style.display = '';
+        wcImg.onerror = () => { wcEl.style.display = 'none'; };
+        wcImg.onload = () => { wcEl.style.display = 'block'; };
+        wcImg.src = track.wordcloud + '?v=' + Date.now();
     } else if (wcEl) {
         wcEl.style.display = 'none';
     }
