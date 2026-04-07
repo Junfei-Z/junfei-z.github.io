@@ -2687,13 +2687,53 @@ function syncArxivPrefs() {
         track_preference: trackFreq,
         liked_titles: liked.map(p => p.title)
     };
-    const blob = new Blob([JSON.stringify(prefs, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'arxiv-prefs.json';
-    a.click();
-    URL.revokeObjectURL(a.href);
-    alert(currentLang === 'zh' ? '偏好文件已下载！请将 arxiv-prefs.json 放到仓库的 static/diary/ 目录并提交，下次推送会参考你的偏好。' : 'Preferences downloaded! Place arxiv-prefs.json in static/diary/ and commit to apply.');
+    // Auto-commit to GitHub via API
+    const REPO = 'Junfei-Z/junfei-z.github.io';
+    const FILE_PATH = 'static/diary/arxiv-prefs.json';
+    let ghToken = localStorage.getItem('gh_token');
+    if (!ghToken) {
+        ghToken = prompt(currentLang === 'zh'
+            ? '首次同步需要 GitHub Token（repo 权限）\n在 GitHub → Settings → Developer settings → Personal access tokens 创建\n请输入：'
+            : 'First sync needs a GitHub Token (repo scope)\nCreate at GitHub → Settings → Developer settings → Personal access tokens\nEnter token:');
+        if (!ghToken) return;
+        localStorage.setItem('gh_token', ghToken.trim());
+        ghToken = ghToken.trim();
+    }
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(prefs, null, 2))));
+    // Get current file SHA if exists
+    const syncBtn = document.querySelector('[onclick="syncArxivPrefs()"]');
+    if (syncBtn) { syncBtn.disabled = true; syncBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>' + (currentLang==='zh'?'同步中...':'Syncing...'); }
+    fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
+        headers: { 'Authorization': `token ${ghToken}`, 'Accept': 'application/vnd.github.v3+json' }
+    })
+    .then(r => r.ok ? r.json() : null)
+    .then(existing => {
+        const body = {
+            message: `chore: sync arXiv reading preferences [skip ci]`,
+            content: content
+        };
+        if (existing && existing.sha) body.sha = existing.sha;
+        return fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
+            method: 'PUT',
+            headers: { 'Authorization': `token ${ghToken}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+    })
+    .then(r => {
+        if (syncBtn) { syncBtn.disabled = false; syncBtn.innerHTML = '<i class="fas fa-sync-alt mr-1"></i>' + t('arxivSyncPrefs'); }
+        if (r.ok) {
+            alert(currentLang === 'zh' ? `偏好已同步！${liked.length} 篇点赞论文的偏好已提交到仓库，明天推送会参考你的口味。` : `Preferences synced! ${liked.length} liked papers submitted. Tomorrow's feed will consider your taste.`);
+        } else if (r.status === 401) {
+            localStorage.removeItem('gh_token');
+            alert(currentLang === 'zh' ? 'Token 无效或过期，请重新输入。' : 'Token invalid or expired. Please try again.');
+        } else {
+            r.json().then(d => alert('Error: ' + (d.message || r.status)));
+        }
+    })
+    .catch(e => {
+        if (syncBtn) { syncBtn.disabled = false; syncBtn.innerHTML = '<i class="fas fa-sync-alt mr-1"></i>' + t('arxivSyncPrefs'); }
+        alert('Network error: ' + e.message);
+    });
 }
 function updateArxivProgress() {
     const el = document.getElementById('arxivReadProgress');
