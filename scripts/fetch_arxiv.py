@@ -141,6 +141,42 @@ def llm_call_with_fallback(messages, providers, current_idx=0, max_tokens=600):
     return None, current_idx
 
 
+# ─── Venue detection ───
+
+import re
+
+TOP_VENUES = {
+    # Top ML/AI conferences
+    "iclr": "ICLR", "neurips": "NeurIPS", "nips": "NeurIPS",
+    "icml": "ICML", "aaai": "AAAI", "ijcai": "IJCAI",
+    # NLP
+    "acl": "ACL", "emnlp": "EMNLP", "naacl": "NAACL",
+    # CV
+    "cvpr": "CVPR", "iccv": "ICCV", "eccv": "ECCV",
+    # Systems
+    "osdi": "OSDI", "sosp": "SOSP", "mlsys": "MLSys",
+    "asplos": "ASPLOS", "isca": "ISCA", "micro": "MICRO",
+    # Journals
+    "nature": "Nature", "science": "Science",
+    "nature machine intelligence": "NMI",
+    "nmi": "NMI", "tmlr": "TMLR", "jmlr": "JMLR",
+    "tpami": "TPAMI", "tacl": "TACL",
+}
+
+
+def detect_venue(comment):
+    """Detect top venue from arXiv comment field."""
+    if not comment:
+        return ""
+    comment_lower = comment.lower()
+    # Check longer patterns first (e.g. "nature machine intelligence" before "nature")
+    for keyword in sorted(TOP_VENUES.keys(), key=len, reverse=True):
+        # Use word boundary to avoid false matches (e.g. "practical" matching "acl")
+        if re.search(r'\b' + re.escape(keyword) + r'\b', comment_lower):
+            return TOP_VENUES[keyword]
+    return ""
+
+
 # ─── arXiv fetching ───
 
 def fetch_arxiv(categories, keywords, max_results=50):
@@ -175,11 +211,17 @@ def fetch_arxiv(categories, keywords, max_results=50):
         published = entry.find("atom:published", ns).text.strip()[:10]
         authors = [a.find("atom:name", ns).text for a in entry.findall("atom:author", ns)]
         categories = [c.get("term") for c in entry.findall("atom:category", ns)]
+        comment_el = entry.find("atom:comment", ns)
+        comment = comment_el.text.strip().replace("\n", " ") if comment_el is not None and comment_el.text else ""
+
+        # Detect top venue from comment
+        venue = detect_venue(comment)
 
         papers.append({
             "id": arxiv_id, "title": title, "abstract": abstract[:600],
             "authors": authors[:5], "published": published,
-            "categories": categories[:5],
+            "categories": categories[:5], "comment": comment[:200],
+            "venue": venue,
             "link": f"https://arxiv.org/abs/{arxiv_id}",
             "pdf": f"https://arxiv.org/pdf/{arxiv_id}"
         })
@@ -208,10 +250,14 @@ def filter_and_summarize(papers, track_key, track_info, providers, provider_idx,
     if not papers:
         return [], provider_idx
 
+    # Sort: venue papers first for LLM attention
+    papers_sorted = sorted(papers, key=lambda p: (0 if p.get("venue") else 1))
+
     # Batch filter: send all titles+abstracts, ask LLM to pick relevant ones
     paper_list = "\n\n".join(
-        f"[{i}] 标题: {p['title']}\n摘要: {p['abstract'][:300]}"
-        for i, p in enumerate(papers)
+        f"[{i}] 标题: {p['title']}\n摘要: {p['abstract'][:300]}" +
+        (f"\n⭐ 发表于: {p['venue']}" if p.get("venue") else "")
+        for i, p in enumerate(papers_sorted)
     )
 
     # Build preference hint if available
@@ -222,7 +268,9 @@ def filter_and_summarize(papers, track_key, track_info, providers, provider_idx,
 
     filter_msg = [
         {"role": "system", "content": track_info["filter_prompt"]},
-        {"role": "user", "content": f"""以下是今天的{len(papers)}篇候选论文。请筛选出相关的（最多{MAX_PER_TRACK}篇），按推荐优先级排序。{pref_hint}
+        {"role": "user", "content": f"""以下是今天的{len(papers_sorted)}篇候选论文。请筛选出相关的（最多{MAX_PER_TRACK}篇），按推荐优先级排序。
+
+重要：标有⭐的论文已被顶会/顶刊接收（如ICLR、NeurIPS、ICML、ACL、CVPR、Nature等），在同等相关性下请优先推荐这些论文，并将其priority设为"高"。{pref_hint}
 
 对每篇相关论文，输出JSON数组格式：
 [{{"index": 0, "priority": "高", "problem": "这篇论文要解决什么问题？（中文一句话，20-40字）", "method": "提出了什么方法/框架？核心思路是什么？如果摘要中有具体数值结果请包含，如延迟降低30%、内存减少2倍等（中文一句话，40-60字）", "relevance": "为什么和我的研究方向相关？这篇文章最大的创新点是什么？（中文一句话，30-50字）"}}]
@@ -255,8 +303,8 @@ def filter_and_summarize(papers, track_key, track_info, providers, provider_idx,
     result = []
     for item in selected[:MAX_PER_TRACK]:
         idx = item.get("index", -1)
-        if 0 <= idx < len(papers):
-            p = papers[idx].copy()
+        if 0 <= idx < len(papers_sorted):
+            p = papers_sorted[idx].copy()
             p["priority"] = item.get("priority", "中")
             p["problem_zh"] = item.get("problem", "")
             p["method_zh"] = item.get("method", "")
