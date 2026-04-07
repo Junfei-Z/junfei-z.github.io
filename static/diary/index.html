@@ -730,7 +730,12 @@
                         <i class="fas fa-newspaper text-rose-400"></i>
                         <span data-i18n="arxivTitle"></span>
                     </div>
-                    <span class="text-[0.6rem] text-zinc-300" id="arxivDate"></span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="syncArxivPrefs()" class="btn-ghost px-2 py-1 text-xs" title="Sync preferences">
+                            <i class="fas fa-sync-alt mr-1"></i><span data-i18n="arxivSyncPrefs"></span>
+                        </button>
+                        <span class="text-[0.6rem] text-zinc-300" id="arxivDate"></span>
+                    </div>
                 </div>
                 <div class="flex gap-1 mb-2" id="arxivTabs"></div>
                 <div id="arxivWordcloud" class="mb-2 rounded-lg overflow-hidden" style="display:none"><img id="arxivWordcloudImg" src="" alt="Word Cloud" class="w-full h-auto"></div>
@@ -954,7 +959,7 @@ const I18N = {
         arxivTitle: "今日论文", arxivHint: "每日自动推送 arXiv 最新论文",
         arxivLoading: "加载中...", arxivEmpty: "暂无论文数据",
         arxivError: "加载失败，点击重试", arxivAuthors: "作者",
-        arxivReadLabel: "篇已读",
+        arxivReadLabel: "篇已读", arxivSyncPrefs: "同步偏好",
         arxivMotiv0: "📚 今天的论文还没开始读哦～",
         arxivMotiv25: "🌱 不错的开始，继续加油！",
         arxivMotiv50: "🔥 已经读了一半，保持节奏！",
@@ -1022,7 +1027,7 @@ const I18N = {
         arxivTitle: "Daily Papers", arxivHint: "Auto-updated arXiv paper feed",
         arxivLoading: "Loading...", arxivEmpty: "No paper data available",
         arxivError: "Failed to load, click to retry", arxivAuthors: "Authors",
-        arxivReadLabel: "read",
+        arxivReadLabel: "read", arxivSyncPrefs: "Sync Prefs",
         arxivMotiv0: "📚 Today's papers are waiting for you~",
         arxivMotiv25: "🌱 Good start, keep going!",
         arxivMotiv50: "🔥 Halfway there, stay on track!",
@@ -2630,11 +2635,65 @@ function renderDayPhases() {
 // ======================== ARXIV PAPERS ========================
 let arxivData = null, arxivActiveTrack = null;
 let arxivReadSet = new Set(JSON.parse(localStorage.getItem('arxivRead') || '[]'));
+let arxivLikes = JSON.parse(localStorage.getItem('arxivLikes') || '{}'); // {paperId: {title, categories, track, date}}
 function toggleArxivRead(paperId, ev) {
     ev.stopPropagation();
     if (arxivReadSet.has(paperId)) arxivReadSet.delete(paperId); else arxivReadSet.add(paperId);
     localStorage.setItem('arxivRead', JSON.stringify([...arxivReadSet]));
     renderArxivTrack(arxivActiveTrack);
+}
+function toggleArxivLike(paperId, ev) {
+    ev.stopPropagation();
+    if (arxivLikes[paperId]) {
+        delete arxivLikes[paperId];
+    } else {
+        // Find paper info from arxivData
+        for (const [tk, tv] of Object.entries(arxivData?.tracks || {})) {
+            const p = (tv.papers || []).find(x => x.id === paperId);
+            if (p) {
+                arxivLikes[paperId] = { title: p.title, categories: p.categories || [], track: tk, date: arxivData.date || '' };
+                break;
+            }
+        }
+    }
+    localStorage.setItem('arxivLikes', JSON.stringify(arxivLikes));
+    renderArxivTrack(arxivActiveTrack);
+}
+function syncArxivPrefs() {
+    const liked = Object.values(arxivLikes);
+    if (!liked.length) { alert(currentLang === 'zh' ? '还没有点赞的论文哦～' : 'No liked papers yet~'); return; }
+    // Extract keyword frequencies from liked paper titles
+    const stopwords = new Set('the a an and or of to in for on with is are was were be been by that this it its from at as we our which their can will has have do does not but also more than into such using used based use these those between however both most each via'.split(' '));
+    const wordFreq = {};
+    liked.forEach(p => {
+        p.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').split(/\s+/).forEach(w => {
+            if (w.length > 2 && !stopwords.has(w)) wordFreq[w] = (wordFreq[w] || 0) + 1;
+        });
+    });
+    const topKeywords = Object.entries(wordFreq).sort((a,b) => b[1]-a[1]).slice(0, 20).map(e => e[0]);
+    // Category frequencies
+    const catFreq = {};
+    liked.forEach(p => (p.categories || []).forEach(c => catFreq[c] = (catFreq[c] || 0) + 1));
+    const topCats = Object.entries(catFreq).sort((a,b) => b[1]-a[1]).slice(0, 10).map(e => e[0]);
+    // Track preference
+    const trackFreq = {};
+    liked.forEach(p => { if(p.track) trackFreq[p.track] = (trackFreq[p.track] || 0) + 1; });
+
+    const prefs = {
+        updated_at: new Date().toISOString(),
+        total_liked: liked.length,
+        preferred_keywords: topKeywords,
+        preferred_categories: topCats,
+        track_preference: trackFreq,
+        liked_titles: liked.map(p => p.title)
+    };
+    const blob = new Blob([JSON.stringify(prefs, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'arxiv-prefs.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    alert(currentLang === 'zh' ? '偏好文件已下载！请将 arxiv-prefs.json 放到仓库的 static/diary/ 目录并提交，下次推送会参考你的偏好。' : 'Preferences downloaded! Place arxiv-prefs.json in static/diary/ and commit to apply.');
 }
 function updateArxivProgress() {
     const el = document.getElementById('arxivReadProgress');
@@ -2767,6 +2826,9 @@ function renderArxivTrack(trackKey) {
                                 <i class="fas fa-file-pdf text-[0.5rem]"></i>PDF
                             </a>
                             <span class="text-[0.6rem] text-zinc-300 ml-auto">${p.published || ''}</span>
+                            <button onclick="toggleArxivLike('${p.id}',event)" class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-[0.6rem] font-medium transition no-underline ${arxivLikes[p.id] ? 'bg-rose-50 text-rose-500' : 'bg-zinc-100 text-zinc-400 hover:bg-zinc-200'}">
+                                <i class="fas fa-thumbs-up text-[0.5rem]"></i>${arxivLikes[p.id] ? (currentLang==='zh'?'已赞':'Liked') : (currentLang==='zh'?'点赞':'Like')}
+                            </button>
                             <button onclick="toggleArxivRead('${p.id}',event)" class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-[0.6rem] font-medium transition no-underline ${arxivReadSet.has(p.id) ? 'bg-emerald-50 text-emerald-500' : 'bg-zinc-100 text-zinc-400 hover:bg-zinc-200'}">
                                 <i class="fas ${arxivReadSet.has(p.id) ? 'fa-check-circle' : 'fa-circle'} text-[0.5rem]"></i>${arxivReadSet.has(p.id) ? (currentLang==='zh'?'已读':'Read') : (currentLang==='zh'?'未读':'Unread')}
                             </button>

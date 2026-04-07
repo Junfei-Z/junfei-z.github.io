@@ -12,6 +12,7 @@ import time
 from datetime import datetime
 
 OUTPUT_PATH = "static/diary/arxiv-daily.json"
+PREFS_PATH = "static/diary/arxiv-prefs.json"
 MAX_PER_TRACK = 10
 
 # ─── Track definitions ───
@@ -188,7 +189,21 @@ def fetch_arxiv(categories, keywords, max_results=50):
 
 # ─── LLM filtering + summarization ───
 
-def filter_and_summarize(papers, track_key, track_info, providers, provider_idx):
+def load_user_prefs():
+    """Load user preferences from arxiv-prefs.json if it exists."""
+    if not os.path.exists(PREFS_PATH):
+        return None
+    try:
+        with open(PREFS_PATH, "r", encoding="utf-8") as f:
+            prefs = json.load(f)
+        print(f"  Loaded user preferences: {prefs.get('total_liked', 0)} liked papers")
+        return prefs
+    except Exception as e:
+        print(f"  Failed to load preferences: {e}")
+        return None
+
+
+def filter_and_summarize(papers, track_key, track_info, providers, provider_idx, user_prefs=None):
     """Use LLM to filter relevant papers and generate summaries."""
     if not papers:
         return [], provider_idx
@@ -199,9 +214,15 @@ def filter_and_summarize(papers, track_key, track_info, providers, provider_idx)
         for i, p in enumerate(papers)
     )
 
+    # Build preference hint if available
+    pref_hint = ""
+    if user_prefs and user_prefs.get("preferred_keywords"):
+        keywords = user_prefs["preferred_keywords"][:15]
+        pref_hint = f"\n\n用户偏好提示：根据用户历史点赞记录，用户对以下关键词相关的论文更感兴趣：{', '.join(keywords)}。请在筛选时适当优先推荐与这些关键词相关的论文，但不要完全排除其他相关论文。"
+
     filter_msg = [
         {"role": "system", "content": track_info["filter_prompt"]},
-        {"role": "user", "content": f"""以下是今天的{len(papers)}篇候选论文。请筛选出相关的（最多{MAX_PER_TRACK}篇），按推荐优先级排序。
+        {"role": "user", "content": f"""以下是今天的{len(papers)}篇候选论文。请筛选出相关的（最多{MAX_PER_TRACK}篇），按推荐优先级排序。{pref_hint}
 
 对每篇相关论文，输出JSON数组格式：
 [{{"index": 0, "priority": "高", "problem": "这篇论文要解决什么问题？（中文一句话，20-40字）", "method": "提出了什么方法/框架？核心思路是什么？如果摘要中有具体数值结果请包含，如延迟降低30%、内存减少2倍等（中文一句话，40-60字）", "relevance": "为什么和我的研究方向相关？这篇文章最大的创新点是什么？（中文一句话，30-50字）"}}]
@@ -308,6 +329,7 @@ def main():
 
     provider_idx = 0
     all_tracks = {}
+    user_prefs = load_user_prefs()
 
     for track_key, track_info in TRACKS.items():
         print(f"\n--- Track: {track_info['name_en']} ---")
@@ -319,7 +341,7 @@ def main():
         if papers and providers:
             print(f"  Filtering with LLM...")
             filtered, provider_idx = filter_and_summarize(
-                papers, track_key, track_info, providers, provider_idx
+                papers, track_key, track_info, providers, provider_idx, user_prefs
             )
             print(f"  Selected {len(filtered)} papers")
         else:
