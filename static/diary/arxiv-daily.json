@@ -1,11 +1,11 @@
 {
-  "date": "2026-04-07",
-  "updated_at": "2026-04-07T21:35:04.709468Z",
+  "date": "2026-04-08",
+  "updated_at": "2026-04-08T11:50:57.428744Z",
   "tracks": {
     "edge_ai": {
       "name_zh": "Edge AI",
       "name_en": "Edge AI",
-      "count": 10,
+      "count": 9,
       "papers": [
         {
           "id": "2604.04722v1",
@@ -27,10 +27,10 @@
           "link": "https://arxiv.org/abs/2604.04722v1",
           "pdf": "https://arxiv.org/pdf/2604.04722v1",
           "priority": "高",
-          "problem_zh": "这篇论文旨在解决在移动和边缘设备上部署大型语言模型时的内存和带宽限制问题。",
-          "method_zh": "提出了一种自适应KV缓存量化方法，旨在减少内存和带宽开销，从而实现轻量级的设备端LLM推理，显著提高了推理效率。",
-          "relevance_zh": "该研究直接涉及边缘设备上的LLM能耗建模与优化，创新点在于提出了适应性量化策略以优化KV缓存。",
-          "summary_zh": "问题：这篇论文旨在解决在移动和边缘设备上部署大型语言模型时的内存和带宽限制问题。\n方法：提出了一种自适应KV缓存量化方法，旨在减少内存和带宽开销，从而实现轻量级的设备端LLM推理，显著提高了推理效率。\n相关性：该研究直接涉及边缘设备上的LLM能耗建模与优化，创新点在于提出了适应性量化策略以优化KV缓存。"
+          "problem_zh": "这篇论文探讨了在移动和边缘设备上部署大型语言模型时的内存和带宽限制问题。",
+          "method_zh": "提出了一种自适应的KV缓存量化方法，旨在减少移动设备上LLM推理的内存和带宽开销，从而提高推理效率。",
+          "relevance_zh": "该论文与边缘设备上的LLM能耗profiling和建模密切相关，创新点在于提出了适应性量化策略以优化资源使用。",
+          "summary_zh": "问题：这篇论文探讨了在移动和边缘设备上部署大型语言模型时的内存和带宽限制问题。\n方法：提出了一种自适应的KV缓存量化方法，旨在减少移动设备上LLM推理的内存和带宽开销，从而提高推理效率。\n相关性：该论文与边缘设备上的LLM能耗profiling和建模密切相关，创新点在于提出了适应性量化策略以优化资源使用。"
         },
         {
           "id": "2604.03143v1",
@@ -52,86 +52,135 @@
           "link": "https://arxiv.org/abs/2604.03143v1",
           "pdf": "https://arxiv.org/pdf/2604.03143v1",
           "priority": "高",
-          "problem_zh": "这篇论文解决了多智能体LLM应用中的KV缓存冗余问题，影响了推理效率。",
-          "method_zh": "提出了TokenDance框架，通过集体KV缓存共享来优化多智能体LLM的执行，减少了缓存冗余，提高了推理效率。",
-          "relevance_zh": "该研究涉及分布式LLM服务与资源调度，创新点在于通过共享机制降低了多智能体系统的能耗。",
-          "summary_zh": "问题：这篇论文解决了多智能体LLM应用中的KV缓存冗余问题，影响了推理效率。\n方法：提出了TokenDance框架，通过集体KV缓存共享来优化多智能体LLM的执行，减少了缓存冗余，提高了推理效率。\n相关性：该研究涉及分布式LLM服务与资源调度，创新点在于通过共享机制降低了多智能体系统的能耗。"
+          "problem_zh": "这篇论文解决了多代理LLM应用中的KV缓存冗余问题，影响了推理效率。",
+          "method_zh": "提出了一种多代理LLM服务的集体KV缓存共享机制，通过中心调度器优化缓存使用，减少冗余数据传输。",
+          "relevance_zh": "该研究与分布式LLM服务和边缘计算协同推理相关，创新点在于通过共享机制提升多代理系统的效率。",
+          "summary_zh": "问题：这篇论文解决了多代理LLM应用中的KV缓存冗余问题，影响了推理效率。\n方法：提出了一种多代理LLM服务的集体KV缓存共享机制，通过中心调度器优化缓存使用，减少冗余数据传输。\n相关性：该研究与分布式LLM服务和边缘计算协同推理相关，创新点在于通过共享机制提升多代理系统的效率。"
         },
         {
-          "id": "2604.02047v1",
-          "title": "Goose: Anisotropic Speculation Trees for Training-Free Speculative Decoding",
-          "abstract": "Speculative decoding accelerates large language model inference by drafting multiple candidate tokens and verifying them in a single forward pass. Candidates are organized as a tree: deeper trees accept more tokens per step, but adding depth requires sacrificing breadth (fallback options) under a fixed verification budget. Existing training-free methods draft from a single token source and shape their trees without distinguishing candidate quality across origins. We observe that two common training-free token sources - n-gram matches copied from the input context, and statistical predictions f",
+          "id": "2604.05250v1",
+          "title": "DualDiffusion: A Speculative Decoding Strategy for Masked Diffusion Models",
+          "abstract": "Masked Diffusion Models (MDMs) offer a promising alternative to autoregressive language models by enabling parallel token generation and bidirectional context modeling. However, their inference speed is significantly limited by the inability to cache key-value pairs due to bidirectional attention, requiring $O(N^2)$ computations at each generation step. While recent methods like FastDLLM and DkvCache improve inference speed through attention approximations and caching strategies, they achieve speedups at the cost of generation quality. We propose DualDiffusion, a speculative decoding framework",
           "authors": [
-            "Tao Jin",
-            "Phuong Minh Nguyen",
-            "Naoya Inoue"
+            "Satyam Goyal",
+            "Kushal Patel",
+            "Tanush Mittal",
+            "Arjun Laxman"
           ],
-          "published": "2026-04-02",
+          "published": "2026-04-06",
           "categories": [
-            "cs.CL",
+            "cs.LG",
+            "cs.CL"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2604.05250v1",
+          "pdf": "https://arxiv.org/pdf/2604.05250v1",
+          "priority": "中",
+          "problem_zh": "这篇论文关注于掩蔽扩散模型的推理速度受限于KV缓存的使用问题。",
+          "method_zh": "提出了一种投机解码策略，通过并行生成候选令牌来加速推理，减少KV缓存的限制。",
+          "relevance_zh": "该论文与推理优化技术相关，特别是在边缘设备上提高LLM推理速度的潜力。",
+          "summary_zh": "问题：这篇论文关注于掩蔽扩散模型的推理速度受限于KV缓存的使用问题。\n方法：提出了一种投机解码策略，通过并行生成候选令牌来加速推理，减少KV缓存的限制。\n相关性：该论文与推理优化技术相关，特别是在边缘设备上提高LLM推理速度的潜力。"
+        },
+        {
+          "id": "2604.05012v1",
+          "title": "Comparative Characterization of KV Cache Management Strategies for LLM Inference",
+          "abstract": "Efficient inference with Large Language Models (LLMs) increasingly relies on Key-Value (KV) caches to store previously computed key and value vectors at each layer. These caches are essential to minimize redundant computation during autoregressive token generation, lowering computational complexity from quadratic to linear. However, the growth of KV caches has posed significant system-level challenges, particularly as model sizes increase, context lengths grow, and concurrent requests compete for limited memory resources. Even though several recent frameworks for KV cache management have emerg",
+          "authors": [
+            "Oteo Mamo",
+            "Olga Kogiou",
+            "Hyunjin Yi",
+            "Weikuan Yu"
+          ],
+          "published": "2026-04-06",
+          "categories": [
+            "cs.AR",
             "cs.AI"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2604.02047v1",
-          "pdf": "https://arxiv.org/pdf/2604.02047v1",
-          "priority": "高",
-          "problem_zh": "这篇论文旨在加速大型语言模型的推理过程，解决推理延迟问题。",
-          "method_zh": "提出了一种训练无关的投机解码方法，通过组织候选令牌为树形结构来加速推理，显著降低了推理时间。",
-          "relevance_zh": "该研究与推理优化技术密切相关，创新点在于提出了新的树形结构以提高推理效率。",
-          "summary_zh": "问题：这篇论文旨在加速大型语言模型的推理过程，解决推理延迟问题。\n方法：提出了一种训练无关的投机解码方法，通过组织候选令牌为树形结构来加速推理，显著降低了推理时间。\n相关性：该研究与推理优化技术密切相关，创新点在于提出了新的树形结构以提高推理效率。"
+          "link": "https://arxiv.org/abs/2604.05012v1",
+          "pdf": "https://arxiv.org/pdf/2604.05012v1",
+          "priority": "中",
+          "problem_zh": "这篇论文探讨了LLM推理中KV缓存管理策略的有效性，旨在降低计算复杂度。",
+          "method_zh": "比较了不同的KV缓存管理策略，提出了一种新的管理方法以提高推理效率，减少冗余计算。",
+          "relevance_zh": "与LLM推理优化和资源调度相关，创新点在于通过管理策略提升推理效率。",
+          "summary_zh": "问题：这篇论文探讨了LLM推理中KV缓存管理策略的有效性，旨在降低计算复杂度。\n方法：比较了不同的KV缓存管理策略，提出了一种新的管理方法以提高推理效率，减少冗余计算。\n相关性：与LLM推理优化和资源调度相关，创新点在于通过管理策略提升推理效率。"
         },
         {
-          "id": "2603.27420v2",
-          "title": "CarbonEdge: Carbon-Aware Deep Learning Inference Framework for Sustainable Edge Computing",
-          "abstract": "Deep learning applications at the network edge lead to a significant growth in AI-related carbon emissions, presenting a critical sustainability challenge. The existing edge computing frameworks optimize for latency and throughput, but they largely ignore the environmental impact of inference workloads. This paper introduces CarbonEdge, a carbon-aware deep learning inference framework that extends adaptive model partitioning with carbon footprint estimation and green scheduling apabilities. We propose a carbon-aware scheduling algorithm that extends traditional weighted scoring with a carbon e",
+          "id": "2604.05438v1",
+          "title": "Top-K Retrieval with Fixed-Size Linear-Attention Completion: Backbone- and KV-Format-Preserving Attention for KV-Cache Read Reduction",
+          "abstract": "Long-context generation is increasingly limited by decode-time key-value (KV) cache traffic, particularly when KV is offloaded beyond GPU memory. Query-aware retrieval (e.g., Top-K selection) reduces this traffic by loading only a subset of KV pairs, but renormalizing the softmax over the subset introduces bias when attention mass is spread over unretrieved tokens. We propose a retrieval-completion attention module that keeps backbone weights and the KV-cache format unchanged. For each query, we compute exact attention over sink/tail anchors and the query-dependent retrieved Top-K tokens, and ",
           "authors": [
-            "Guilin Zhang",
-            "Wulan Guo",
-            "Ziqi Tan",
-            "Chuanyi Sun",
-            "Hailong Jiang"
+            "Yasuto Hoshi",
+            "Daisuke Miyashita",
+            "Jun Deguchi"
           ],
-          "published": "2026-03-28",
+          "published": "2026-04-07",
           "categories": [
-            "cs.DC",
-            "cs.AI",
+            "cs.LG",
+            "cs.CL"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2604.05438v1",
+          "pdf": "https://arxiv.org/pdf/2604.05438v1",
+          "priority": "中",
+          "problem_zh": "这篇论文解决了长上下文生成中KV缓存流量过大的问题，影响了推理效率。",
+          "method_zh": "提出了一种固定大小线性注意力完成的Top-K检索方法，减少KV缓存读取时的流量。",
+          "relevance_zh": "与推理优化技术相关，特别是在边缘设备上优化LLM推理的效率。",
+          "summary_zh": "问题：这篇论文解决了长上下文生成中KV缓存流量过大的问题，影响了推理效率。\n方法：提出了一种固定大小线性注意力完成的Top-K检索方法，减少KV缓存读取时的流量。\n相关性：与推理优化技术相关，特别是在边缘设备上优化LLM推理的效率。"
+        },
+        {
+          "id": "2604.04921v1",
+          "title": "TriAttention: Efficient Long Reasoning with Trigonometric KV Compression",
+          "abstract": "Extended reasoning in large language models (LLMs) creates severe KV cache memory bottlenecks. Leading KV cache compression methods estimate KV importance using attention scores from recent post-RoPE queries. However, queries rotate with position during RoPE, making representative queries very few, leading to poor top-key selection and unstable reasoning. To avoid this issue, we turn to the pre-RoPE space, where we observe that Q and K vectors are highly concentrated around fixed non-zero centers and remain stable across positions -- Q/K concentration. We show that this concentration causes qu",
+          "authors": [
+            "Weian Mao",
+            "Xi Lin",
+            "Wei Huang",
+            "Yuxin Xie",
+            "Tianfu Fu"
+          ],
+          "published": "2026-04-06",
+          "categories": [
+            "cs.CL",
+            "cs.CV"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2604.04921v1",
+          "pdf": "https://arxiv.org/pdf/2604.04921v1",
+          "priority": "中",
+          "problem_zh": "这篇论文关注于LLM推理中的KV缓存内存瓶颈问题，影响了推理的延续性。",
+          "method_zh": "提出了一种三角函数KV压缩方法，以提高长推理过程中的KV缓存效率。",
+          "relevance_zh": "与LLM推理优化相关，特别是在边缘设备上提高推理效率的潜力。",
+          "summary_zh": "问题：这篇论文关注于LLM推理中的KV缓存内存瓶颈问题，影响了推理的延续性。\n方法：提出了一种三角函数KV压缩方法，以提高长推理过程中的KV缓存效率。\n相关性：与LLM推理优化相关，特别是在边缘设备上提高推理效率的潜力。"
+        },
+        {
+          "id": "2604.02715v1",
+          "title": "FluxMoE: Decoupling Expert Residency for High-Performance MoE Serving",
+          "abstract": "Mixture-of-Experts (MoE) models have become a dominant paradigm for scaling large language models, but their rapidly growing parameter sizes introduce a fundamental inefficiency during inference: most expert weights remain idle in GPU memory while competing with performance-critical runtime state such as the key-value (KV) cache. Since KV cache capacity directly determines serving throughput, this mismatch leads to underutilized memory and degraded performance. In this paper, we present FluxMoE, a new MoE inference system that decouples expert parameters from persistent GPU residency. FluxMoE ",
+          "authors": [
+            "Qingxiu Liu",
+            "Cyril Y. He",
+            "Hanser Jiang",
+            "Zion Wang",
+            "Alan Zhao"
+          ],
+          "published": "2026-04-03",
+          "categories": [
             "cs.LG"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2603.27420v2",
-          "pdf": "https://arxiv.org/pdf/2603.27420v2",
-          "priority": "高",
-          "problem_zh": "这篇论文关注于深度学习推理在边缘计算中的碳排放问题，提出可持续性挑战。",
-          "method_zh": "提出了CarbonEdge框架，优化推理过程以降低碳排放，同时兼顾延迟和吞吐量，推动可持续边缘计算。",
-          "relevance_zh": "该研究涉及边缘设备上的能耗建模，创新点在于将环境影响纳入推理优化考量。",
-          "summary_zh": "问题：这篇论文关注于深度学习推理在边缘计算中的碳排放问题，提出可持续性挑战。\n方法：提出了CarbonEdge框架，优化推理过程以降低碳排放，同时兼顾延迟和吞吐量，推动可持续边缘计算。\n相关性：该研究涉及边缘设备上的能耗建模，创新点在于将环境影响纳入推理优化考量。"
-        },
-        {
-          "id": "2603.27138v1",
-          "title": "ScoutAttention: Efficient KV Cache Offloading via Layer-Ahead CPU Pre-computation for LLM Inference",
-          "abstract": "Large language models encounter critical GPU memory capacity constraints during long-context inference, where KV cache memory consumption severely limits decode batch sizes. While existing research has explored offloading KV cache to DRAM, these approaches either demand frequent GPU-CPU data transfers or impose extensive CPU computation requirements, resulting in poor GPU utilization as the system waits for I/O operations or CPU processing to complete.   We propose ScoutAttention, a novel KV cache offloading framework that accelerates LLM inference through collaborative GPU-CPU attention compu",
-          "authors": [
-            "Qiuyang Zhang",
-            "Kai Zhou",
-            "Ding Tang",
-            "Kai Lu",
-            "Cheng Li"
-          ],
-          "published": "2026-03-28",
-          "categories": [
-            "cs.LG"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2603.27138v1",
-          "pdf": "https://arxiv.org/pdf/2603.27138v1",
-          "priority": "高",
-          "problem_zh": "这篇论文解决了在长上下文推理中，LLM面临的GPU内存限制问题。",
-          "method_zh": "提出了一种通过层前计算来高效卸载KV缓存的方法，减少了GPU和CPU之间的数据传输，提高了推理效率。",
-          "relevance_zh": "该研究与边缘设备的推理优化密切相关，创新点在于提出了新的缓存卸载策略以提升性能。",
-          "summary_zh": "问题：这篇论文解决了在长上下文推理中，LLM面临的GPU内存限制问题。\n方法：提出了一种通过层前计算来高效卸载KV缓存的方法，减少了GPU和CPU之间的数据传输，提高了推理效率。\n相关性：该研究与边缘设备的推理优化密切相关，创新点在于提出了新的缓存卸载策略以提升性能。"
+          "link": "https://arxiv.org/abs/2604.02715v1",
+          "pdf": "https://arxiv.org/pdf/2604.02715v1",
+          "priority": "中",
+          "problem_zh": "这篇论文探讨了Mixture-of-Experts模型在推理过程中的效率问题。",
+          "method_zh": "提出了一种解耦专家驻留的方法，以提高MoE模型的推理性能，减少不必要的计算。",
+          "relevance_zh": "与推理优化技术相关，尤其是在边缘设备上提高LLM推理效率的潜力。",
+          "summary_zh": "问题：这篇论文探讨了Mixture-of-Experts模型在推理过程中的效率问题。\n方法：提出了一种解耦专家驻留的方法，以提高MoE模型的推理性能，减少不必要的计算。\n相关性：与推理优化技术相关，尤其是在边缘设备上提高LLM推理效率的潜力。"
         },
         {
           "id": "2604.00136v1",
@@ -150,111 +199,35 @@
           "link": "https://arxiv.org/abs/2604.00136v1",
           "pdf": "https://arxiv.org/pdf/2604.00136v1",
           "priority": "中",
-          "problem_zh": "这篇论文解决了在生产环境中，LLM服务的非平稳路由决策问题。",
-          "method_zh": "提出了ParetoBandit框架，通过预算驱动的自适应路由来优化LLM服务的质量与成本之间的权衡。",
-          "relevance_zh": "该研究涉及系统调度与建模，创新点在于提出了动态路由策略以应对服务质量变化。",
-          "summary_zh": "问题：这篇论文解决了在生产环境中，LLM服务的非平稳路由决策问题。\n方法：提出了ParetoBandit框架，通过预算驱动的自适应路由来优化LLM服务的质量与成本之间的权衡。\n相关性：该研究涉及系统调度与建模，创新点在于提出了动态路由策略以应对服务质量变化。"
+          "problem_zh": "这篇论文研究了在多模型组合中如何在质量与成本之间进行有效的路由决策。",
+          "method_zh": "提出了一种预算适应性路由策略，以应对非平稳的LLM服务环境，优化资源使用。",
+          "relevance_zh": "与系统调度与建模相关，特别是在边缘设备上优化LLM推理的效率。",
+          "summary_zh": "问题：这篇论文研究了在多模型组合中如何在质量与成本之间进行有效的路由决策。\n方法：提出了一种预算适应性路由策略，以应对非平稳的LLM服务环境，优化资源使用。\n相关性：与系统调度与建模相关，特别是在边缘设备上优化LLM推理的效率。"
         },
         {
-          "id": "2603.27624v1",
-          "title": "Expert Streaming: Accelerating Low-Batch MoE Inference via Multi-chiplet Architecture and Dynamic Expert Trajectory Scheduling",
-          "abstract": "Mixture-of-Experts is a promising approach for edge AI with low-batch inference. Yet, on-device deployments often face limited on-chip memory and severe workload imbalance; the prevalent use of offloading further incurs off-chip memory access bottlenecks. Moreover, MoE sparsity and dynamic gating shift distributed strategies toward much finer granularity and introduce runtime scheduling considerations. Recently, high die-to-die bandwidth chiplet interconnects have created new opportunities for multi-chiplet systems to address workload imbalance and offloading bottlenecks with fine-grained sche",
+          "id": "2603.28149v1",
+          "title": "BlankSkip: Early-exit Object Detection onboard Nano-drones",
+          "abstract": "Deploying tiny computer vision Deep Neural Networks (DNNs) on-board nano-sized drones is key for achieving autonomy, but is complicated by the extremely tight constraints of their computational platforms (approximately 10 MiB memory, 1 W power budget). Early-exit adaptive DNNs that dial down the computational effort for \"easy-to-process\" input frames represent a promising way to reduce the average inference latency. However, while this approach is extensively studied for classification, its application to dense tasks like object detection (OD) is not straightforward. In this paper, we propose ",
           "authors": [
-            "Songchen Ma",
-            "Hongyi Li",
-            "Weihao Zhang",
-            "Yonghao Tan",
-            "Pingcheng Dong"
-          ],
-          "published": "2026-03-29",
-          "categories": [
-            "cs.AR",
-            "cs.AI"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2603.27624v1",
-          "pdf": "https://arxiv.org/pdf/2603.27624v1",
-          "priority": "中",
-          "problem_zh": "这篇论文关注于混合专家模型在边缘AI中的低批量推理加速问题。",
-          "method_zh": "提出了一种多芯片架构和动态专家轨迹调度的方法，以提高低批量推理的效率，解决了内存和负载不平衡问题。",
-          "relevance_zh": "该研究与边缘设备上的推理优化和资源调度相关，创新点在于提出了新的架构设计以提升推理性能。",
-          "summary_zh": "问题：这篇论文关注于混合专家模型在边缘AI中的低批量推理加速问题。\n方法：提出了一种多芯片架构和动态专家轨迹调度的方法，以提高低批量推理的效率，解决了内存和负载不平衡问题。\n相关性：该研究与边缘设备上的推理优化和资源调度相关，创新点在于提出了新的架构设计以提升推理性能。"
-        },
-        {
-          "id": "2603.26498v1",
-          "title": "Rocks, Pebbles and Sand: Modality-aware Scheduling for Multimodal Large Language Model Inference",
-          "abstract": "Multimodal Large Language Models (MLLMs) power platforms like ChatGPT, Gemini, and Copilot, enabling richer interactions with text, images, and videos. These heterogeneous workloads introduce additional inference stages, such as vision preprocessing and encoding, that inflate latency and memory demand. Existing LLM serving systems, optimized for text-only workloads, fail under multimodality: large requests (e.g., videos) monopolize resources, causing severe head-of-line blocking and performance degradation. Our key insight is that multimodal requests differ by orders of magnitude in resource d",
-          "authors": [
-            "Konstantinos Papaioannou",
-            "Thaleia Dimitra Doudali"
-          ],
-          "published": "2026-03-27",
-          "categories": [
-            "cs.DC",
-            "cs.AI"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2603.26498v1",
-          "pdf": "https://arxiv.org/pdf/2603.26498v1",
-          "priority": "中",
-          "problem_zh": "这篇论文解决了多模态大型语言模型推理中的调度问题，导致延迟和内存需求增加。",
-          "method_zh": "提出了一种模态感知调度策略，优化了多模态LLM的推理过程，降低了延迟和内存消耗。",
-          "relevance_zh": "该研究涉及系统调度与建模，创新点在于提出了新的调度策略以提高多模态推理效率。",
-          "summary_zh": "问题：这篇论文解决了多模态大型语言模型推理中的调度问题，导致延迟和内存需求增加。\n方法：提出了一种模态感知调度策略，优化了多模态LLM的推理过程，降低了延迟和内存消耗。\n相关性：该研究涉及系统调度与建模，创新点在于提出了新的调度策略以提高多模态推理效率。"
-        },
-        {
-          "id": "2604.04750v1",
-          "title": "DeepStack: Scalable and Accurate Design Space Exploration for Distributed 3D-Stacked AI Accelerators",
-          "abstract": "Advances in hybrid bonding and packaging have driven growing interest in 3D DRAM-stacked accelerators with higher memory bandwidth and capacity. As LLMs scale to hundreds of billions or trillions of parameters, distributed inference across multiple 3D chips becomes essential. With cross-stack co-design increasingly critical, we propose DeepStack, an accurate and efficient performance model and tool to enable early-stage system-hardware co-design space exploration (DSE) for distributed 3D-stacked AI systems. At the hardware level, DeepStack captures fine-grained 3D memory semantics such as tran",
-          "authors": [
-            "Zhiwen Mo",
-            "Guoyu Li",
-            " Hao",
-            " Chen",
-            "Yu Cheng"
-          ],
-          "published": "2026-04-06",
-          "categories": [
-            "cs.AR",
-            "cs.DC"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2604.04750v1",
-          "pdf": "https://arxiv.org/pdf/2604.04750v1",
-          "priority": "中",
-          "problem_zh": "这篇论文探讨了分布式3D堆叠AI加速器在LLM推理中的设计空间。",
-          "method_zh": "提出了一种可扩展的设计空间探索方法，以优化分布式推理的内存带宽和容量，适应大规模LLM的需求。",
-          "relevance_zh": "该研究与分布式LLM服务相关，创新点在于提出了新的设计方法以支持大规模推理。",
-          "summary_zh": "问题：这篇论文探讨了分布式3D堆叠AI加速器在LLM推理中的设计空间。\n方法：提出了一种可扩展的设计空间探索方法，以优化分布式推理的内存带宽和容量，适应大规模LLM的需求。\n相关性：该研究与分布式LLM服务相关，创新点在于提出了新的设计方法以支持大规模推理。"
-        },
-        {
-          "id": "2603.28282v1",
-          "title": "Pre-Deployment Complexity Estimation for Federated Perception Systems",
-          "abstract": "Edge AI systems increasingly rely on federated learning to train perception models in distributed, privacy-preserving, and resource-constrained environments. Yet, before training begins, practitioners often lack practical tools to estimate how difficult a federated learning task will be in terms of achievable accuracy and communication cost. This paper presents a classifier-agnostic, pre-deployment framework for estimating learning complexity in federated perception systems by jointly modeling intrinsic properties of the data and characteristics of the distributed environment. The proposed com",
-          "authors": [
-            "KMA Solaiman",
-            "Shafkat Islam",
-            "Ruy de Oliveira",
-            "Bharat Bhargava"
+            "Carlo Marra",
+            "Beatrice Alessandra Motetti",
+            "Alessio Burrello",
+            "Enrico Macii",
+            "Massimo Poncino"
           ],
           "published": "2026-03-30",
           "categories": [
-            "cs.LG",
-            "cs.AI",
-            "cs.DC"
+            "cs.CV"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2603.28282v1",
-          "pdf": "https://arxiv.org/pdf/2603.28282v1",
+          "link": "https://arxiv.org/abs/2603.28149v1",
+          "pdf": "https://arxiv.org/pdf/2603.28149v1",
           "priority": "中",
-          "problem_zh": "这篇论文关注于联邦学习在边缘感知系统中的复杂性估计问题。",
-          "method_zh": "提出了一种预部署复杂性估计工具，以帮助实践者评估联邦学习任务的难度，优化资源分配。",
-          "relevance_zh": "该研究与系统调度与建模相关，创新点在于提供了新的工具以支持边缘AI系统的优化。",
-          "summary_zh": "问题：这篇论文关注于联邦学习在边缘感知系统中的复杂性估计问题。\n方法：提出了一种预部署复杂性估计工具，以帮助实践者评估联邦学习任务的难度，优化资源分配。\n相关性：该研究与系统调度与建模相关，创新点在于提供了新的工具以支持边缘AI系统的优化。"
+          "problem_zh": "这篇论文探讨了在纳米无人机上部署深度神经网络进行物体检测的挑战。",
+          "method_zh": "提出了一种早期退出的自适应DNN方法，以降低计算需求，从而适应极限的计算平台。",
+          "relevance_zh": "与边缘设备上的推理优化相关，特别是在资源受限环境中提高LLM推理效率的潜力。",
+          "summary_zh": "问题：这篇论文探讨了在纳米无人机上部署深度神经网络进行物体检测的挑战。\n方法：提出了一种早期退出的自适应DNN方法，以降低计算需求，从而适应极限的计算平台。\n相关性：与边缘设备上的推理优化相关，特别是在资源受限环境中提高LLM推理效率的潜力。"
         }
       ],
       "wordcloud": "wordcloud_edge_ai.png"
@@ -282,10 +255,10 @@
           "link": "https://arxiv.org/abs/2604.04514v1",
           "pdf": "https://arxiv.org/pdf/2604.04514v1",
           "priority": "高",
-          "problem_zh": "现有的记忆系统无法有效支持LLM代理的个性化记忆，导致对话历史无法有效利用。",
-          "method_zh": "提出了SuperLocalMemory V3.3框架，结合生物启发的遗忘机制和多通道检索，显著提升了记忆系统的效率和个性化能力。",
-          "relevance_zh": "该研究直接探讨了LLM代理中的记忆管理，提出的框架在计算效率和记忆检索方面具有创新性。",
-          "summary_zh": "问题：现有的记忆系统无法有效支持LLM代理的个性化记忆，导致对话历史无法有效利用。\n方法：提出了SuperLocalMemory V3.3框架，结合生物启发的遗忘机制和多通道检索，显著提升了记忆系统的效率和个性化能力。\n相关性：该研究直接探讨了LLM代理中的记忆管理，提出的框架在计算效率和记忆检索方面具有创新性。"
+          "problem_zh": "这篇论文探讨了如何为零LLM代理系统设计生物启发的记忆管理机制，以提高记忆的有效性。",
+          "method_zh": "提出了SuperLocalMemory V3.3框架，结合生物启发的遗忘机制和多通道检索，显著提升了记忆系统的效率和准确性。",
+          "relevance_zh": "该论文创新性地将生物学原理应用于LLM代理的记忆管理，关注计算效率和记忆检索的优化，符合研究方向。",
+          "summary_zh": "问题：这篇论文探讨了如何为零LLM代理系统设计生物启发的记忆管理机制，以提高记忆的有效性。\n方法：提出了SuperLocalMemory V3.3框架，结合生物启发的遗忘机制和多通道检索，显著提升了记忆系统的效率和准确性。\n相关性：该论文创新性地将生物学原理应用于LLM代理的记忆管理，关注计算效率和记忆检索的优化，符合研究方向。"
         },
         {
           "id": "2604.01707v1",
@@ -308,10 +281,10 @@
           "link": "https://arxiv.org/abs/2604.01707v1",
           "pdf": "https://arxiv.org/pdf/2604.01707v1",
           "priority": "高",
-          "problem_zh": "LLM代理在复杂任务中缺乏有效的记忆模块，导致知识积累和推理能力不足。",
-          "method_zh": "提出了一种模块化的记忆架构，整合多种记忆策略以支持长时间复杂任务的执行，提升了推理效率。",
-          "relevance_zh": "这篇文章为LLM代理的记忆设计提供了新的思路，强调了计算效率在记忆管理中的重要性。",
-          "summary_zh": "问题：LLM代理在复杂任务中缺乏有效的记忆模块，导致知识积累和推理能力不足。\n方法：提出了一种模块化的记忆架构，整合多种记忆策略以支持长时间复杂任务的执行，提升了推理效率。\n相关性：这篇文章为LLM代理的记忆设计提供了新的思路，强调了计算效率在记忆管理中的重要性。"
+          "problem_zh": "这篇论文研究了在LLM代理中如何有效整合记忆模块以支持复杂任务的执行。",
+          "method_zh": "提出了一个模块化架构，整合多种记忆策略，提升了知识积累和推理能力，适用于多轮对话和科学发现等任务。",
+          "relevance_zh": "文章强调记忆在LLM代理中的核心作用，探讨了计算效率和性能的权衡，符合研究主题。",
+          "summary_zh": "问题：这篇论文研究了在LLM代理中如何有效整合记忆模块以支持复杂任务的执行。\n方法：提出了一个模块化架构，整合多种记忆策略，提升了知识积累和推理能力，适用于多轮对话和科学发现等任务。\n相关性：文章强调记忆在LLM代理中的核心作用，探讨了计算效率和性能的权衡，符合研究主题。"
         },
         {
           "id": "2604.01670v1",
@@ -333,35 +306,55 @@
           "link": "https://arxiv.org/abs/2604.01670v1",
           "pdf": "https://arxiv.org/pdf/2604.01670v1",
           "priority": "高",
-          "problem_zh": "长期记忆的扩展导致了检索噪声和计算延迟，影响智能代理的性能。",
-          "method_zh": "提出了分层记忆编排的方法，通过优化存储和检索策略，减少了计算延迟和性能瓶颈。",
-          "relevance_zh": "该研究关注记忆管理的计算效率，提供了对LLM代理性能提升的实用见解。",
-          "summary_zh": "问题：长期记忆的扩展导致了检索噪声和计算延迟，影响智能代理的性能。\n方法：提出了分层记忆编排的方法，通过优化存储和检索策略，减少了计算延迟和性能瓶颈。\n相关性：该研究关注记忆管理的计算效率，提供了对LLM代理性能提升的实用见解。"
+          "problem_zh": "这篇论文解决了长时间交互中智能代理的长期记忆管理问题，关注性能瓶颈。",
+          "method_zh": "提出了分层记忆编排的方法，减少了检索噪声和计算延迟，提高了推理能力和响应速度。",
+          "relevance_zh": "该研究聚焦于记忆的计算效率，探讨了存储扩展对性能的影响，符合研究方向。",
+          "summary_zh": "问题：这篇论文解决了长时间交互中智能代理的长期记忆管理问题，关注性能瓶颈。\n方法：提出了分层记忆编排的方法，减少了检索噪声和计算延迟，提高了推理能力和响应速度。\n相关性：该研究聚焦于记忆的计算效率，探讨了存储扩展对性能的影响，符合研究方向。"
         },
         {
-          "id": "2604.01560v1",
-          "title": "DeltaMem: Towards Agentic Memory Management via Reinforcement Learning",
-          "abstract": "Recent advances in persona-centric memory have revealed the powerful capability of multi-agent systems in managing persona memory, especially in conversational scenarios. However, these complex frameworks often suffer from information loss and are fragile across varying scenarios, resulting in suboptimal performance. In this paper, we propose DeltaMem, an agentic memory management system that formulates persona-centric memory management as an end-to-end task within a single-agent setting. To further improve the performance of our agentic memory manager, we draw inspiration from the evolution o",
+          "id": "2603.29193v1",
+          "title": "Developing Adaptive Context Compression Techniques for Large Language Models (LLMs) in Long-Running Interactions",
+          "abstract": "Large Language Models (LLMs) often experience performance degradation during long-running interactions due to increasing context length, memory saturation, and computational overhead. This paper presents an adaptive context compression framework that integrates importance-aware memory selection, coherence-sensitive filtering, and dynamic budget allocation to retain essential conversational information while controlling context growth. The approach is evaluated on LOCOMO, LOCCO, and LongBench benchmarks to assess answer quality, retrieval accuracy, coherence preservation, and efficiency. Experi",
           "authors": [
-            "Qi Zhang",
-            "Shen Huang",
-            "Chu Liu",
-            "Shouqing Yang",
-            "Junbo Zhao"
+            "Payal Fofadiya",
+            "Sunil Tiwari"
           ],
-          "published": "2026-04-02",
+          "published": "2026-03-31",
           "categories": [
-            "cs.CL"
+            "cs.CV",
+            "cs.AI"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2604.01560v1",
-          "pdf": "https://arxiv.org/pdf/2604.01560v1",
+          "link": "https://arxiv.org/abs/2603.29193v1",
+          "pdf": "https://arxiv.org/pdf/2603.29193v1",
           "priority": "高",
-          "problem_zh": "多代理系统在管理个性化记忆时面临信息丢失和脆弱性的问题。",
-          "method_zh": "提出了DeltaMem框架，通过强化学习优化记忆管理，提升了记忆的稳定性和效率。",
-          "relevance_zh": "该研究探讨了动态记忆管理的计算效率，具有重要的理论和实践意义。",
-          "summary_zh": "问题：多代理系统在管理个性化记忆时面临信息丢失和脆弱性的问题。\n方法：提出了DeltaMem框架，通过强化学习优化记忆管理，提升了记忆的稳定性和效率。\n相关性：该研究探讨了动态记忆管理的计算效率，具有重要的理论和实践意义。"
+          "problem_zh": "这篇论文探讨了在长时间交互中，如何通过自适应上下文压缩技术提升LLM的性能。",
+          "method_zh": "提出了一种自适应上下文压缩框架，结合重要性感知的记忆选择，显著降低了计算开销和延迟。",
+          "relevance_zh": "文章关注计算效率和上下文管理，提供了对LLM在长时间交互中的优化方案，符合研究主题。",
+          "summary_zh": "问题：这篇论文探讨了在长时间交互中，如何通过自适应上下文压缩技术提升LLM的性能。\n方法：提出了一种自适应上下文压缩框架，结合重要性感知的记忆选择，显著降低了计算开销和延迟。\n相关性：文章关注计算效率和上下文管理，提供了对LLM在长时间交互中的优化方案，符合研究主题。"
+        },
+        {
+          "id": "2603.29023v1",
+          "title": "Human-Like Lifelong Memory: A Neuroscience-Grounded Architecture for Infinite Interaction",
+          "abstract": "Large language models lack persistent, structured memory for long-term interaction and context-sensitive retrieval. Expanding context windows does not solve this: recent evidence shows that context length alone degrades reasoning by up to 85% - even with perfect retrieval. We propose a bio-inspired memory framework grounded in complementary learning systems theory, cognitive behavioral therapy's belief hierarchy, dual-process cognition, and fuzzy-trace theory, organized around three principles: (1) Memory has valence, not just content - pre-computed emotional-associative summaries (valence vec",
+          "authors": [
+            "Diego C. Lerma-Torres"
+          ],
+          "published": "2026-03-30",
+          "categories": [
+            "cs.CL",
+            "cs.AI"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2603.29023v1",
+          "pdf": "https://arxiv.org/pdf/2603.29023v1",
+          "priority": "高",
+          "problem_zh": "这篇论文提出了一种生物启发的架构，以解决LLM在长期交互中的记忆和检索问题。",
+          "method_zh": "通过引入结构化的长期记忆机制，显著提高了上下文敏感检索的效率，减少了推理过程中的干扰。",
+          "relevance_zh": "该研究关注记忆的计算效率和上下文管理，提供了新的架构设计思路，符合研究方向。",
+          "summary_zh": "问题：这篇论文提出了一种生物启发的架构，以解决LLM在长期交互中的记忆和检索问题。\n方法：通过引入结构化的长期记忆机制，显著提高了上下文敏感检索的效率，减少了推理过程中的干扰。\n相关性：该研究关注记忆的计算效率和上下文管理，提供了新的架构设计思路，符合研究方向。"
         },
         {
           "id": "2603.29002v1",
@@ -383,10 +376,10 @@
           "link": "https://arxiv.org/abs/2603.29002v1",
           "pdf": "https://arxiv.org/pdf/2603.29002v1",
           "priority": "高",
-          "problem_zh": "现代LLM在处理长上下文时面临计算效率瓶颈，影响复杂推理能力。",
-          "method_zh": "展示了一种统一的优化机制，结合稀疏注意力和压缩上下文记忆，显著提升了推理效率。",
-          "relevance_zh": "该研究为LLM的计算效率提供了新的优化思路，适用于长上下文处理。",
-          "summary_zh": "问题：现代LLM在处理长上下文时面临计算效率瓶颈，影响复杂推理能力。\n方法：展示了一种统一的优化机制，结合稀疏注意力和压缩上下文记忆，显著提升了推理效率。\n相关性：该研究为LLM的计算效率提供了新的优化思路，适用于长上下文处理。"
+          "problem_zh": "这篇论文研究了如何优化LLM的长上下文处理和生成机制，以提高推理效率。",
+          "method_zh": "展示了稀疏注意力、检索增强生成和压缩上下文记忆的统一优化，显著提升了计算效率。",
+          "relevance_zh": "文章探讨了多种优化策略对计算效率的影响，符合研究主题。",
+          "summary_zh": "问题：这篇论文研究了如何优化LLM的长上下文处理和生成机制，以提高推理效率。\n方法：展示了稀疏注意力、检索增强生成和压缩上下文记忆的统一优化，显著提升了计算效率。\n相关性：文章探讨了多种优化策略对计算效率的影响，符合研究主题。"
         },
         {
           "id": "2603.21564v1",
@@ -411,33 +404,35 @@
           "link": "https://arxiv.org/abs/2603.21564v1",
           "pdf": "https://arxiv.org/pdf/2603.21564v1",
           "priority": "高",
-          "problem_zh": "现有的长上下文和代理系统在处理上下文长度限制时缺乏有效的分层记忆机制。",
-          "method_zh": "提出了一种分层记忆理论，通过提取原始数据的原子单元并构建多级表示，优化了记忆检索过程。",
-          "relevance_zh": "该研究为LLM代理的记忆设计提供了新的理论基础，强调了计算效率的重要性。",
-          "summary_zh": "问题：现有的长上下文和代理系统在处理上下文长度限制时缺乏有效的分层记忆机制。\n方法：提出了一种分层记忆理论，通过提取原始数据的原子单元并构建多级表示，优化了记忆检索过程。\n相关性：该研究为LLM代理的记忆设计提供了新的理论基础，强调了计算效率的重要性。"
+          "problem_zh": "这篇论文探讨了如何通过分层记忆来解决语言代理的上下文长度限制问题。",
+          "method_zh": "提出了一种分层记忆的理论框架，通过提取原始数据的原子单元并进行压缩，优化了记忆检索过程。",
+          "relevance_zh": "该研究关注记忆的结构化和计算效率，提供了新的设计思路，符合研究方向。",
+          "summary_zh": "问题：这篇论文探讨了如何通过分层记忆来解决语言代理的上下文长度限制问题。\n方法：提出了一种分层记忆的理论框架，通过提取原始数据的原子单元并进行压缩，优化了记忆检索过程。\n相关性：该研究关注记忆的结构化和计算效率，提供了新的设计思路，符合研究方向。"
         },
         {
-          "id": "2603.29193v1",
-          "title": "Developing Adaptive Context Compression Techniques for Large Language Models (LLMs) in Long-Running Interactions",
-          "abstract": "Large Language Models (LLMs) often experience performance degradation during long-running interactions due to increasing context length, memory saturation, and computational overhead. This paper presents an adaptive context compression framework that integrates importance-aware memory selection, coherence-sensitive filtering, and dynamic budget allocation to retain essential conversational information while controlling context growth. The approach is evaluated on LOCOMO, LOCCO, and LongBench benchmarks to assess answer quality, retrieval accuracy, coherence preservation, and efficiency. Experi",
+          "id": "2603.23234v1",
+          "title": "MemCollab: Cross-Agent Memory Collaboration via Contrastive Trajectory Distillation",
+          "abstract": "Large language model (LLM)-based agents rely on memory mechanisms to reuse knowledge from past problem-solving experiences. Existing approaches typically construct memory in a per-agent manner, tightly coupling stored knowledge to a single model's reasoning style. In modern deployments with heterogeneous agents, a natural question arises: can a single memory system be shared across different models? We found that naively transferring memory between agents often degrades performance, as such memory entangles task-relevant knowledge with agent-specific biases. To address this challenge, we propo",
           "authors": [
-            "Payal Fofadiya",
-            "Sunil Tiwari"
+            "Yurui Chang",
+            "Yiran Wu",
+            "Qingyun Wu",
+            "Lu Lin"
           ],
-          "published": "2026-03-31",
+          "published": "2026-03-24",
           "categories": [
-            "cs.CV",
-            "cs.AI"
+            "cs.AI",
+            "cs.LG"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2603.29193v1",
-          "pdf": "https://arxiv.org/pdf/2603.29193v1",
+          "link": "https://arxiv.org/abs/2603.23234v1",
+          "pdf": "https://arxiv.org/pdf/2603.23234v1",
           "priority": "中",
-          "problem_zh": "在长时间交互中，LLM的性能因上下文长度增加和计算开销而下降。",
-          "method_zh": "提出了一种自适应上下文压缩框架，结合重要性感知的记忆选择，显著提高了处理效率。",
-          "relevance_zh": "该研究关注LLM在长交互中的计算效率，提供了实用的解决方案。",
-          "summary_zh": "问题：在长时间交互中，LLM的性能因上下文长度增加和计算开销而下降。\n方法：提出了一种自适应上下文压缩框架，结合重要性感知的记忆选择，显著提高了处理效率。\n相关性：该研究关注LLM在长交互中的计算效率，提供了实用的解决方案。"
+          "problem_zh": "这篇论文探讨了如何通过对比轨迹蒸馏实现跨代理的记忆协作。",
+          "method_zh": "提出了MemCollab框架，允许多个代理共享和重用知识，提升了记忆的有效性和计算效率。",
+          "relevance_zh": "文章关注多代理系统中的记忆管理，探讨了计算效率的提升，符合研究方向。",
+          "summary_zh": "问题：这篇论文探讨了如何通过对比轨迹蒸馏实现跨代理的记忆协作。\n方法：提出了MemCollab框架，允许多个代理共享和重用知识，提升了记忆的有效性和计算效率。\n相关性：文章关注多代理系统中的记忆管理，探讨了计算效率的提升，符合研究方向。"
         },
         {
           "id": "2604.02985v1",
@@ -460,39 +455,266 @@
           "link": "https://arxiv.org/abs/2604.02985v1",
           "pdf": "https://arxiv.org/pdf/2604.02985v1",
           "priority": "中",
-          "problem_zh": "RAG系统中的LLM延迟成为瓶颈，影响了信息检索的效率。",
-          "method_zh": "研究了提示压缩技术，减少输入提示的大小，从而降低了计算开销和延迟。",
-          "relevance_zh": "该研究探讨了提示压缩对计算效率的影响，适用于LLM代理的优化。",
-          "summary_zh": "问题：RAG系统中的LLM延迟成为瓶颈，影响了信息检索的效率。\n方法：研究了提示压缩技术，减少输入提示的大小，从而降低了计算开销和延迟。\n相关性：该研究探讨了提示压缩对计算效率的影响，适用于LLM代理的优化。"
+          "problem_zh": "这篇论文研究了如何通过压缩提示来降低LLM推理的延迟和计算开销。",
+          "method_zh": "提出了一种提示压缩方法，显著减少了输入提示的大小，从而降低了计算成本和延迟。",
+          "relevance_zh": "文章关注计算效率，探讨了提示压缩对LLM推理的影响，符合研究主题。",
+          "summary_zh": "问题：这篇论文研究了如何通过压缩提示来降低LLM推理的延迟和计算开销。\n方法：提出了一种提示压缩方法，显著减少了输入提示的大小，从而降低了计算成本和延迟。\n相关性：文章关注计算效率，探讨了提示压缩对LLM推理的影响，符合研究主题。"
+        }
+      ],
+      "wordcloud": "wordcloud_agent_memory.png"
+    },
+    "edge_intelligence": {
+      "name_zh": "Edge Intelligence",
+      "name_en": "Edge Intelligence",
+      "count": 10,
+      "papers": [
+        {
+          "id": "2604.04654v1",
+          "title": "Communication-Efficient Collaborative LLM Inference over LEO Satellite Networks",
+          "abstract": "Low Earth orbit (LEO) satellites play an essential role in intelligent Earth observation by leveraging artificial intelligence models. However, limited onboard memory and excessive inference delay prevent the practical deployment of large language models (LLMs) on a single satellite. In this paper, we propose a communication-efficient collaborative LLM inference scheme for LEO satellite networks. Specifically, the entire LLM is split into multiple sub-models, with each deployed on a satellite, thereby enabling collaborative LLM inference via exchanging intermediate activations between satellit",
+          "authors": [
+            "Songge Zhang",
+            "Wen Wu",
+            "Liang Li",
+            "Ye Wang",
+            " Xuemin"
+          ],
+          "published": "2026-04-06",
+          "categories": [
+            "cs.DC"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2604.04654v1",
+          "pdf": "https://arxiv.org/pdf/2604.04654v1",
+          "priority": "高",
+          "problem_zh": "这篇论文解决了在低地球轨道卫星网络中高效推理大型语言模型的挑战。",
+          "method_zh": "提出了一种通信高效的协作推理框架，利用多个卫星协同处理推理任务，从而降低延迟并提高推理效率。",
+          "relevance_zh": "该论文与边缘智能场景中的AI模型推理优化密切相关，创新点在于通过卫星网络实现协同推理，克服单一设备的限制。",
+          "summary_zh": "问题：这篇论文解决了在低地球轨道卫星网络中高效推理大型语言模型的挑战。\n方法：提出了一种通信高效的协作推理框架，利用多个卫星协同处理推理任务，从而降低延迟并提高推理效率。\n相关性：该论文与边缘智能场景中的AI模型推理优化密切相关，创新点在于通过卫星网络实现协同推理，克服单一设备的限制。"
         },
         {
-          "id": "2603.25926v1",
-          "title": "Density-aware Soft Context Compression with Semi-Dynamic Compression Ratio",
-          "abstract": "Soft context compression reduces the computational workload of processing long contexts in LLMs by encoding long context into a smaller number of latent tokens. However, existing frameworks apply uniform compression ratios, failing to account for the extreme variance in natural language information density. While adopting a density-aware dynamic compression ratio seems intuitive, empirical investigations reveal that models struggle intrinsically with operations parameterized by input dependent, continuous structural hyperparameters. To resolve this pitfall, we introduce Semi-Dynamic Context Co",
+          "id": "2604.02938v1",
+          "title": "Digital Twin-Assisted In-Network and Edge Collaboration for Joint User Association, Task Offloading, and Resource Allocation in the Metaverse",
+          "abstract": "Advancements in extended reality (XR) are driving the development of the metaverse, which demands efficient real-time transformation of 2D scenes into 3D objects, a computation-intensive process that necessitates task offloading because of complex perception, visual, and audio processing. This challenge is further compounded by asymmetric uplink (UL) and downlink (DL) data characteristics, where 2D data are transmitted in the UL and 3D content is rendered in the DL. To address this issue, we propose a digital twin (DT)-based in-network computing (INC)-assisted multi-access edge computing (MEC)",
           "authors": [
-            "Yijiong Yu",
-            "Shuai Yuan",
-            "Jie Zheng",
-            "Huazheng Wang",
-            "Ji Pei"
+            "Ibrahim Aliyu",
+            "Seungmin Oh",
+            "Sangwon Oh",
+            "Jinsul Kim"
           ],
-          "published": "2026-03-26",
+          "published": "2026-04-03",
           "categories": [
+            "cs.DC",
+            "cs.IT"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2604.02938v1",
+          "pdf": "https://arxiv.org/pdf/2604.02938v1",
+          "priority": "高",
+          "problem_zh": "这篇论文探讨了在元宇宙中如何有效地进行用户关联、任务卸载和资源分配。",
+          "method_zh": "提出了一种数字双胞胎辅助的网络内和边缘协作框架，优化了任务卸载和资源分配的效率，提升了系统的实时性。",
+          "relevance_zh": "该研究涉及边缘计算中的任务调度与资源优化，特别是在复杂的元宇宙环境中，具有重要的应用价值。",
+          "summary_zh": "问题：这篇论文探讨了在元宇宙中如何有效地进行用户关联、任务卸载和资源分配。\n方法：提出了一种数字双胞胎辅助的网络内和边缘协作框架，优化了任务卸载和资源分配的效率，提升了系统的实时性。\n相关性：该研究涉及边缘计算中的任务调度与资源优化，特别是在复杂的元宇宙环境中，具有重要的应用价值。"
+        },
+        {
+          "id": "2604.02945v1",
+          "title": "MSAO: Adaptive Modality Sparsity-Aware Offloading with Edge-Cloud Collaboration for Efficient Multimodal LLM Inference",
+          "abstract": "Multimodal large language models (MLLMs) enable powerful cross-modal reasoning capabilities but impose substantial computational and latency burdens, posing critical challenges for deployment on resource-constrained edge devices. In this paper, we propose MSAO, an adaptive modality sparsity-aware offloading framework with edge-cloud collaboration for efficient MLLM Inference. First, a lightweight heterogeneous modality-aware via fine-grained sparsity module performs spatial-temporal-modal joint analysis to compute the Modality Activation Sparsity (MAS) metric, which quantifies the necessity of",
+          "authors": [
+            "Zheming Yang",
+            "Qi Guo",
+            "Jun Wan",
+            "Jiarui Ruan",
+            "Yunqing Hu"
+          ],
+          "published": "2026-04-03",
+          "categories": [
+            "cs.DC"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2604.02945v1",
+          "pdf": "https://arxiv.org/pdf/2604.02945v1",
+          "priority": "高",
+          "problem_zh": "这篇论文解决了在资源受限的边缘设备上高效推理多模态大型语言模型的挑战。",
+          "method_zh": "提出了一种自适应模态稀疏感知卸载方法，通过边缘与云的协作，显著降低了推理延迟和计算负担。",
+          "relevance_zh": "该论文与边缘设备上的AI模型部署和推理优化密切相关，创新点在于结合边缘和云资源进行高效推理。",
+          "summary_zh": "问题：这篇论文解决了在资源受限的边缘设备上高效推理多模态大型语言模型的挑战。\n方法：提出了一种自适应模态稀疏感知卸载方法，通过边缘与云的协作，显著降低了推理延迟和计算负担。\n相关性：该论文与边缘设备上的AI模型部署和推理优化密切相关，创新点在于结合边缘和云资源进行高效推理。"
+        },
+        {
+          "id": "2603.20037v1",
+          "title": "Federated Hyperdimensional Computing for Resource-Constrained Industrial IoT",
+          "abstract": "In the Industrial Internet of Things (IIoT) systems, edge devices often operate under strict constraints in memory, compute capability, and wireless bandwidth. These limitations challenge the deployment of advanced data analytics tasks, such as predictive and prescriptive maintenance. In this work, we explore hyperdimensional computing (HDC) as a lightweight learning paradigm for resource-constrained IIoT. Conventional centralized HDC leverages the properties of high-dimensional vector spaces to enable energy-efficient training and inference. We integrate this paradigm into a federated learnin",
+          "authors": [
+            "Nikita Zeulin",
+            "Olga Galinina",
+            "Nageen Himayat",
+            "Sergey Andreev"
+          ],
+          "published": "2026-03-20",
+          "categories": [
+            "cs.LG",
+            "cs.NI"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2603.20037v1",
+          "pdf": "https://arxiv.org/pdf/2603.20037v1",
+          "priority": "高",
+          "problem_zh": "这篇论文探讨了在工业物联网中资源受限的边缘设备上进行联邦超维计算的挑战。",
+          "method_zh": "提出了一种联邦学习框架，能够在资源受限的环境中高效进行数据分析和预测维护，提升了模型的适应性。",
+          "relevance_zh": "该研究与联邦学习在边缘网络中的应用相关，创新点在于针对工业物联网的特定约束设计了高效的计算方法。",
+          "summary_zh": "问题：这篇论文探讨了在工业物联网中资源受限的边缘设备上进行联邦超维计算的挑战。\n方法：提出了一种联邦学习框架，能够在资源受限的环境中高效进行数据分析和预测维护，提升了模型的适应性。\n相关性：该研究与联邦学习在边缘网络中的应用相关，创新点在于针对工业物联网的特定约束设计了高效的计算方法。"
+        },
+        {
+          "id": "2603.19741v1",
+          "title": "FedPDPO: Federated Personalized Direct Preference Optimization for Large Language Model Alignment",
+          "abstract": "Aligning large language models (LLMs) with human preferences in federated learning (FL) is challenging due to decentralized, privacy-sensitive, and highly non-IID preference data. Direct Preference Optimization (DPO) offers an efficient alternative to reinforcement learning with human feedback (RLHF), but its direct application in FL suffers from severe performance degradation under non-IID data and limited generalization of implicit rewards. To bridge this gap, we propose FedPDPO (Federated Personalized Direct Preference Optimization), a personalized federated framework for preference alignme",
+          "authors": [
+            "Kewen Zhu",
+            "Liping Yi",
+            "Zhiming Zhao",
+            "Zhuang Qi",
+            "Han Yu"
+          ],
+          "published": "2026-03-20",
+          "categories": [
+            "cs.LG",
             "cs.CL"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2603.25926v1",
-          "pdf": "https://arxiv.org/pdf/2603.25926v1",
+          "link": "https://arxiv.org/abs/2603.19741v1",
+          "pdf": "https://arxiv.org/pdf/2603.19741v1",
+          "priority": "高",
+          "problem_zh": "这篇论文解决了在联邦学习中对大型语言模型进行人类偏好对齐的挑战。",
+          "method_zh": "提出了一种联邦个性化直接偏好优化方法，能够高效处理去中心化和隐私敏感的数据，提升模型的对齐效果。",
+          "relevance_zh": "该论文与联邦学习和边缘智能场景中的AI模型优化密切相关，创新点在于提出了新的优化方法以提高模型的实用性。",
+          "summary_zh": "问题：这篇论文解决了在联邦学习中对大型语言模型进行人类偏好对齐的挑战。\n方法：提出了一种联邦个性化直接偏好优化方法，能够高效处理去中心化和隐私敏感的数据，提升模型的对齐效果。\n相关性：该论文与联邦学习和边缘智能场景中的AI模型优化密切相关，创新点在于提出了新的优化方法以提高模型的实用性。"
+        },
+        {
+          "id": "2604.04645v1",
+          "title": "Edge-Oriented Orchestration of Energy Services Using Graph-Driven Swarm Intelligence",
+          "abstract": "As smart grids increasingly depend on IoT devices and distributed energy management, they require decentralized, low latency orchestration of energy services. We address this with a unified framework for edge fog cloud infrastructures tailored to smart energy systems. It features a graph based data model that captures infrastructure and workload, enabling efficient topology exploration and task placement. Leveraging this model, a swarm-based heuristic algorithm handles task offloading in a resource-aware, latency sensitive manner. Our framework ensures data interoperability via energy data spa",
+          "authors": [
+            "Liana Toderean",
+            "Dragos Lazea",
+            "Vasile Ofrim",
+            "Stefania Dumbrava",
+            "Anca Hangan"
+          ],
+          "published": "2026-04-06",
+          "categories": [
+            "cs.DC"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2604.04645v1",
+          "pdf": "https://arxiv.org/pdf/2604.04645v1",
           "priority": "中",
-          "problem_zh": "现有的软上下文压缩方法未能有效考虑自然语言信息的变异性，导致计算效率低下。",
-          "method_zh": "提出了一种密度感知的软上下文压缩方法，动态调整压缩比率，优化了计算效率。",
-          "relevance_zh": "该研究为LLM的上下文处理提供了新的思路，强调了计算效率的重要性。",
-          "summary_zh": "问题：现有的软上下文压缩方法未能有效考虑自然语言信息的变异性，导致计算效率低下。\n方法：提出了一种密度感知的软上下文压缩方法，动态调整压缩比率，优化了计算效率。\n相关性：该研究为LLM的上下文处理提供了新的思路，强调了计算效率的重要性。"
+          "problem_zh": "这篇论文探讨了在智能电网中如何使用边缘计算进行能源服务的调度。",
+          "method_zh": "提出了一种基于图驱动的群体智能框架，优化了边缘、雾和云基础设施的协作，提升了能源服务的调度效率。",
+          "relevance_zh": "该研究涉及边缘计算中的任务调度与资源优化，特别是在智能电网环境中，具有实际应用价值。",
+          "summary_zh": "问题：这篇论文探讨了在智能电网中如何使用边缘计算进行能源服务的调度。\n方法：提出了一种基于图驱动的群体智能框架，优化了边缘、雾和云基础设施的协作，提升了能源服务的调度效率。\n相关性：该研究涉及边缘计算中的任务调度与资源优化，特别是在智能电网环境中，具有实际应用价值。"
+        },
+        {
+          "id": "2604.04413v1",
+          "title": "A Survey on Robust Deep Joint Source-Channel Coding for Semantic Communications",
+          "abstract": "Semantic communications (SCs) aim to transmit only the essential information required to perform given tasks, thereby improving communication efficiency. Deep learning-based joint source-channel coding (deep JSCC) has emerged as a promising approach for SC systems; however, its performance often degrades when the deployment channels differ from the training channel conditions, making robustness a critical requirement. This paper presents a structured overview of recent methodologies for enhancing the robustness of deep JSCC. Specifically, existing approaches are categorized into two classes: r",
+          "authors": [
+            "Eunhye Hong",
+            "Taewoo Park",
+            "Yongjune Kim"
+          ],
+          "published": "2026-04-06",
+          "categories": [
+            "eess.SP"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2604.04413v1",
+          "pdf": "https://arxiv.org/pdf/2604.04413v1",
+          "priority": "中",
+          "problem_zh": "这篇论文调查了语义通信中的深度联合源信道编码的鲁棒性问题。",
+          "method_zh": "提出了一种基于深度学习的联合源信道编码方法，旨在提高语义通信系统的效率和鲁棒性。",
+          "relevance_zh": "该研究与语义通信技术相关，创新点在于通过深度学习方法提升通信效率，适用于边缘智能场景。",
+          "summary_zh": "问题：这篇论文调查了语义通信中的深度联合源信道编码的鲁棒性问题。\n方法：提出了一种基于深度学习的联合源信道编码方法，旨在提高语义通信系统的效率和鲁棒性。\n相关性：该研究与语义通信技术相关，创新点在于通过深度学习方法提升通信效率，适用于边缘智能场景。"
+        },
+        {
+          "id": "2604.02461v1",
+          "title": "RL-Loop: Reinforcement Learning-Driven Real-Time 5G Slice Control for Connected and Autonomous Mobility Services",
+          "abstract": "Smart and connected mobility systems rely on 5G edge infrastructure to support real-time communication, control, and service differentiation. Achieving this requires adaptive resource management mechanisms that can react to rapidly changing traffic conditions. In this paper, we propose RL-Loop, a closed-loop reinforcement learning framework for real-time CPU resource control in 5G network slicing environments supporting connected mobility services. RL-Loop employs a Proximal Policy Optimization (PPO) agent that continuously observes slice-level key performance indicators and adjusts edge CPU a",
+          "authors": [
+            "Lara Tarkh",
+            "Ali Chouman",
+            "Hanan Lutfiyya",
+            "Abdallah Shami"
+          ],
+          "published": "2026-04-02",
+          "categories": [
+            "cs.NI"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2604.02461v1",
+          "pdf": "https://arxiv.org/pdf/2604.02461v1",
+          "priority": "中",
+          "problem_zh": "这篇论文研究了在5G边缘基础设施中如何实现实时的资源管理。",
+          "method_zh": "提出了一种基于强化学习的实时切片控制机制，能够自适应地管理资源以应对快速变化的交通条件。",
+          "relevance_zh": "该论文与边缘计算中的资源优化和调度相关，创新点在于利用强化学习实现动态资源管理。",
+          "summary_zh": "问题：这篇论文研究了在5G边缘基础设施中如何实现实时的资源管理。\n方法：提出了一种基于强化学习的实时切片控制机制，能够自适应地管理资源以应对快速变化的交通条件。\n相关性：该论文与边缘计算中的资源优化和调度相关，创新点在于利用强化学习实现动态资源管理。"
+        },
+        {
+          "id": "2604.05446v1",
+          "title": "MEC: Machine-Learning-Assisted Generalized Entropy Calibration for Semi-Supervised Mean Estimation",
+          "abstract": "Obtaining high-quality labels is costly, whereas unlabeled covariates are often abundant, motivating semi-supervised inference methods with reliable uncertainty quantification. Prediction-powered inference (PPI) leverages a machine-learning predictor trained on a small labeled sample to improve efficiency, but it can lose efficiency under model misspecification and suffer from coverage distortions due to label reuse. We introduce Machine-Learning-Assisted Generalized Entropy Calibration (MEC), a cross-fitted, calibration-weighted variant of PPI. MEC improves efficiency by reweighting labeled s",
+          "authors": [
+            "Se Yoon Lee",
+            "Jae Kwang Kim"
+          ],
+          "published": "2026-04-07",
+          "categories": [
+            "stat.ML",
+            "cs.LG"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2604.05446v1",
+          "pdf": "https://arxiv.org/pdf/2604.05446v1",
+          "priority": "中",
+          "problem_zh": "这篇论文探讨了如何在半监督学习中提高不确定性量化的可靠性。",
+          "method_zh": "提出了一种机器学习辅助的熵校准方法，通过小样本的标签数据提升半监督推断的效率。",
+          "relevance_zh": "该研究与边缘智能系统中的任务调度与资源优化相关，尤其是在数据稀缺的情况下提升推理效果。",
+          "summary_zh": "问题：这篇论文探讨了如何在半监督学习中提高不确定性量化的可靠性。\n方法：提出了一种机器学习辅助的熵校准方法，通过小样本的标签数据提升半监督推断的效率。\n相关性：该研究与边缘智能系统中的任务调度与资源优化相关，尤其是在数据稀缺的情况下提升推理效果。"
+        },
+        {
+          "id": "2604.04312v1",
+          "title": "Out-of-Air Computation: Enabling Structured Extraction from Wireless Superposition",
+          "abstract": "Over-the-air computation (AirComp) has traditionally been built on the principle of pre-embedding computation into transmitted waveforms or on exploiting massive antenna arrays, often requiring the wireless multiple-access channel (MAC) to operate under conditions that approximate an ideal computational medium. This paper introduces a new computation framework, termed out-of-air computation (AirCPU), which establishes a joint source-channel coding foundation in which computation is not embedded before transmission but is instead extracted from the wireless superposition by exploiting structure",
+          "authors": [
+            "Seyed Mohammad Azimi-Abarghouyi"
+          ],
+          "published": "2026-04-05",
+          "categories": [
+            "cs.IT",
+            "cs.DC",
+            "cs.LG"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2604.04312v1",
+          "pdf": "https://arxiv.org/pdf/2604.04312v1",
+          "priority": "中",
+          "problem_zh": "这篇论文研究了如何在无线超叠加中实现计算的高效执行。",
+          "method_zh": "提出了一种新的结构化提取方法，能够在无线超叠加环境中高效执行计算任务，提升了计算效率。",
+          "relevance_zh": "该研究与通信计算联合优化相关，创新点在于通过无线超叠加实现高效计算，适用于边缘智能场景。",
+          "summary_zh": "问题：这篇论文研究了如何在无线超叠加中实现计算的高效执行。\n方法：提出了一种新的结构化提取方法，能够在无线超叠加环境中高效执行计算任务，提升了计算效率。\n相关性：该研究与通信计算联合优化相关，创新点在于通过无线超叠加实现高效计算，适用于边缘智能场景。"
         }
       ],
-      "wordcloud": "wordcloud_agent_memory.png"
+      "wordcloud": "wordcloud_edge_intelligence.png"
     }
   },
-  "total_count": 19
+  "total_count": 28
 }
