@@ -153,12 +153,130 @@ footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);
   </div>
 </section>
 
+<!-- ═══════ 2.5 EXPERIMENTAL SETUP ═══════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-label reveal">Experimental Setup</div>
+    <h2 class="section-title reveal">5 VLMs &times; 2 Edge Platforms &times; 1,680 Runs</h2>
+    <p class="section-desc reveal">We systematically profile energy across three architecture families, four input resolutions, and two hardware platforms.</p>
+
+    <!-- Models table -->
+    <div style="overflow-x:auto;background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:4px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:36px" class="reveal">
+      <table style="width:100%;border-collapse:collapse;font-size:0.85rem">
+        <thead>
+          <tr style="border-bottom:2px solid var(--card-border)">
+            <th style="text-align:left;padding:12px 16px;color:var(--text-dim);font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px">Model</th>
+            <th style="text-align:left;padding:12px 16px;color:var(--text-dim);font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px">Params</th>
+            <th style="text-align:left;padding:12px 16px;color:var(--text-dim);font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px">Vision Encoder</th>
+            <th style="text-align:left;padding:12px 16px;color:var(--text-dim);font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px">Token Strategy</th>
+            <th style="text-align:left;padding:12px 16px;color:var(--text-dim);font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px">&alpha;<sub>d</sub>/&alpha;<sub>p</sub></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid rgba(0,0,0,0.05)"><td style="padding:12px 16px;font-weight:700">InternVL3-1B</td><td style="padding:12px 16px">1B</td><td style="padding:12px 16px">InternViT</td><td style="padding:12px 16px">Fixed (265)</td><td style="padding:12px 16px"><span style="background:rgba(5,150,105,0.1);color:var(--emerald);padding:2px 10px;border-radius:100px;font-size:0.78rem;font-weight:600">11&times;</span></td></tr>
+          <tr style="border-bottom:1px solid rgba(0,0,0,0.05)"><td style="padding:12px 16px;font-weight:700">InternVL3-2B</td><td style="padding:12px 16px">2B</td><td style="padding:12px 16px">InternViT</td><td style="padding:12px 16px">Fixed (265)</td><td style="padding:12px 16px"><span style="background:rgba(8,145,178,0.1);color:var(--cyan);padding:2px 10px;border-radius:100px;font-size:0.78rem;font-weight:600">17&times;</span></td></tr>
+          <tr style="border-bottom:1px solid rgba(0,0,0,0.05)"><td style="padding:12px 16px;font-weight:700">Qwen2-VL-2B</td><td style="padding:12px 16px">2B</td><td style="padding:12px 16px">Qwen-ViT</td><td style="padding:12px 16px">Dynamic (73&ndash;1033)</td><td style="padding:12px 16px"><span style="background:rgba(232,99,10,0.1);color:var(--orange);padding:2px 10px;border-radius:100px;font-size:0.78rem;font-weight:600">39&times;</span></td></tr>
+          <tr style="border-bottom:1px solid rgba(0,0,0,0.05)"><td style="padding:12px 16px;font-weight:700">Qwen2.5-VL-3B</td><td style="padding:12px 16px">3B</td><td style="padding:12px 16px">Qwen-ViT</td><td style="padding:12px 16px">Dynamic (73&ndash;1033)</td><td style="padding:12px 16px"><span style="background:rgba(79,70,229,0.1);color:var(--indigo);padding:2px 10px;border-radius:100px;font-size:0.78rem;font-weight:600">12&times;</span></td></tr>
+          <tr style="border-bottom:1px solid rgba(0,0,0,0.05)"><td style="padding:12px 16px;font-weight:700">Gemma-3-4B</td><td style="padding:12px 16px">4B</td><td style="padding:12px 16px">SigLIP</td><td style="padding:12px 16px">Fixed (265)</td><td style="padding:12px 16px"><span style="background:rgba(124,58,237,0.1);color:var(--violet);padding:2px 10px;border-radius:100px;font-size:0.78rem;font-weight:600">17&times;</span></td></tr>
+          <tr style="border-bottom:1px solid rgba(0,0,0,0.05);color:var(--text-dim)"><td style="padding:12px 16px;font-weight:700">Qwen2.5-VL-7B</td><td style="padding:12px 16px">7B</td><td style="padding:12px 16px" colspan="3"><em>Extended validation &mdash; Table 5</em></td></tr>
+          <tr style="color:var(--text-dim)"><td style="padding:12px 16px;font-weight:700">InternVL3-8B</td><td style="padding:12px 16px">8B</td><td style="padding:12px 16px" colspan="3"><em>Extended validation &mdash; Table 5</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Hardware photos -->
+    <div class="ev-grid reveal">
+      <div class="ev-card">
+        <img src="img/setup_jetson.jpg" alt="NVIDIA Jetson Orin NX 16GB with power measurement" loading="lazy" style="object-fit:cover;height:220px">
+        <div class="ev-card-body">
+          <h3>NVIDIA Jetson Orin NX 16 GB</h3>
+          <p>15W mode, jetson_clocks enabled. Power measured via on-board INA3221 sensor at 100ms intervals.</p>
+        </div>
+      </div>
+      <div class="ev-card">
+        <img src="img/setup_pc.jpg" alt="RTX 3070 Laptop GPU setup" loading="lazy" style="object-fit:cover;height:220px">
+        <div class="ev-card-body">
+          <h3>NVIDIA RTX 3070 Laptop GPU</h3>
+          <p>8 GB GDDR6, frequency locked at 1500 MHz. Power via NVIDIA SMI at 100ms polling.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 2.7 PREFILL vs DECODE INTERACTIVE ═══════ -->
+<section class="section" style="background:var(--bg-alt)">
+  <div class="container">
+    <div class="section-label reveal">Key Concept</div>
+    <h2 class="section-title reveal">Two phases of LLM inference</h2>
+    <p class="section-desc reveal">Click each phase to understand why their energy costs are fundamentally different.</p>
+    <div class="two-col reveal" style="gap:24px">
+      <div id="phase-prefill" class="card" style="cursor:pointer;border:2px solid transparent;transition:all .3s" onclick="selectPhase('prefill')">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <span style="background:rgba(5,150,105,0.12);color:var(--emerald);padding:4px 12px;border-radius:8px;font-size:0.75rem;font-weight:700">PREFILL</span>
+          <span style="font-size:0.8rem;color:var(--text-dim)">Processing all inputs</span>
+        </div>
+        <h3 style="color:var(--emerald);margin-bottom:8px">Seeing &mdash; Fast &amp; Cheap</h3>
+        <ul style="list-style:none;font-size:0.84rem;color:var(--text-dim)" id="prefill-details" style="display:none">
+          <li style="padding:4px 0">All N<sub>input</sub> tokens in <strong style="color:var(--text)">one parallel</strong> forward pass</li>
+          <li style="padding:4px 0"><strong style="color:var(--text)">Compute-bound</strong> &mdash; GPU cores fully utilized</li>
+          <li style="padding:4px 0">Builds KV-cache for decode phase</li>
+          <li style="padding:4px 0">Only <strong style="color:var(--emerald)">3&ndash;14%</strong> of total energy</li>
+        </ul>
+      </div>
+      <div id="phase-decode" class="card" style="cursor:pointer;border:2px solid transparent;transition:all .3s" onclick="selectPhase('decode')">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <span style="background:rgba(232,99,10,0.12);color:var(--orange);padding:4px 12px;border-radius:8px;font-size:0.75rem;font-weight:700">DECODE</span>
+          <span style="font-size:0.8rem;color:var(--text-dim)">Generating output</span>
+        </div>
+        <h3 style="color:var(--orange);margin-bottom:8px">Speaking &mdash; Slow &amp; Expensive</h3>
+        <ul style="list-style:none;font-size:0.84rem;color:var(--text-dim)" id="decode-details">
+          <li style="padding:4px 0">One forward pass <strong style="color:var(--text)">per token</strong>, sequentially</li>
+          <li style="padding:4px 0"><strong style="color:var(--text)">Memory-bound</strong> &mdash; reads full weights each step</li>
+          <li style="padding:4px 0">Autoregressive: each token depends on all prior</li>
+          <li style="padding:4px 0">Consumes <strong style="color:var(--orange)">86&ndash;97%</strong> of total energy</li>
+        </ul>
+      </div>
+    </div>
+    <!-- Interactive energy meter -->
+    <div class="reveal" style="margin-top:32px;max-width:600px;margin-left:auto;margin-right:auto">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;font-size:0.82rem">
+        <span style="font-weight:600">Energy split</span>
+        <span style="margin-left:auto;font-size:0.78rem;color:var(--text-dim)" id="meter-label">Click a phase above</span>
+      </div>
+      <div style="height:28px;border-radius:14px;background:rgba(0,0,0,0.06);overflow:hidden;display:flex;position:relative">
+        <div id="meter-prefill" style="height:100%;background:var(--emerald);transition:width .8s cubic-bezier(.16,1,.3,1);width:9%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff">9%</div>
+        <div id="meter-decode" style="height:100%;background:var(--orange);transition:width .8s cubic-bezier(.16,1,.3,1);width:91%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff">91%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ═══════ 3. THE ANSWER ═══════ -->
 <section class="section">
   <div class="container">
     <div class="section-label reveal">The Answer</div>
     <h2 class="section-title reveal">Decode dominates everything</h2>
     <p class="section-desc reveal">Across 5 models and 2 hardware platforms, autoregressive decoding accounts for 86&ndash;97% of total energy. The bottleneck is <strong style="color:var(--orange)">how much the model says</strong>, not what it sees.</p>
+
+    <!-- Figure 1: Energy decomposition + cost ratio -->
+    <div class="ev-grid reveal" style="margin-bottom:40px">
+      <div class="ev-card">
+        <img src="img/fig1a_energy_bars.png" alt="Energy decomposition: decode dominates 86-97% across all 5 VLMs" loading="lazy">
+        <div class="ev-card-body">
+          <h3>Decode consumes 86&ndash;97% of total energy</h3>
+          <p>Stacked bars show prefill (orange, top) vs. decode (blue) energy for each model on RTX 3070. Even the smallest model spends 86% on decode.</p>
+        </div>
+      </div>
+      <div class="ev-card">
+        <img src="img/fig1b_energy_ratio.png" alt="Cost ratio: each output token costs 11-39x more than input" loading="lazy">
+        <div class="ev-card-body">
+          <h3>"Speaking" costs 11&ndash;39&times; more than "seeing"</h3>
+          <p>Per-token cost ratio (decode / prefill). Qwen2-VL-2B's dynamic tokens make it 39&times; more expensive to generate than to process input.</p>
+        </div>
+      </div>
+    </div>
+
     <div class="two-col">
       <div class="reveal" style="text-align:center">
         <div class="ring-wrap">
@@ -194,42 +312,41 @@ footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);
     <h2 class="section-title reveal">Three surprising findings</h2>
     <p class="section-desc reveal">Our systematic profiling reveals counterintuitive truths about where energy goes&mdash;and where it doesn't.</p>
 
-    <!-- Finding A: Power is constant -->
+    <!-- Finding 1: Power is constant -->
     <div class="two-col" style="margin-bottom:56px">
-      <div class="fig reveal">
-        <img src="img/fig3_power.png" alt="Power vs resolution: nearly flat lines across 224² to 896²" loading="lazy">
-        <div class="fig-cap"><strong>Figure 3: Power vs. resolution &amp; model size.</strong> Average power stays within &lt;5% CV across all input resolutions and content types.</div>
-      </div>
-      <div class="reveal reveal-d1">
+      <div class="reveal">
         <div style="font-size:0.7rem;font-weight:700;letter-spacing:1.5px;color:var(--emerald);text-transform:uppercase;margin-bottom:8px">Finding 1</div>
         <h3 style="font-size:1.15rem;font-weight:700;color:var(--white);margin-bottom:10px">Power is a model fingerprint</h3>
-        <p style="color:var(--text-dim);font-size:0.88rem">Average inference power is a <em>model-intrinsic constant</em>, invariant to input resolution, image complexity, and prompt type (&lt;5% CV). This means energy analysis reduces entirely to understanding <strong style="color:var(--text)">inference time</strong>.</p>
+        <p style="color:var(--text-dim);font-size:0.88rem;margin-bottom:16px">Average inference power is a <em>model-intrinsic constant</em>, invariant to input resolution, image complexity, and prompt type (&lt;5% CV). This means energy analysis reduces entirely to understanding <strong style="color:var(--text)">inference time</strong>.</p>
+      </div>
+      <div class="fig reveal reveal-d1">
+        <img src="img/fig3a_power_resolution.png" alt="Power vs resolution: nearly flat across 224² to 896²" loading="lazy">
+        <div class="fig-cap"><strong>(a) Power vs. resolution.</strong> Flat across 4 resolutions for all models (&lt;5% CV).</div>
+      </div>
+    </div>
+    <div class="ev-grid reveal" style="margin-bottom:56px">
+      <div class="ev-card">
+        <img src="img/fig4a_power_content.png" alt="Power stability across content complexity tiers" loading="lazy">
+        <div class="ev-card-body">
+          <h3>Invariant to content complexity</h3>
+          <p>From simple single-object (T1) to complex 12+ object scenes (T6), power stays flat at ~14.6W and ~14.1W.</p>
+        </div>
+      </div>
+      <div class="ev-card">
+        <img src="img/fig4b_power_prompt.png" alt="Power stability across prompt types" loading="lazy">
+        <div class="ev-card-body">
+          <h3>Invariant to prompt type</h3>
+          <p>"Describe this image" (avg 398 tokens) vs. "Main object? One word" (avg 3 tokens) &mdash; same power draw, but 100&times; different energy.</p>
+        </div>
       </div>
     </div>
 
-    <!-- Finding B: Power is content & prompt invariant -->
+    <!-- Finding 2: Output length is the lever -->
     <div class="two-col" style="margin-bottom:56px">
-      <div class="fig reveal" style="max-width:900px;grid-column:1/-1">
-        <img src="img/fig4_content.png" alt="Power stability across content complexity tiers and prompt types" loading="lazy">
-        <div class="fig-cap"><strong>Figure 4: Power across content complexity &amp; prompt types</strong> (Jetson Orin NX, 448px). Power stays flat (&lt;3.4% CV) regardless of what the model sees or how you prompt it. Energy differences come entirely from output length.</div>
-      </div>
-      <div class="reveal reveal-d1" style="grid-column:1/-1">
+      <div class="reveal">
         <div style="font-size:0.7rem;font-weight:700;letter-spacing:1.5px;color:var(--orange);text-transform:uppercase;margin-bottom:8px">Finding 2</div>
         <h3 style="font-size:1.15rem;font-weight:700;color:var(--white);margin-bottom:10px">Output length is the energy lever</h3>
-        <p style="color:var(--text-dim);font-size:0.88rem">Same model, same resolution&mdash;yet up to <strong style="color:var(--text)">4.1&times;</strong> energy difference between images. The cause isn't visual processing cost, but how many tokens the model generates. Reducing output from 398 to 3 tokens cuts energy by <strong style="color:var(--orange)">90%</strong>.</p>
-      </div>
-    </div>
-
-    <!-- Finding C: Token pruning illusion -->
-    <div class="two-col">
-      <div class="reveal">
-        <div style="font-size:0.7rem;font-weight:700;letter-spacing:1.5px;color:var(--red);text-transform:uppercase;margin-bottom:8px">Finding 3</div>
-        <h3 style="font-size:1.15rem;font-weight:700;color:var(--white);margin-bottom:10px">Visual token pruning is an illusion</h3>
-        <p style="color:var(--text-dim);font-size:0.88rem;margin-bottom:16px">Even removing <em>all</em> visual tokens saves at most 10% of energy for fixed-token models. By contrast, output length control saves <strong style="color:var(--orange)">2&ndash;24&times; more</strong>.</p>
-        <div class="fig" style="max-width:560px">
-          <img src="img/table5_savings.png" alt="Table 5: Energy savings comparison - token pruning vs output control" loading="lazy">
-          <div class="fig-cap"><strong>Table 5:</strong> Visual token pruning achieves &le;10% savings. Output length control achieves up to 97%.</div>
-        </div>
+        <p style="color:var(--text-dim);font-size:0.88rem;margin-bottom:16px">Same model, same resolution&mdash;yet up to <strong style="color:var(--text)">4.1&times;</strong> energy difference between images. The cause isn't visual processing cost, but how many tokens the model generates. Reducing output from 398 to 3 tokens cuts energy by <strong style="color:var(--orange)">90%</strong>.</p>
       </div>
       <div class="reveal reveal-d1">
         <div class="bar-group">
@@ -241,10 +358,6 @@ footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);
           <div class="bar-item">
             <div class="bar-head"><span style="color:var(--orange)">max_tokens 256&rarr;128</span><span class="val">&darr;45%</span></div>
             <div class="bar-track"><div class="bar-fill" data-w="45%" style="background:linear-gradient(90deg,var(--orange),var(--amber))"></div></div>
-          </div>
-          <div class="bar-item">
-            <div class="bar-head"><span style="color:var(--cyan)">Resolution 896&rarr;224 (dynamic)</span><span class="val">&darr;27%</span></div>
-            <div class="bar-track"><div class="bar-fill" data-w="27%" style="background:linear-gradient(90deg,var(--cyan),var(--indigo))"></div></div>
           </div>
           <div class="bar-item">
             <div class="bar-head"><span style="color:var(--emerald)">Remove 100% visual tokens</span><span class="val">&darr;&le;10%</span></div>
@@ -279,9 +392,21 @@ footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);
       </div>
     </div>
 
-    <div class="fig reveal" style="max-width:700px;margin:0 auto">
-      <img src="img/fig5_predictor.png" alt="Figure 5: Predicted vs actual energy - per-model and universal predictor" loading="lazy">
-      <div class="fig-cap"><strong>Figure 5: Predicted vs. measured energy</strong> on RTX 3070 (1,680 runs). (a) Per-model fit: R&sup2;=0.967. (b) Universal model across all 5 architectures: R&sup2;=0.986, MAPE=10.3%&mdash;no per-model calibration needed.</div>
+    <div class="ev-grid reveal">
+      <div class="ev-card">
+        <img src="img/fig5a_permodel_pred.png" alt="Per-model predicted vs actual energy" loading="lazy">
+        <div class="ev-card-body">
+          <h3>Per-model predictor</h3>
+          <p>Parameters fitted independently per model. Overall MAPE=13.7%, R&sup2;=0.967 across 1,680 multimodal inferences.</p>
+        </div>
+      </div>
+      <div class="ev-card">
+        <img src="img/fig5b_universal_pred.png" alt="Universal predicted vs actual energy: R²=0.986" loading="lazy">
+        <div class="ev-card-body">
+          <h3>Universal predictor</h3>
+          <p>A <strong>single model</strong> across all 5 architectures: R&sup2;=0.986, MAPE=10.3%&mdash;no per-model calibration needed.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -348,6 +473,40 @@ const bo = new IntersectionObserver(entries => {
   });
 }, { threshold: .25 });
 document.querySelectorAll('.bar-group').forEach(el => bo.observe(el));
+
+// Phase selector interaction
+function selectPhase(phase) {
+  const pf = document.getElementById('phase-prefill');
+  const dc = document.getElementById('phase-decode');
+  const mp = document.getElementById('meter-prefill');
+  const md = document.getElementById('meter-decode');
+  const ml = document.getElementById('meter-label');
+
+  pf.style.borderColor = phase === 'prefill' ? 'var(--emerald)' : 'transparent';
+  pf.style.boxShadow = phase === 'prefill' ? '0 0 20px rgba(5,150,105,0.15)' : '';
+  dc.style.borderColor = phase === 'decode' ? 'var(--orange)' : 'transparent';
+  dc.style.boxShadow = phase === 'decode' ? '0 0 20px rgba(232,99,10,0.15)' : '';
+
+  if (phase === 'prefill') {
+    mp.style.width = '50%'; mp.textContent = 'Prefill: 9%';
+    md.style.width = '50%'; md.textContent = 'Decode: 91%';
+    ml.textContent = 'Prefill processes ALL inputs in one pass — but only costs 9%';
+    ml.style.color = 'var(--emerald)';
+  } else {
+    mp.style.width = '9%'; mp.textContent = '9%';
+    md.style.width = '91%'; md.textContent = '91%';
+    ml.textContent = 'Decode generates tokens one-by-one — consuming 91% of energy';
+    ml.style.color = 'var(--orange)';
+  }
+}
+// Auto-select decode on scroll
+const phaseObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { setTimeout(() => selectPhase('decode'), 600); phaseObs.unobserve(e.target); }
+  });
+}, { threshold: .5 });
+const phaseEl = document.getElementById('phase-decode');
+if (phaseEl) phaseObs.observe(phaseEl.closest('.two-col'));
 </script>
 </body>
 </html>
