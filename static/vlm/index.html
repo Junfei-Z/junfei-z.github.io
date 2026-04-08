@@ -4,434 +4,359 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Seeing is Free, Speaking is Not - Edge VLM Energy Profiling</title>
-<meta name="description" content="Uncovering the True Energy Bottleneck in Edge VLM Inference. The dominant energy cost is not what the model sees, but how much it says.">
+<meta name="description" content="Uncovering the True Energy Bottleneck in Edge VLM Inference.">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --orange:#f97316;--amber:#f59e0b;--red:#ef4444;--emerald:#10b981;--cyan:#06b6d4;
-  --indigo:#6366f1;--violet:#8b5cf6;--slate:#1e293b;--slate-light:#64748b;
-  --bg:#0f0f17;--card:#1a1a2e;--card-border:#2a2a40;--text:#e2e8f0;--text-dim:#94a3b8;
+  --indigo:#6366f1;--violet:#8b5cf6;
+  --bg:#1c1c24;--bg-alt:#22222e;--card:#282838;--card-border:#363648;
+  --text:#dde1e8;--text-dim:#8b90a0;--white:#f0f0f5;
 }
 html{scroll-behavior:smooth}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
-
-.container{max-width:1100px;margin:0 auto;padding:0 24px}
+.container{max-width:1000px;margin:0 auto;padding:0 24px}
 .section{padding:80px 0}
-.section-title{font-size:2rem;font-weight:800;text-align:center;margin-bottom:16px;color:#fff}
-.section-subtitle{text-align:center;color:var(--text-dim);font-size:1.05rem;max-width:720px;margin:0 auto 48px}
-.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:100px;font-size:0.8rem;font-weight:600}
+.section-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--orange);text-align:center;margin-bottom:12px}
+.section-title{font-size:1.9rem;font-weight:800;text-align:center;margin-bottom:12px;color:var(--white)}
+.section-desc{text-align:center;color:var(--text-dim);font-size:0.95rem;max-width:660px;margin:0 auto 48px}
+
+/* ─── Scroll Animations ─── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.reveal.vis{opacity:1;transform:translateY(0)}
+.reveal-d1{transition-delay:.1s}.reveal-d2{transition-delay:.2s}.reveal-d3{transition-delay:.3s}.reveal-d4{transition-delay:.4s}
 
 /* ─── Hero ─── */
-.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;
-  background:radial-gradient(ellipse at 30% 50%,rgba(249,115,22,0.12) 0%,transparent 50%),
-             radial-gradient(ellipse at 70% 30%,rgba(6,182,212,0.08) 0%,transparent 40%),
-             var(--bg)}
-.hero-content{position:relative;z-index:2;text-align:center;padding:40px 24px;max-width:900px}
-.hero-venue{display:inline-block;padding:8px 24px;border-radius:100px;background:rgba(249,115,22,0.15);
-  color:var(--orange);font-size:0.85rem;font-weight:600;letter-spacing:0.5px;margin-bottom:28px;border:1px solid rgba(249,115,22,0.25)}
-.hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:24px}
-.hero h1 .seeing{color:var(--emerald)}
-.hero h1 .speaking{color:var(--orange)}
-.hero-tagline{font-size:1.3rem;color:var(--text-dim);margin-bottom:16px;font-style:italic}
-.hero-desc{font-size:1rem;color:var(--text-dim);max-width:700px;margin:0 auto 40px;line-height:1.8}
-.hero-stats{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
-.hero-stat{background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:16px;padding:20px 28px;min-width:140px}
-.hero-stat-num{font-size:2rem;font-weight:900;margin-bottom:2px}
-.hero-stat-label{font-size:0.75rem;color:var(--text-dim)}
-.hero-buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:12px;font-size:0.9rem;font-weight:600;text-decoration:none;transition:all .3s;border:none;cursor:pointer}
-.btn-primary{background:var(--orange);color:#fff}
-.btn-primary:hover{background:#ea580c;transform:translateY(-2px);box-shadow:0 8px 30px rgba(249,115,22,0.3)}
-.btn-outline{background:transparent;color:var(--text);border:2px solid var(--card-border)}
-.btn-outline:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px)}
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 30% 50%,rgba(249,115,22,0.08) 0%,transparent 50%),
+             radial-gradient(ellipse at 70% 30%,rgba(16,185,129,0.06) 0%,transparent 40%),var(--bg)}
+.hero-inner{position:relative;z-index:2;text-align:center;padding:40px 24px;max-width:860px}
+.hero-badge{display:inline-block;padding:7px 20px;border-radius:100px;background:rgba(249,115,22,0.12);color:var(--orange);font-size:0.8rem;font-weight:600;letter-spacing:.5px;margin-bottom:24px;border:1px solid rgba(249,115,22,0.2)}
+.hero h1{font-size:clamp(2rem,5vw,3rem);font-weight:900;color:var(--white);line-height:1.15;margin-bottom:20px}
+.hero h1 .g{color:var(--emerald)}.hero h1 .o{color:var(--orange)}
+.hero-sub{font-size:1.15rem;color:var(--text-dim);margin-bottom:32px;font-style:italic}
+.hero-stats{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:36px}
+.hero-stat{background:rgba(255,255,255,0.03);border:1px solid var(--card-border);border-radius:14px;padding:16px 24px;min-width:130px}
+.hero-stat b{display:block;font-size:1.8rem;font-weight:900;margin-bottom:2px}
+.hero-stat span{font-size:0.72rem;color:var(--text-dim)}
+.hero-scroll{margin-top:8px;font-size:0.85rem;color:var(--text-dim)}
+.hero-scroll a{color:var(--orange);text-decoration:none;font-weight:600}
+.hero-scroll a:hover{text-decoration:underline}
 
-/* Animated energy wave */
-.energy-wave{position:absolute;bottom:0;left:0;right:0;height:120px;z-index:1;opacity:0.3}
-.energy-wave svg{width:100%;height:100%}
+/* Wave */
+.wave{position:absolute;bottom:0;left:0;right:0;height:80px;z-index:1;opacity:.25}
+.wave svg{width:100%;height:100%}
 
-/* ─── Core Insight ─── */
-.insight-section{background:linear-gradient(180deg,var(--bg) 0%,#12121f 100%)}
-.insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
-.insight-visual{position:relative}
-.energy-ring{width:280px;height:280px;margin:0 auto;position:relative}
-.energy-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
-.energy-ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.energy-ring-pct{font-size:3rem;font-weight:900;color:var(--orange)}
-.energy-ring-text{font-size:0.85rem;color:var(--text-dim)}
-.insight-text h2{font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;line-height:1.3}
-.insight-text p{color:var(--text-dim);margin-bottom:16px;font-size:0.95rem}
-.insight-highlight{background:rgba(249,115,22,0.1);border-left:3px solid var(--orange);padding:16px 20px;border-radius:0 12px 12px 0;color:var(--text);font-size:0.9rem;margin-top:20px}
+/* ─── Figure ─── */
+.fig{border-radius:14px;overflow:hidden;background:#fff;border:1px solid var(--card-border);margin:0 auto;max-width:100%}
+.fig img{display:block;width:100%;height:auto}
+.fig-cap{padding:10px 16px;font-size:0.78rem;color:var(--text-dim);background:var(--card);border-top:1px solid var(--card-border)}
 
-/* ─── Contrast Cards ─── */
-.contrast-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:800px;margin:0 auto}
-.contrast-card{border-radius:20px;padding:36px;text-align:center;position:relative;overflow:hidden}
-.contrast-card.seeing{background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(6,182,212,0.05));border:1px solid rgba(16,185,129,0.2)}
-.contrast-card.speaking{background:linear-gradient(135deg,rgba(249,115,22,0.1),rgba(239,68,68,0.05));border:1px solid rgba(249,115,22,0.2)}
-.contrast-icon{font-size:3rem;margin-bottom:16px}
-.contrast-card h3{font-size:1.3rem;font-weight:700;margin-bottom:12px}
-.contrast-card.seeing h3{color:var(--emerald)}
-.contrast-card.speaking h3{color:var(--orange)}
-.contrast-list{list-style:none;text-align:left;font-size:0.85rem;color:var(--text-dim)}
-.contrast-list li{padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
-.contrast-list li::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:10px}
-.contrast-card.seeing .contrast-list li::before{background:var(--emerald)}
-.contrast-card.speaking .contrast-list li::before{background:var(--orange)}
+/* ─── Insight columns ─── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+@media(max-width:768px){.two-col{grid-template-columns:1fr}}
 
-/* ─── Findings ─── */
-.findings-bg{background:linear-gradient(180deg,#12121f 0%,#0f0f17 100%)}
-.finding-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
-.finding-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:28px;transition:all .3s}
-.finding-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
-.finding-num{font-size:0.75rem;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
-.finding-card h3{font-size:1.1rem;font-weight:700;margin-bottom:8px;color:#fff}
-.finding-card p{color:var(--text-dim);font-size:0.85rem}
+/* ─── Energy ring ─── */
+.ring-wrap{width:240px;height:240px;margin:0 auto;position:relative}
+.ring-wrap svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-pct{font-size:2.6rem;font-weight:900;color:var(--orange)}
+.ring-sub{font-size:0.8rem;color:var(--text-dim)}
+@keyframes ring-in{from{stroke-dashoffset:754}to{stroke-dashoffset:var(--end)}}
+.ring-anim{stroke-dashoffset:754;animation:ring-in 2s cubic-bezier(.16,1,.3,1) forwards;animation-play-state:paused}
+.ring-anim.go{animation-play-state:running}
 
-/* ─── Cost Comparison ─── */
-.cost-bars{max-width:700px;margin:0 auto}
-.cost-item{margin-bottom:28px}
-.cost-header{display:flex;justify-content:space-between;margin-bottom:8px}
-.cost-header span:first-child{font-weight:600;font-size:0.9rem}
-.cost-header span:last-child{color:var(--text-dim);font-size:0.85rem}
-.cost-bar{height:12px;border-radius:6px;background:rgba(255,255,255,0.05);overflow:hidden}
-.cost-bar-fill{height:100%;border-radius:6px;transition:width 1.5s cubic-bezier(.16,1,.3,1);width:0}
+/* ─── Cards ─── */
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:28px;transition:transform .3s,box-shadow .3s}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.25)}
+.card h3{font-size:1.05rem;font-weight:700;color:var(--white);margin-bottom:8px}
+.card p{color:var(--text-dim);font-size:0.85rem}
+.card-icon{font-size:1.6rem;margin-bottom:10px}
 
-/* ─── Models ─── */
-.models-table{width:100%;border-collapse:collapse;font-size:0.85rem}
-.models-table th{text-align:left;padding:12px 16px;border-bottom:2px solid var(--card-border);color:var(--text-dim);font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px}
-.models-table td{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04)}
-.models-table tr:hover td{background:rgba(255,255,255,0.02)}
-.model-name{font-weight:700;color:#fff}
-.power-badge{display:inline-block;padding:2px 10px;border-radius:100px;font-size:0.75rem;font-weight:600}
+/* ─── Comparison bars ─── */
+.bar-group{max-width:680px;margin:0 auto}
+.bar-item{margin-bottom:24px}
+.bar-head{display:flex;justify-content:space-between;margin-bottom:6px;font-size:0.88rem}
+.bar-head .val{color:var(--text-dim);font-size:0.82rem}
+.bar-track{height:10px;border-radius:5px;background:rgba(255,255,255,0.05);overflow:hidden}
+.bar-fill{height:100%;border-radius:5px;width:0;transition:width 1.4s cubic-bezier(.16,1,.3,1)}
 
-/* ─── Deployment ─── */
-.deploy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.deploy-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:28px;transition:all .3s}
-.deploy-card:hover{border-color:var(--orange);transform:translateY(-3px)}
-.deploy-icon{font-size:2rem;margin-bottom:12px}
-.deploy-card h3{font-size:1rem;font-weight:700;margin-bottom:8px;color:#fff}
-.deploy-card p{color:var(--text-dim);font-size:0.83rem}
+/* ─── Evidence grid ─── */
+.ev-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+@media(max-width:768px){.ev-grid{grid-template-columns:1fr}}
+.ev-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;overflow:hidden;transition:transform .3s}
+.ev-card:hover{transform:translateY(-3px)}
+.ev-card img{display:block;width:100%;height:auto;background:#fff}
+.ev-card-body{padding:20px 22px}
+.ev-card-body h3{font-size:0.95rem;font-weight:700;color:var(--white);margin-bottom:6px}
+.ev-card-body p{font-size:0.82rem;color:var(--text-dim)}
 
-/* ─── Animated Number ─── */
-.anim-num{display:inline-block}
+/* ─── Formula ─── */
+.formula-box{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:32px;text-align:center;max-width:700px;margin:0 auto}
+.formula{font-size:1.3rem;font-weight:300;color:var(--white);font-family:'Times New Roman',serif;letter-spacing:1px;margin-bottom:20px}
+
+/* ─── Deploy ─── */
+.deploy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:768px){.deploy-grid{grid-template-columns:1fr}}
 
 /* ─── Footer ─── */
-.footer{padding:40px 0;text-align:center;border-top:1px solid var(--card-border);color:var(--text-dim);font-size:0.85rem}
+footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);color:var(--text-dim);font-size:0.82rem}
+
+/* ─── Highlight quote ─── */
+.highlight{background:rgba(249,115,22,0.08);border-left:3px solid var(--orange);padding:14px 18px;border-radius:0 10px 10px 0;font-size:0.9rem;color:var(--text);margin-top:16px}
 
 /* ─── Responsive ─── */
 @media(max-width:768px){
-  .section{padding:60px 0}
-  .section-title{font-size:1.6rem}
-  .insight-grid,.contrast-grid{grid-template-columns:1fr}
-  .deploy-grid{grid-template-columns:1fr}
-  .hero-stats{gap:12px}
-  .hero-stat{padding:14px 18px;min-width:110px}
-  .hero-stat-num{font-size:1.5rem}
+  .section{padding:56px 0}
+  .section-title{font-size:1.5rem}
+  .hero-stats{gap:10px}
+  .hero-stat{padding:12px 16px;min-width:100px}
+  .hero-stat b{font-size:1.4rem}
 }
 
-/* ─── Scroll Animations ─── */
-.fade-in{opacity:0;transform:translateY(30px);transition:all .7s cubic-bezier(.16,1,.3,1)}
-.fade-in.visible{opacity:1;transform:translateY(0)}
-.stagger-children>*{opacity:0;transform:translateY(20px);transition:all .5s cubic-bezier(.16,1,.3,1)}
-.stagger-children.visible>*:nth-child(1){transition-delay:0s}
-.stagger-children.visible>*:nth-child(2){transition-delay:.1s}
-.stagger-children.visible>*:nth-child(3){transition-delay:.15s}
-.stagger-children.visible>*:nth-child(4){transition-delay:.2s}
-.stagger-children.visible>*:nth-child(5){transition-delay:.25s}
-.stagger-children.visible>*:nth-child(6){transition-delay:.3s}
-.stagger-children.visible>*{opacity:1;transform:translateY(0)}
-
-/* Ring animation */
-@keyframes ring-draw{from{stroke-dashoffset:754}to{stroke-dashoffset:var(--target-offset)}}
-.ring-animated{animation:ring-draw 2s cubic-bezier(.16,1,.3,1) forwards;animation-play-state:paused}
-.ring-animated.playing{animation-play-state:running}
-
-/* Pulse glow */
-@keyframes pulse-glow{0%,100%{opacity:.6}50%{opacity:1}}
-.pulse-glow{animation:pulse-glow 2s ease-in-out infinite}
+/* ─── Pulse ─── */
+@keyframes pulse{0%,100%{opacity:.65}50%{opacity:1}}
+.pulse{animation:pulse 2.5s ease-in-out infinite}
 </style>
 </head>
 <body>
 
-<!-- ═══════════════ HERO ═══════════════ -->
+<!-- ═══════ 1. HERO ═══════ -->
 <section class="hero">
-  <div class="hero-content">
-    <div class="hero-venue">Under Review &mdash; Double Blind</div>
-    <h1><span class="seeing">Seeing is Free</span>, <span class="speaking">Speaking is Not</span></h1>
-    <p class="hero-tagline">Uncovering the True Energy Bottleneck in Edge VLM Inference</p>
-    <p class="hero-desc">
-      The first systematic energy profiling of on-device Vision-Language Model inference.
-      We overturn the implicit assumption that visual processing dominates energy cost &mdash;
-      the true bottleneck is <strong style="color:var(--orange)">how much the model says</strong>, not what it sees.
-    </p>
+  <div class="hero-inner">
+    <div class="hero-badge">MM '26 &mdash; Under Review</div>
+    <h1><span class="g">Seeing is Free</span>, <span class="o">Speaking is Not</span></h1>
+    <p class="hero-sub">Uncovering the True Energy Bottleneck in Edge VLM Inference</p>
     <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="hero-stat-num" style="color:var(--orange)">86&ndash;97%</div>
-        <div class="hero-stat-label">Energy from Decode</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num" style="color:var(--cyan)">11&ndash;39&times;</div>
-        <div class="hero-stat-label">Output vs Input Token Cost</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num" style="color:var(--emerald)">&lt;5%</div>
-        <div class="hero-stat-label">Power Variation Across Inputs</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num" style="color:var(--violet)">5</div>
-        <div class="hero-stat-label">VLMs &times; 2 Platforms Profiled</div>
-      </div>
+      <div class="hero-stat"><b style="color:var(--orange)">86&ndash;97%</b><span>Energy from Decode</span></div>
+      <div class="hero-stat"><b style="color:var(--cyan)">11&ndash;39&times;</b><span>Output vs Input Cost</span></div>
+      <div class="hero-stat"><b style="color:var(--emerald)">&lt;5%</b><span>Power Variation</span></div>
+      <div class="hero-stat"><b style="color:var(--violet)">5&times;2</b><span>VLMs &times; Platforms</span></div>
     </div>
-    <div class="hero-buttons">
-      <a href="#findings" class="btn btn-primary">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-        Explore Findings
-      </a>
-      <a href="#guidelines" class="btn btn-outline">Deployment Guidelines</a>
-    </div>
+    <p class="hero-scroll"><a href="#question">Scroll to explore &darr;</a></p>
   </div>
-  <div class="energy-wave">
-    <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
-      <path d="M0,60 C360,20 720,100 1080,40 C1260,20 1380,60 1440,50 L1440,120 L0,120 Z" fill="rgba(249,115,22,0.08)"/>
-      <path d="M0,80 C240,40 480,100 720,60 C960,20 1200,80 1440,60 L1440,120 L0,120 Z" fill="rgba(249,115,22,0.05)"/>
-    </svg>
+  <div class="wave"><svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C360,10 720,70 1080,25 C1260,10 1380,40 1440,35 L1440,80 L0,80Z" fill="rgba(249,115,22,0.07)"/></svg></div>
+</section>
+
+<!-- ═══════ 2. THE QUESTION ═══════ -->
+<section class="section" id="question" style="background:var(--bg-alt)">
+  <div class="container">
+    <div class="section-label reveal">The Question</div>
+    <h2 class="section-title reveal">Where does the energy go in edge VLM inference?</h2>
+    <p class="section-desc reveal">Vision-Language Models run on edge devices like Jetson Orin NX and laptop GPUs. Most efficiency work assumes visual token processing is the bottleneck. We measured where energy <em>actually</em> goes.</p>
+    <div class="fig reveal" style="max-width:900px">
+      <img src="img/fig_pipeline.png" alt="VLM inference pipeline: Input → Encoding → Concatenation → LLM Inference (Prefill + Decode) → Output" loading="lazy">
+      <div class="fig-cap"><strong>VLM inference pipeline.</strong> An image and prompt are encoded into visual + text tokens, then processed by the LLM in two phases: a fast parallel prefill and a slow sequential decode.</div>
+    </div>
   </div>
 </section>
 
-<!-- ═══════════════ CORE INSIGHT ═══════════════ -->
-<section class="section insight-section">
+<!-- ═══════ 3. THE ANSWER ═══════ -->
+<section class="section">
   <div class="container">
-    <div class="insight-grid">
-      <div class="insight-visual fade-in">
-        <div class="energy-ring">
+    <div class="section-label reveal">The Answer</div>
+    <h2 class="section-title reveal">Decode dominates everything</h2>
+    <p class="section-desc reveal">Across 5 models and 2 hardware platforms, autoregressive decoding accounts for 86&ndash;97% of total energy. The bottleneck is <strong style="color:var(--orange)">how much the model says</strong>, not what it sees.</p>
+    <div class="two-col">
+      <div class="reveal" style="text-align:center">
+        <div class="ring-wrap">
           <svg viewBox="0 0 260 260">
-            <circle cx="130" cy="130" r="120" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="16"/>
-            <circle cx="130" cy="130" r="120" fill="none" stroke="var(--emerald)" stroke-width="16" stroke-dasharray="754" stroke-dashoffset="680" stroke-linecap="round" opacity="0.8"/>
-            <circle cx="130" cy="130" r="120" fill="none" stroke="var(--orange)" stroke-width="16" stroke-dasharray="754" style="--target-offset:75" stroke-dashoffset="754" stroke-linecap="round" class="ring-animated"/>
+            <circle cx="130" cy="130" r="120" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="14"/>
+            <circle cx="130" cy="130" r="120" fill="none" stroke="var(--emerald)" stroke-width="14" stroke-dasharray="754" stroke-dashoffset="680" stroke-linecap="round" opacity=".7"/>
+            <circle cx="130" cy="130" r="120" fill="none" stroke="var(--orange)" stroke-width="14" stroke-dasharray="754" style="--end:75" stroke-linecap="round" class="ring-anim"/>
           </svg>
-          <div class="energy-ring-label">
-            <div class="energy-ring-pct pulse-glow">91%</div>
-            <div class="energy-ring-text">Decode Energy</div>
+          <div class="ring-label">
+            <div class="ring-pct pulse">91%</div>
+            <div class="ring-sub">Decode Energy</div>
           </div>
         </div>
-        <div style="display:flex;justify-content:center;gap:24px;margin-top:20px;font-size:0.8rem">
-          <span><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--orange);margin-right:6px"></span>Decode (86&ndash;97%)</span>
-          <span><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--emerald);margin-right:6px"></span>Prefill (3&ndash;14%)</span>
+        <div style="display:flex;justify-content:center;gap:20px;margin-top:16px;font-size:0.78rem">
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--orange);margin-right:6px"></span>Decode (86&ndash;97%)</span>
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--emerald);margin-right:6px"></span>Prefill (3&ndash;14%)</span>
         </div>
       </div>
-      <div class="insight-text fade-in">
-        <h2>The Energy Goes to <span style="color:var(--orange)">Speaking</span>, Not <span style="color:var(--emerald)">Seeing</span></h2>
-        <p>We decompose VLM inference energy into prefill (processing all inputs) and decode (generating output tokens). Across all 5 models and 2 hardware platforms:</p>
-        <p><strong>Autoregressive decoding accounts for 86&ndash;97% of total energy.</strong> The compute-bound prefill phase&mdash;which processes all visual tokens&mdash;is a minority contributor.</p>
-        <div class="insight-highlight">
-          <strong>Key implication:</strong> Even removing <em>all</em> visual tokens saves at most 10% of total energy for fixed-token models. Controlling output length saves up to <strong>97%</strong>.
+      <div class="reveal reveal-d1">
+        <h3 style="font-size:1.2rem;font-weight:700;color:var(--white);margin-bottom:12px">Why does decode cost so much?</h3>
+        <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px"><strong style="color:var(--text)">Prefill</strong> is compute-bound: all tokens process in parallel in one forward pass. Fast and cheap.</p>
+        <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px"><strong style="color:var(--text)">Decode</strong> is memory-bound: one forward pass per token, reading full model weights each time. Slow and expensive.</p>
+        <div class="highlight">Each output token costs <strong>11&ndash;39&times;</strong> more energy than each input token. A single output token on InternVL3-2B costs as much as processing <strong>17 visual tokens</strong>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 4. THE EVIDENCE ═══════ -->
+<section class="section" style="background:var(--bg-alt)">
+  <div class="container">
+    <div class="section-label reveal">The Evidence</div>
+    <h2 class="section-title reveal">Three surprising findings</h2>
+    <p class="section-desc reveal">Our systematic profiling reveals counterintuitive truths about where energy goes&mdash;and where it doesn't.</p>
+
+    <!-- Finding A: Power is constant -->
+    <div class="two-col" style="margin-bottom:56px">
+      <div class="fig reveal">
+        <img src="img/fig_power_resolution.png" alt="Power vs resolution: nearly flat lines across 224² to 896²" loading="lazy">
+        <div class="fig-cap"><strong>Power vs. resolution &amp; model size.</strong> Average power stays within 5% across all input resolutions and content types.</div>
+      </div>
+      <div class="reveal reveal-d1">
+        <div style="font-size:0.7rem;font-weight:700;letter-spacing:1.5px;color:var(--emerald);text-transform:uppercase;margin-bottom:8px">Finding 1</div>
+        <h3 style="font-size:1.15rem;font-weight:700;color:var(--white);margin-bottom:10px">Power is a model fingerprint</h3>
+        <p style="color:var(--text-dim);font-size:0.88rem">Average inference power is a <em>model-intrinsic constant</em>, invariant to input resolution, image complexity, and prompt type (&lt;5% CV). This means energy analysis reduces entirely to understanding <strong style="color:var(--text)">inference time</strong>.</p>
+      </div>
+    </div>
+
+    <!-- Finding B: Output length is the lever -->
+    <div class="ev-grid reveal" style="margin-bottom:56px">
+      <div class="ev-card">
+        <img src="img/fig_per_image_energy.png" alt="Per-image energy varies 2.1x for same model and resolution" loading="lazy">
+        <div class="ev-card-body">
+          <h3>Content drives energy via output length</h3>
+          <p>Same model, same resolution&mdash;yet up to 2.1&times; energy difference between images. The cause isn't visual processing cost, but how many tokens the model generates in response.</p>
+        </div>
+      </div>
+      <div class="ev-card">
+        <img src="img/fig_energy_vs_tokens.png" alt="Energy vs output tokens: strong linear correlation" loading="lazy">
+        <div class="ev-card-body">
+          <h3>Output count is the #1 predictor</h3>
+          <p>Energy scales linearly with output token count. Reducing output from 398 to 3 tokens cuts energy by 90%. Output length is the single most important variable.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finding C: Token pruning illusion -->
+    <div class="two-col">
+      <div class="reveal">
+        <div style="font-size:0.7rem;font-weight:700;letter-spacing:1.5px;color:var(--red);text-transform:uppercase;margin-bottom:8px">Finding 3</div>
+        <h3 style="font-size:1.15rem;font-weight:700;color:var(--white);margin-bottom:10px">Visual token pruning is an illusion</h3>
+        <p style="color:var(--text-dim);font-size:0.88rem;margin-bottom:16px">Even removing <em>all</em> visual tokens saves at most 10% of energy for fixed-token models. By contrast, output length control saves <strong style="color:var(--orange)">2&ndash;24&times; more</strong>.</p>
+        <div class="fig" style="max-width:480px">
+          <img src="img/fig_energy_vs_res.png" alt="Energy vs input resolution across models" loading="lazy">
+          <div class="fig-cap"><strong>Energy vs. resolution.</strong> Fixed-token models (dashed) are almost flat; dynamic-token models show variance only through output length effects.</div>
+        </div>
+      </div>
+      <div class="reveal reveal-d1">
+        <div class="bar-group">
+          <p style="font-size:0.78rem;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:20px">Energy Savings Comparison</p>
+          <div class="bar-item">
+            <div class="bar-head"><span style="color:var(--orange)">Short-answer prompt (3 tokens)</span><span class="val">&darr;90%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-w="90%" style="background:linear-gradient(90deg,var(--orange),var(--red))"></div></div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-head"><span style="color:var(--orange)">max_tokens 256&rarr;128</span><span class="val">&darr;45%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-w="45%" style="background:linear-gradient(90deg,var(--orange),var(--amber))"></div></div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-head"><span style="color:var(--cyan)">Resolution 896&rarr;224 (dynamic)</span><span class="val">&darr;27%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-w="27%" style="background:linear-gradient(90deg,var(--cyan),var(--indigo))"></div></div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-head"><span style="color:var(--emerald)">Remove 100% visual tokens</span><span class="val">&darr;&le;10%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-w="10%" style="background:linear-gradient(90deg,var(--emerald),var(--cyan))"></div></div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-head"><span style="color:var(--emerald)">Remove 50% visual tokens</span><span class="val">&darr;&le;5%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-w="5%" style="background:var(--emerald)"></div></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ SEEING vs SPEAKING ═══════════════ -->
+<!-- ═══════ 5. THE MODEL ═══════ -->
 <section class="section">
   <div class="container">
-    <h2 class="section-title fade-in">The Counterintuitive Truth</h2>
-    <p class="section-subtitle fade-in">Existing VLM efficiency work focuses on reducing visual tokens. Our measurements reveal this targets the wrong bottleneck.</p>
-    <div class="contrast-grid stagger-children">
-      <div class="contrast-card seeing">
-        <div class="contrast-icon">&#x1F441;&#xFE0F;</div>
-        <h3>Seeing is Free</h3>
-        <ul class="contrast-list">
-          <li>Power is resolution-invariant (&lt;5% CV)</li>
-          <li>14&times; more visual tokens &rarr; no measurable power change</li>
-          <li>Content complexity doesn't affect power draw</li>
-          <li>Prompt type doesn't change power</li>
-          <li>Prefill is compute-bound, fast, and cheap</li>
-          <li>Visual token pruning: &le;10% energy savings</li>
-        </ul>
-      </div>
-      <div class="contrast-card speaking">
-        <div class="contrast-icon">&#x1F4AC;</div>
-        <h3>Speaking is Not</h3>
-        <ul class="contrast-list">
-          <li>Each output token costs 11&ndash;39&times; more than input</li>
-          <li>Decode dominates 86&ndash;97% of total energy</li>
-          <li>Output count is the #1 energy predictor</li>
-          <li>Image complexity &rarr; 4.1&times; energy variation (via output length)</li>
-          <li>Decode is memory-bound, sequential, and expensive</li>
-          <li>Output length control: up to 97% energy savings</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
+    <div class="section-label reveal">The Model</div>
+    <h2 class="section-title reveal">A universal energy predictor</h2>
+    <p class="section-desc reveal">Since power is constant and time depends on token counts, we build a simple linear energy model that works across all VLMs.</p>
 
-<!-- ═══════════════ KEY FINDINGS ═══════════════ -->
-<section class="section findings-bg" id="findings">
-  <div class="container">
-    <h2 class="section-title fade-in">Key Findings</h2>
-    <p class="section-subtitle fade-in">Three contributions from systematic energy profiling across 5 VLMs, 4 resolutions, and 2 edge platforms.</p>
-    <div class="finding-cards stagger-children">
-      <div class="finding-card">
-        <div class="finding-num">Finding 1</div>
-        <h3>Power is a Model Fingerprint</h3>
-        <p>Average inference power is a model-intrinsic constant, invariant to input resolution, image complexity, and prompt type, with less than 5% variation. Energy analysis reduces to understanding inference time.</p>
-      </div>
-      <div class="finding-card">
-        <div class="finding-num">Finding 2</div>
-        <h3>Decode Dominates Everything</h3>
-        <p>Autoregressive decoding accounts for 86&ndash;97% of total energy. The decode-to-prefill cost ratio per token ranges from 11&times; to 39&times;, confirming the compute-bound vs. memory-bound architectural asymmetry.</p>
-      </div>
-      <div class="finding-card">
-        <div class="finding-num">Finding 3</div>
-        <h3>Visual Token Pruning &mdash; An Illusion</h3>
-        <p>We derive a theoretical upper bound: removing all visual tokens saves at most 10% of total energy for fixed-token models. By contrast, controlling output length saves 2&ndash;24&times; more energy.</p>
-      </div>
-      <div class="finding-card">
-        <div class="finding-num">Finding 4</div>
-        <h3>Output Length is the Energy Lever</h3>
-        <p>Reducing output from 398 to 3 tokens cuts energy by 90% while prefill energy stays unchanged. Output token count is the first-order predictor of per-inference energy.</p>
-      </div>
-      <div class="finding-card">
-        <div class="finding-num">Finding 5</div>
-        <h3>Cross-Model Energy Predictor</h3>
-        <p>A single linear model with 5 features (model size, input/output counts, and interactions) achieves R&sup2;=0.986 and MAPE=10.3% across all 1,680 runs&mdash;without per-model calibration.</p>
-      </div>
-      <div class="finding-card">
-        <div class="finding-num">Finding 6</div>
-        <h3>Content Affects Energy via Output</h3>
-        <p>Image complexity induces up to 4.1&times; energy differences at identical resolution&mdash;not from visual processing cost, but entirely through its effect on output length.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════ ENERGY COMPARISON ═══════════════ -->
-<section class="section">
-  <div class="container">
-    <h2 class="section-title fade-in">Energy Savings: What Actually Works</h2>
-    <p class="section-subtitle fade-in">Comparing visual token pruning vs. output length control on Jetson Orin NX (InternVL3-1B, 448&times;448).</p>
-    <div class="cost-bars fade-in">
-      <div class="cost-item">
-        <div class="cost-header"><span style="color:var(--orange)">Short-answer prompt (3 tokens)</span><span>&#x2193;90% energy</span></div>
-        <div class="cost-bar"><div class="cost-bar-fill" data-width="90%" style="background:linear-gradient(90deg,var(--orange),var(--red))"></div></div>
-      </div>
-      <div class="cost-item">
-        <div class="cost-header"><span style="color:var(--orange)">max_tokens 256&rarr;128</span><span>&#x2193;45% energy</span></div>
-        <div class="cost-bar"><div class="cost-bar-fill" data-width="45%" style="background:linear-gradient(90deg,var(--orange),var(--amber))"></div></div>
-      </div>
-      <div class="cost-item">
-        <div class="cost-header"><span style="color:var(--cyan)">Resolution 896&rarr;224 (dynamic-token)</span><span>&#x2193;27% energy</span></div>
-        <div class="cost-bar"><div class="cost-bar-fill" data-width="27%" style="background:linear-gradient(90deg,var(--cyan),var(--indigo))"></div></div>
-      </div>
-      <div class="cost-item">
-        <div class="cost-header"><span style="color:var(--emerald)">Remove 100% visual tokens</span><span>&#x2193;&le;10% energy</span></div>
-        <div class="cost-bar"><div class="cost-bar-fill" data-width="10%" style="background:linear-gradient(90deg,var(--emerald),var(--cyan))"></div></div>
-      </div>
-      <div class="cost-item">
-        <div class="cost-header"><span style="color:var(--emerald)">Remove 50% visual tokens</span><span>&#x2193;&le;5% energy</span></div>
-        <div class="cost-bar"><div class="cost-bar-fill" data-width="5%" style="background:var(--emerald)"></div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════ PROFILED MODELS ═══════════════ -->
-<section class="section findings-bg">
-  <div class="container">
-    <h2 class="section-title fade-in">Profiled Models &amp; Platforms</h2>
-    <p class="section-subtitle fade-in">Spanning three architecture families, 1B&ndash;4B parameters, and two edge hardware platforms.</p>
-    <div style="overflow-x:auto;background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:4px" class="fade-in">
-      <table class="models-table">
-        <thead>
-          <tr><th>Model</th><th>Params</th><th>Vision Encoder</th><th>Token Strategy</th><th>Power (Jetson)</th><th>&alpha;<sub>d</sub>/&alpha;<sub>p</sub></th></tr>
-        </thead>
-        <tbody>
-          <tr><td class="model-name">InternVL3-1B</td><td>1B</td><td>InternViT</td><td>Fixed (265 tokens)</td><td><span class="power-badge" style="background:rgba(16,185,129,0.15);color:var(--emerald)">14.6 W</span></td><td>11&times;</td></tr>
-          <tr><td class="model-name">InternVL3-2B</td><td>2B</td><td>InternViT</td><td>Fixed (265 tokens)</td><td><span class="power-badge" style="background:rgba(6,182,212,0.15);color:var(--cyan)">17.0 W</span></td><td>17&times;</td></tr>
-          <tr><td class="model-name">Qwen2-VL-2B</td><td>2B</td><td>Qwen-ViT</td><td>Dynamic (73&ndash;1033)</td><td><span class="power-badge" style="background:rgba(99,102,241,0.15);color:var(--indigo)">14.1 W</span></td><td>39&times;</td></tr>
-          <tr><td class="model-name">Qwen2.5-VL-3B</td><td>3B</td><td>Qwen-ViT</td><td>Dynamic (73&ndash;1033)</td><td><span class="power-badge" style="background:rgba(139,92,246,0.15);color:var(--violet)">14.2 W</span></td><td>12&times;</td></tr>
-          <tr><td class="model-name">Gemma-3-4B</td><td>4B</td><td>SigLIP</td><td>Fixed (265 tokens)</td><td><span class="power-badge" style="background:rgba(249,115,22,0.15);color:var(--orange)">14.7 W</span></td><td>17&times;</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div style="display:flex;gap:24px;justify-content:center;margin-top:32px;flex-wrap:wrap" class="fade-in">
-      <div style="background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:16px 24px;text-align:center">
-        <div style="font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Platform 1</div>
-        <div style="font-weight:700">NVIDIA RTX 3070 Laptop</div>
-        <div style="font-size:0.8rem;color:var(--text-dim)">8 GB GDDR6 &middot; 1500 MHz lock</div>
-      </div>
-      <div style="background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:16px 24px;text-align:center">
-        <div style="font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Platform 2</div>
-        <div style="font-weight:700">NVIDIA Jetson Orin NX 16 GB</div>
-        <div style="font-size:0.8rem;color:var(--text-dim)">15 W mode &middot; jetson_clocks</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════ DEPLOYMENT GUIDELINES ═══════════════ -->
-<section class="section" id="guidelines">
-  <div class="container">
-    <h2 class="section-title fade-in">Deployment Guidelines</h2>
-    <p class="section-subtitle fade-in">Three actionable strategies for energy-constrained VLM deployment, derived from our energy analysis.</p>
-    <div class="deploy-grid stagger-children">
-      <div class="deploy-card">
-        <div class="deploy-icon">&#x1F3AF;</div>
-        <h3>Budget Output, Not Input</h3>
-        <p>Each output token costs 11&ndash;39&times; more than each input token. Setting a lower <code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px;font-size:0.8rem">max_tokens</code> is the single most effective energy control. Reducing from 256 to 128 tokens saves ~40&ndash;50% energy across all models.</p>
-      </div>
-      <div class="deploy-card">
-        <div class="deploy-icon">&#x1F3AD;</div>
-        <h3>Match Strategy to Task</h3>
-        <p>If the application requires high-resolution input (e.g., fine-grained visual inspection), use fixed-token architectures (InternVL3, Gemma-3) to avoid the resolution-dependent energy penalty of dynamic-token models.</p>
-      </div>
-      <div class="deploy-card">
-        <div class="deploy-icon">&#x1F50B;</div>
-        <h3>Anticipate Content-Driven Variation</h3>
-        <p>Image content causes up to 4.1&times; energy variation through output length. For battery budgeting in embodied agents, use worst-case <code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px;font-size:0.8rem">max_tokens</code> rather than average output length. Our universal predictor enables such estimation.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════ FORMULA ═══════════════ -->
-<section class="section findings-bg">
-  <div class="container" style="max-width:800px">
-    <h2 class="section-title fade-in">The Energy Equation</h2>
-    <p class="section-subtitle fade-in">VLM inference energy is low-dimensional and architecturally determined.</p>
-    <div style="background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:36px;text-align:center" class="fade-in">
-      <div style="font-size:1.4rem;font-weight:300;color:#fff;margin-bottom:24px;font-family:'Times New Roman',serif;letter-spacing:1px">
+    <div class="formula-box reveal" style="margin-bottom:40px">
+      <div class="formula">
         <em>E</em> &asymp; <span style="color:var(--text-dim)"><em style="text-decoration:overline">P</em></span> &middot; (<em style="color:var(--emerald)">&alpha;<sub>p</sub></em> &middot; <em>N</em><sub>in</sub> + <em style="color:var(--orange)">&alpha;<sub>d</sub></em> &middot; <em>N</em><sub>out</sub> + <em>&beta;</em>)
       </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;text-align:left;font-size:0.8rem;color:var(--text-dim)">
-        <div><span style="color:var(--text-dim);font-family:serif"><em style="text-decoration:overline">P</em></span> = power fingerprint (model-intrinsic constant)</div>
-        <div><span style="color:var(--emerald);font-family:serif"><em>&alpha;<sub>p</sub></em></span> = prefill cost per token (cheap)</div>
-        <div><span style="color:var(--orange);font-family:serif"><em>&alpha;<sub>d</sub></em></span> = decode cost per token (11&ndash;39&times; more)</div>
-        <div><span style="font-family:serif"><em>N</em><sub>out</sub></span> = output length (the dominant driver)</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;text-align:left;font-size:0.78rem;color:var(--text-dim)">
+        <div><span style="font-family:serif"><em style="text-decoration:overline">P</em></span> = model power fingerprint</div>
+        <div><span style="color:var(--emerald);font-family:serif"><em>&alpha;<sub>p</sub></em></span> = prefill cost/token</div>
+        <div><span style="color:var(--orange);font-family:serif"><em>&alpha;<sub>d</sub></em></span> = decode cost/token (11&ndash;39&times; more)</div>
+        <div><span style="font-family:serif"><em>N</em><sub>out</sub></span> = the dominant variable</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="fig reveal">
+        <img src="img/fig_universal_pred.png" alt="Predicted vs actual energy: R²=0.986, MAPE=10.3%" loading="lazy">
+        <div class="fig-cap"><strong>Universal predictor.</strong> A single linear model achieves R&sup2;=0.986 and MAPE=10.3% across all 1,680 experimental runs&mdash;no per-model calibration needed.</div>
+      </div>
+      <div class="fig reveal reveal-d1">
+        <img src="img/fig_permodel_pred.png" alt="Per-model predicted vs actual energy" loading="lazy">
+        <div class="fig-cap"><strong>Per-model fit.</strong> Individual model fits achieve 2.5&ndash;21% MAPE, with larger models showing tighter predictions due to more deterministic decode behavior.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ FOOTER ═══════════════ -->
-<footer class="footer">
+<!-- ═══════ 6. WHAT TO DO ═══════ -->
+<section class="section" style="background:var(--bg-alt)">
   <div class="container">
-    <p style="margin-bottom:8px">Under double-blind review. Keywords: Vision-Language Models, Energy Profiling, Edge Inference, On-Device AI.</p>
-    <p style="color:rgba(255,255,255,0.3)">This project page does not reveal author identities in compliance with the review process.</p>
+    <div class="section-label reveal">The Takeaway</div>
+    <h2 class="section-title reveal">Deployment guidelines for edge VLMs</h2>
+    <p class="section-desc reveal">Three actionable strategies derived from our energy analysis.</p>
+    <div class="deploy-grid">
+      <div class="card reveal">
+        <div class="card-icon">1</div>
+        <h3>Budget output, not input</h3>
+        <p>Each output token costs 11&ndash;39&times; more than input. Setting a lower <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:0.78rem">max_tokens</code> is the single most effective energy control. 256&rarr;128 saves ~45%.</p>
+      </div>
+      <div class="card reveal reveal-d1">
+        <div class="card-icon">2</div>
+        <h3>Match architecture to task</h3>
+        <p>If your application needs high-resolution input (e.g., fine-grained inspection), use <strong>fixed-token</strong> architectures (InternVL3, Gemma-3) to avoid the resolution-dependent energy penalty of dynamic-token models.</p>
+      </div>
+      <div class="card reveal reveal-d2">
+        <div class="card-icon">3</div>
+        <h3>Anticipate content variation</h3>
+        <p>Image content causes up to 4.1&times; energy variation&mdash;entirely through output length. For battery budgeting in embodied agents, use our predictor with worst-case <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:0.78rem">max_tokens</code> bounds.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="container">
+    <p style="margin-bottom:6px">Under double-blind review. Keywords: Vision-Language Models &middot; Energy Profiling &middot; Edge Inference &middot; On-Device AI</p>
+    <p style="color:rgba(255,255,255,0.25);font-size:0.75rem">This project page does not reveal author identities in compliance with the review process.</p>
   </div>
 </footer>
 
 <script>
-// Scroll animations
-const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.15,rootMargin:'0px 0px -50px 0px'});
-document.querySelectorAll('.fade-in,.stagger-children').forEach(el=>obs.observe(el));
+// Intersection Observer for reveal animations
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis') });
+}, { threshold: .12, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-// Ring animation trigger
-const ringObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.ring-animated').forEach(r=>r.classList.add('playing'));ringObs.unobserve(e.target)}})},{threshold:.5});
-document.querySelectorAll('.energy-ring').forEach(el=>ringObs.observe(el));
+// Ring animation
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.ring-anim').forEach(r => r.classList.add('go'));
+      ro.unobserve(e.target);
+    }
+  });
+}, { threshold: .4 });
+document.querySelectorAll('.ring-wrap').forEach(el => ro.observe(el));
 
-// Cost bars
-const barObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.cost-bar-fill').forEach(f=>{f.style.width=f.dataset.width})}})},{threshold:.3});
-document.querySelectorAll('.cost-bars').forEach(el=>barObs.observe(el));
+// Bar fill animation
+const bo = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.bar-fill').forEach(f => { f.style.width = f.dataset.w });
+      bo.unobserve(e.target);
+    }
+  });
+}, { threshold: .25 });
+document.querySelectorAll('.bar-group').forEach(el => bo.observe(el));
 </script>
 </body>
 </html>
