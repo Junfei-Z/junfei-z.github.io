@@ -145,7 +145,7 @@ footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);
     <h2 class="section-title reveal">Where does the energy go in edge VLM inference?</h2>
     <p class="section-desc reveal">Vision-Language Models run on edge devices like Jetson Orin NX and laptop GPUs. Most efficiency work assumes visual token processing is the bottleneck. We measured where energy <em>actually</em> goes.</p>
     <div class="fig reveal" style="max-width:900px">
-      <img src="img/fig_pipeline.png" alt="VLM inference pipeline: Input → Encoding → Concatenation → LLM Inference (Prefill + Decode) → Output" loading="lazy">
+      <img src="img/fig2_pipeline.png" alt="VLM inference pipeline: Input → Encoding → Concatenation → LLM Inference (Prefill + Decode) → Output" loading="lazy">
       <div class="fig-cap"><strong>VLM inference pipeline.</strong> An image and prompt are encoded into visual + text tokens, then processed by the LLM in two phases: a fast parallel prefill and a slow sequential decode.</div>
     </div>
   </div>
@@ -195,8 +195,8 @@ footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);
     <!-- Finding A: Power is constant -->
     <div class="two-col" style="margin-bottom:56px">
       <div class="fig reveal">
-        <img src="img/fig_power_resolution.png" alt="Power vs resolution: nearly flat lines across 224² to 896²" loading="lazy">
-        <div class="fig-cap"><strong>Power vs. resolution &amp; model size.</strong> Average power stays within 5% across all input resolutions and content types.</div>
+        <img src="img/fig3_power.png" alt="Power vs resolution: nearly flat lines across 224² to 896²" loading="lazy">
+        <div class="fig-cap"><strong>Figure 3: Power vs. resolution &amp; model size.</strong> Average power stays within &lt;5% CV across all input resolutions and content types.</div>
       </div>
       <div class="reveal reveal-d1">
         <div style="font-size:0.7rem;font-weight:700;letter-spacing:1.5px;color:var(--emerald);text-transform:uppercase;margin-bottom:8px">Finding 1</div>
@@ -205,21 +205,16 @@ footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);
       </div>
     </div>
 
-    <!-- Finding B: Output length is the lever -->
-    <div class="ev-grid reveal" style="margin-bottom:56px">
-      <div class="ev-card">
-        <img src="img/fig_per_image_energy.png" alt="Per-image energy varies 2.1x for same model and resolution" loading="lazy">
-        <div class="ev-card-body">
-          <h3>Content drives energy via output length</h3>
-          <p>Same model, same resolution&mdash;yet up to 2.1&times; energy difference between images. The cause isn't visual processing cost, but how many tokens the model generates in response.</p>
-        </div>
+    <!-- Finding B: Power is content & prompt invariant -->
+    <div class="two-col" style="margin-bottom:56px">
+      <div class="fig reveal" style="max-width:900px;grid-column:1/-1">
+        <img src="img/fig4_content.png" alt="Power stability across content complexity tiers and prompt types" loading="lazy">
+        <div class="fig-cap"><strong>Figure 4: Power across content complexity &amp; prompt types</strong> (Jetson Orin NX, 448px). Power stays flat (&lt;3.4% CV) regardless of what the model sees or how you prompt it. Energy differences come entirely from output length.</div>
       </div>
-      <div class="ev-card">
-        <img src="img/fig_energy_vs_tokens.png" alt="Energy vs output tokens: strong linear correlation" loading="lazy">
-        <div class="ev-card-body">
-          <h3>Output count is the #1 predictor</h3>
-          <p>Energy scales linearly with output token count. Reducing output from 398 to 3 tokens cuts energy by 90%. Output length is the single most important variable.</p>
-        </div>
+      <div class="reveal reveal-d1" style="grid-column:1/-1">
+        <div style="font-size:0.7rem;font-weight:700;letter-spacing:1.5px;color:var(--orange);text-transform:uppercase;margin-bottom:8px">Finding 2</div>
+        <h3 style="font-size:1.15rem;font-weight:700;color:var(--white);margin-bottom:10px">Output length is the energy lever</h3>
+        <p style="color:var(--text-dim);font-size:0.88rem">Same model, same resolution&mdash;yet up to <strong style="color:var(--text)">4.1&times;</strong> energy difference between images. The cause isn't visual processing cost, but how many tokens the model generates. Reducing output from 398 to 3 tokens cuts energy by <strong style="color:var(--orange)">90%</strong>.</p>
       </div>
     </div>
 
@@ -229,9 +224,9 @@ footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);
         <div style="font-size:0.7rem;font-weight:700;letter-spacing:1.5px;color:var(--red);text-transform:uppercase;margin-bottom:8px">Finding 3</div>
         <h3 style="font-size:1.15rem;font-weight:700;color:var(--white);margin-bottom:10px">Visual token pruning is an illusion</h3>
         <p style="color:var(--text-dim);font-size:0.88rem;margin-bottom:16px">Even removing <em>all</em> visual tokens saves at most 10% of energy for fixed-token models. By contrast, output length control saves <strong style="color:var(--orange)">2&ndash;24&times; more</strong>.</p>
-        <div class="fig" style="max-width:480px">
-          <img src="img/fig_energy_vs_res.png" alt="Energy vs input resolution across models" loading="lazy">
-          <div class="fig-cap"><strong>Energy vs. resolution.</strong> Fixed-token models (dashed) are almost flat; dynamic-token models show variance only through output length effects.</div>
+        <div class="fig" style="max-width:560px">
+          <img src="img/table5_savings.png" alt="Table 5: Energy savings comparison - token pruning vs output control" loading="lazy">
+          <div class="fig-cap"><strong>Table 5:</strong> Visual token pruning achieves &le;10% savings. Output length control achieves up to 97%.</div>
         </div>
       </div>
       <div class="reveal reveal-d1">
@@ -282,15 +277,9 @@ footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);
       </div>
     </div>
 
-    <div class="two-col">
-      <div class="fig reveal">
-        <img src="img/fig_universal_pred.png" alt="Predicted vs actual energy: R²=0.986, MAPE=10.3%" loading="lazy">
-        <div class="fig-cap"><strong>Universal predictor.</strong> A single linear model achieves R&sup2;=0.986 and MAPE=10.3% across all 1,680 experimental runs&mdash;no per-model calibration needed.</div>
-      </div>
-      <div class="fig reveal reveal-d1">
-        <img src="img/fig_permodel_pred.png" alt="Per-model predicted vs actual energy" loading="lazy">
-        <div class="fig-cap"><strong>Per-model fit.</strong> Individual model fits achieve 2.5&ndash;21% MAPE, with larger models showing tighter predictions due to more deterministic decode behavior.</div>
-      </div>
+    <div class="fig reveal" style="max-width:700px;margin:0 auto">
+      <img src="img/fig5_predictor.png" alt="Figure 5: Predicted vs actual energy - per-model and universal predictor" loading="lazy">
+      <div class="fig-cap"><strong>Figure 5: Predicted vs. measured energy</strong> on RTX 3070 (1,680 runs). (a) Per-model fit: R&sup2;=0.967. (b) Universal model across all 5 architectures: R&sup2;=0.986, MAPE=10.3%&mdash;no per-model calibration needed.</div>
     </div>
   </div>
 </section>
