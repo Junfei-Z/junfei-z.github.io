@@ -96,6 +96,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .formula-box{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:32px;text-align:center;max-width:700px;margin:0 auto;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
 .formula{font-size:1.3rem;font-weight:300;color:var(--white);font-family:'Times New Roman',serif;letter-spacing:1px;margin-bottom:20px}
 
+/* ─── Theorem ─── */
+.thm{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:28px 32px;margin-bottom:28px;box-shadow:0 2px 8px rgba(0,0,0,0.05);position:relative;overflow:hidden}
+.thm::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
+.thm-prop::before{background:var(--indigo)}
+.thm-cor::before{background:var(--orange)}
+.thm-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+.thm-prop .thm-label{color:var(--indigo)}
+.thm-cor .thm-label{color:var(--orange)}
+.thm-title{font-size:1rem;font-weight:700;color:var(--white);margin-bottom:10px}
+.thm-body{font-size:0.88rem;color:var(--text);line-height:1.8;font-style:italic}
+.thm-body em.math{font-style:normal;font-family:'Times New Roman',serif}
+.thm-eq{background:var(--bg-alt);border-radius:10px;padding:14px 20px;margin:14px 0;text-align:center;font-family:'Times New Roman',serif;font-size:1.1rem;color:var(--white);letter-spacing:.5px}
+.proof{font-size:0.84rem;color:var(--text-dim);margin-top:16px;padding-top:14px;border-top:1px solid var(--card-border)}
+.proof-label{font-weight:700;color:var(--text);font-style:italic;margin-bottom:4px}
+.qed{float:right;font-size:0.9rem}
+
 /* ─── Deploy ─── */
 .deploy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 @media(max-width:768px){.deploy-grid{grid-template-columns:1fr}}
@@ -368,6 +384,66 @@ footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);
             <div class="bar-track"><div class="bar-fill" data-w="5%" style="background:var(--emerald)"></div></div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 4.5 THEORETICAL ANALYSIS ═══════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-label reveal">Theoretical Analysis</div>
+    <h2 class="section-title reveal">Formal bounds on power and pruning</h2>
+    <p class="section-desc reveal">We formalize our empirical findings as two propositions, providing roofline-based proofs for why power is input-invariant and why visual token pruning has a hard ceiling.</p>
+
+    <!-- Proposition 1 -->
+    <div class="thm thm-prop reveal">
+      <div class="thm-label">Proposition 1 &mdash; Power Fingerprint Under Roofline</div>
+      <div class="thm-title">Per-inference average power is bounded within an &epsilon;-window</div>
+      <div class="thm-body">
+        Suppose that throughout an inference, the workload is at all times either compute-bound (<em class="math">I &ge; I*</em>) or memory-bound (<em class="math">I &lt; I*</em>), and that the GPU is fully utilized in whichever regime it is in. Let <em class="math">&epsilon; = |P<sub>max</sub> &minus; P<sub>mem</sub>| / P<sub>max</sub></em>. Then:
+      </div>
+      <div class="thm-eq">
+        (1 &minus; &epsilon;) &sdot; <em>P</em><sub>max</sub> &nbsp;&le;&nbsp; <em style="text-decoration:overline">P</em> &nbsp;&le;&nbsp; <em>P</em><sub>max</sub>
+      </div>
+      <div class="thm-body">
+        independently of the input resolution, the image content, the prompt type, the prefill-to-decode ratio, or the number of output tokens.
+      </div>
+      <div class="proof">
+        <div class="proof-label">Interpretation.</div>
+        As long as the GPU stays saturated in whichever roofline regime applies, per-inference average power is bounded in an <em>&epsilon;</em>-window that does not depend on the input. On the Jetson Orin NX, <em>&epsilon;</em> &lesssim; 0.05 &mdash; exactly the &lt;5% CV we observe empirically. The linear dependence <em style="font-family:serif;font-style:normal"><span style="text-decoration:overline">P</span> = 12.1S + 42.2</em> on parameter count <em>S</em> reflects <em>P<sub>max</sub></em> itself scaling with model size, not a violation of the proposition.
+      </div>
+    </div>
+
+    <!-- Proposition 2 -->
+    <div class="thm thm-prop reveal">
+      <div class="thm-label">Proposition 2 &mdash; Energy Savings Upper Bound</div>
+      <div class="thm-title">Visual token pruning savings are structurally bounded by &rho;<sub>pre</sub></div>
+      <div class="thm-body">
+        Suppose a visual-token pruning method removes a fraction <em class="math">&eta;</em> of visual tokens, leaves the decode phase unchanged, and reduces prefill energy in proportion to the removed visual-token compute. Then the relative end-to-end energy savings satisfy:
+      </div>
+      <div class="thm-eq">
+        &Delta;<em>E</em> / <em>E</em><sub>tot</sub> &nbsp;&le;&nbsp; &eta; &sdot; &rho;<sub>pre</sub> &nbsp;&le;&nbsp; &rho;<sub>pre</sub>
+      </div>
+      <div class="thm-body">
+        The bound is tight in the limit <em class="math">&eta; &rarr; 1</em>, in which case the maximum achievable saving is exactly the prefill share <em class="math">&rho;<sub>pre</sub></em>.
+      </div>
+      <div class="proof">
+        <div class="proof-label">Proof sketch.</div>
+        Pruning leaves decode unchanged, so <em>E'<sub>tot</sub> = E'<sub>pre</sub> + E<sub>dec</sub> &ge; (1&minus;&eta;)E<sub>pre</sub> + E<sub>dec</sub></em>. Subtracting from <em>E<sub>tot</sub></em> gives <em>&Delta;E = E<sub>tot</sub> &minus; E'<sub>tot</sub> &le; &eta; E<sub>pre</sub></em>. Dividing by <em>E<sub>tot</sub></em> and substituting <em>&rho;<sub>pre</sub> = E<sub>pre</sub>/E<sub>tot</sub></em> yields <em>&Delta;E/E<sub>tot</sub> &le; &eta; &rho;<sub>pre</sub> &le; &rho;<sub>pre</sub></em>. Setting <em>&eta;=1</em> saturates the first inequality. <span class="qed">&marker;</span>
+      </div>
+    </div>
+
+    <!-- Corollary -->
+    <div class="thm thm-cor reveal">
+      <div class="thm-label">Corollary 1 &mdash; Edge-Device Ceiling</div>
+      <div class="thm-title">Token pruning cannot exceed 10% energy savings on these configurations</div>
+      <div class="thm-body">
+        For the five models profiled on the Jetson Orin NX in 15W mode, the prefill share <em class="math">&rho;<sub>pre</sub></em> lies between 0.05 and 0.30, depending on the model and input resolution. Therefore the end-to-end energy savings of any visual-token pruning method on these configurations <strong style="font-style:normal;color:var(--orange)">cannot exceed 30%, and for most (model, resolution) pairs cannot exceed 10%</strong>.
+      </div>
+      <div class="proof">
+        <div class="proof-label">What this rules out and what it does not.</div>
+        Proposition 2 is a statement about end-to-end energy on the rail, not about FLOPs or prefill latency in isolation. It does not contradict prior work reporting 50%+ savings on those proxies &mdash; it only says those proxies do not transfer to rail-level joules on edge devices, because the decode share dwarfs the prefill share. Controlling output length attacks the <em>1 &minus; &rho;<sub>pre</sub></em> portion of the budget that pruning structurally cannot touch, yielding 73&ndash;97% savings.
       </div>
     </div>
   </div>
