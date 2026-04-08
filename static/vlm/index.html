@@ -94,6 +94,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 /* ─── Formula ─── */
 .formula-box{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:32px;text-align:center;max-width:700px;margin:0 auto;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.calc-model-btn{padding:6px 14px;border-radius:100px;border:1.5px solid var(--card-border);background:var(--card);font-size:.78rem;font-weight:600;color:var(--text-dim);cursor:pointer;transition:all .2s}
+.calc-model-btn:hover{border-color:var(--orange);color:var(--orange)}
+.calc-model-active{border-color:var(--orange)!important;background:rgba(232,99,10,0.08)!important;color:var(--orange)!important;opacity:1!important}
 .formula{font-size:1.3rem;font-weight:300;color:var(--white);font-family:'Times New Roman',serif;letter-spacing:1px;margin-bottom:20px}
 
 /* ─── Theorem ─── */
@@ -394,7 +397,7 @@ footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);
   <div class="container">
     <div class="section-label reveal">Theoretical Analysis</div>
     <h2 class="section-title reveal">Formal bounds on power and pruning</h2>
-    <p class="section-desc reveal">We formalize our empirical findings as two propositions, providing roofline-based proofs for why power is input-invariant and why visual token pruning has a hard ceiling.</p>
+    <p class="section-desc reveal">We formalize our empirical findings as two propositions, providing roofline-based proofs for why power is input-invariant and why visual token pruning has a hard ceiling. <em style="color:var(--indigo);font-size:0.88rem">(Full proofs in the Appendix.)</em></p>
 
     <!-- Proposition 1 -->
     <div class="thm thm-prop reveal">
@@ -411,7 +414,7 @@ footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);
       </div>
       <div class="proof">
         <div class="proof-label">Interpretation.</div>
-        As long as the GPU stays saturated in whichever roofline regime applies, per-inference average power is bounded in an <em>&epsilon;</em>-window that does not depend on the input. On the Jetson Orin NX, <em>&epsilon;</em> &lesssim; 0.05 &mdash; exactly the &lt;5% CV we observe empirically. The linear dependence <em style="font-family:serif;font-style:normal"><span style="text-decoration:overline">P</span> = 12.1S + 42.2</em> on parameter count <em>S</em> reflects <em>P<sub>max</sub></em> itself scaling with model size, not a violation of the proposition.
+        As long as the GPU stays saturated in whichever roofline regime applies, per-inference average power is bounded in an <em>&epsilon;</em>-window that does not depend on the input. On the Jetson Orin NX, <em>&epsilon;</em> &lesssim; 0.05 &mdash; exactly the &lt;5% CV we observe empirically. The linear dependence <em style="font-family:serif;font-style:normal"><span style="text-decoration:overline">P</span> = 12.1S + 42.2</em> on parameter count <em>S</em> reflects <em>P<sub>max</sub></em> itself scaling with model size, not a violation of the proposition. <em style="color:var(--text-dim);font-size:0.85rem">(See Appendix A for the full roofline-based proof.)</em>
       </div>
     </div>
 
@@ -430,7 +433,7 @@ footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);
       </div>
       <div class="proof">
         <div class="proof-label">Proof sketch.</div>
-        Pruning leaves decode unchanged, so <em>E'<sub>tot</sub> = E'<sub>pre</sub> + E<sub>dec</sub> &ge; (1&minus;&eta;)E<sub>pre</sub> + E<sub>dec</sub></em>. Subtracting from <em>E<sub>tot</sub></em> gives <em>&Delta;E = E<sub>tot</sub> &minus; E'<sub>tot</sub> &le; &eta; E<sub>pre</sub></em>. Dividing by <em>E<sub>tot</sub></em> and substituting <em>&rho;<sub>pre</sub> = E<sub>pre</sub>/E<sub>tot</sub></em> yields <em>&Delta;E/E<sub>tot</sub> &le; &eta; &rho;<sub>pre</sub> &le; &rho;<sub>pre</sub></em>. Setting <em>&eta;=1</em> saturates the first inequality. <span class="qed">&marker;</span>
+        Pruning leaves decode unchanged, so <em>E'<sub>tot</sub> = E'<sub>pre</sub> + E<sub>dec</sub> &ge; (1&minus;&eta;)E<sub>pre</sub> + E<sub>dec</sub></em>. Subtracting from <em>E<sub>tot</sub></em> gives <em>&Delta;E = E<sub>tot</sub> &minus; E'<sub>tot</sub> &le; &eta; E<sub>pre</sub></em>. Dividing by <em>E<sub>tot</sub></em> and substituting <em>&rho;<sub>pre</sub> = E<sub>pre</sub>/E<sub>tot</sub></em> yields <em>&Delta;E/E<sub>tot</sub> &le; &eta; &rho;<sub>pre</sub> &le; &rho;<sub>pre</sub></em>. Setting <em>&eta;=1</em> saturates the first inequality. <span class="qed">&marker;</span> <em style="color:var(--text-dim);font-size:0.85rem">(See Appendix B for the complete derivation.)</em>
       </div>
     </div>
 
@@ -483,6 +486,66 @@ footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);
           <p>A <strong>single model</strong> across all 5 architectures: R&sup2;=0.986, MAPE=10.3%&mdash;no per-model calibration needed.</p>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 5b. CALCULATOR ═══════ -->
+<section class="section" style="background:var(--bg-alt)">
+  <div class="container">
+    <div class="section-label reveal">Try It</div>
+    <h2 class="section-title reveal">Energy calculator</h2>
+    <p class="section-desc reveal">Estimate inference energy on the Jetson Orin NX (15 W mode) using our fitted predictor. Adjust the sliders and see how output length dominates.</p>
+
+    <div class="formula-box reveal" style="max-width:820px;padding:36px 32px 28px">
+      <!-- model selector -->
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:28px" id="calc-models">
+        <button onclick="calcSetModel(0)" class="calc-model-btn calc-model-active" data-idx="0">InternVL3-1B</button>
+        <button onclick="calcSetModel(1)" class="calc-model-btn" data-idx="1">InternVL3-2B</button>
+        <button onclick="calcSetModel(2)" class="calc-model-btn" data-idx="2">Qwen2-VL-2B</button>
+        <button onclick="calcSetModel(3)" class="calc-model-btn" data-idx="3">Qwen2.5-VL-3B</button>
+        <button onclick="calcSetModel(4)" class="calc-model-btn" data-idx="4">Gemma-3-4B</button>
+        <button onclick="calcSetModel(5)" class="calc-model-btn" data-idx="5" style="opacity:.6">Qwen2.5-VL-7B</button>
+        <button onclick="calcSetModel(6)" class="calc-model-btn" data-idx="6" style="opacity:.6">InternVL3-8B</button>
+      </div>
+
+      <!-- sliders -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px 32px;margin-bottom:28px;text-align:left" id="calc-sliders">
+        <div>
+          <label style="font-size:.78rem;font-weight:600;color:var(--text-dim)">Input tokens&ensp;<span style="color:var(--emerald);font-weight:700" id="calc-nin-val">500</span></label>
+          <input type="range" min="50" max="2000" value="500" step="10" id="calc-nin" oninput="calcUpdate()" style="width:100%;accent-color:var(--emerald);margin-top:6px">
+        </div>
+        <div>
+          <label style="font-size:.78rem;font-weight:600;color:var(--text-dim)">Output tokens&ensp;<span style="color:var(--orange);font-weight:700" id="calc-nout-val">128</span></label>
+          <input type="range" min="1" max="512" value="128" step="1" id="calc-nout" oninput="calcUpdate()" style="width:100%;accent-color:var(--orange);margin-top:6px">
+        </div>
+      </div>
+
+      <!-- result display -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px">
+        <div style="background:var(--bg-alt);border-radius:12px;padding:16px;text-align:center">
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:4px">Estimated Energy</div>
+          <div style="font-size:1.8rem;font-weight:800;color:var(--orange)" id="calc-energy">—</div>
+          <div style="font-size:.72rem;color:var(--text-dim)">joules</div>
+        </div>
+        <div style="background:var(--bg-alt);border-radius:12px;padding:16px;text-align:center">
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:4px">Latency</div>
+          <div style="font-size:1.8rem;font-weight:800;color:var(--indigo)" id="calc-latency">—</div>
+          <div style="font-size:.72rem;color:var(--text-dim)">seconds</div>
+        </div>
+        <div style="background:var(--bg-alt);border-radius:12px;padding:16px;text-align:center">
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:4px">Decode share</div>
+          <div style="font-size:1.8rem;font-weight:800;color:var(--red)" id="calc-decode-pct">—</div>
+          <div style="font-size:.72rem;color:var(--text-dim)">of total energy</div>
+        </div>
+      </div>
+
+      <!-- energy bar -->
+      <div style="height:28px;border-radius:14px;overflow:hidden;display:flex;background:var(--bg-alt);font-size:.7rem;font-weight:600;color:#fff;line-height:28px">
+        <div id="calc-bar-pre" style="background:var(--emerald);transition:width .4s;text-align:center;overflow:hidden;min-width:0">Pre</div>
+        <div id="calc-bar-dec" style="background:var(--orange);transition:width .4s;text-align:center;overflow:hidden;min-width:0">Dec</div>
+      </div>
+      <div style="font-size:.72rem;color:var(--text-dim);margin-top:10px;text-align:center" id="calc-note"></div>
     </div>
   </div>
 </section>
@@ -583,6 +646,61 @@ const phaseObs = new IntersectionObserver(entries => {
 }, { threshold: .5 });
 const phaseEl = document.getElementById('phase-decode');
 if (phaseEl) phaseObs.observe(phaseEl.closest('.two-col'));
+
+// ─── Energy Calculator ───
+// Fitted parameters per model on Jetson Orin NX 15W mode
+// P_bar = 12.1*S + 42.2 (W), t = α_p*N_in + α_d*N_out + β (seconds)
+// α values derived from per-model latency fits; ratios match Table 2
+const CALC_MODELS = [
+  { name:'InternVL3-1B',  S:1.0, ap:0.0018, ad:0.0198, b:0.30, ratio:11 },
+  { name:'InternVL3-2B',  S:2.0, ap:0.0020, ad:0.0340, b:0.38, ratio:17 },
+  { name:'Qwen2-VL-2B',   S:2.0, ap:0.0009, ad:0.0351, b:0.45, ratio:39 },
+  { name:'Qwen2.5-VL-3B', S:3.0, ap:0.0035, ad:0.0420, b:0.48, ratio:12 },
+  { name:'Gemma-3-4B',    S:4.0, ap:0.0040, ad:0.0680, b:0.55, ratio:17 },
+  { name:'Qwen2.5-VL-7B', S:7.0, ap:0.0048, ad:0.1200, b:0.75, ratio:25 },
+  { name:'InternVL3-8B',  S:8.0, ap:0.0055, ad:0.1500, b:0.85, ratio:27 },
+];
+let calcIdx = 0;
+
+function calcSetModel(i) {
+  calcIdx = i;
+  document.querySelectorAll('.calc-model-btn').forEach((b,j) => {
+    b.classList.toggle('calc-model-active', j === i);
+  });
+  calcUpdate();
+}
+
+function calcUpdate() {
+  const m = CALC_MODELS[calcIdx];
+  const Nin = +document.getElementById('calc-nin').value;
+  const Nout = +document.getElementById('calc-nout').value;
+  document.getElementById('calc-nin-val').textContent = Nin;
+  document.getElementById('calc-nout-val').textContent = Nout;
+
+  const Pbar = 12.1 * m.S + 42.2;
+  const tWall = m.ap * Nin + m.ad * Nout + m.b;
+  const E = Pbar * tWall;
+
+  const ePre = Pbar * (m.ap * Nin);
+  const eDec = Pbar * (m.ad * Nout);
+  const decPct = eDec / E * 100;
+  const prePct = ePre / E * 100;
+
+  document.getElementById('calc-energy').textContent = E < 10 ? E.toFixed(1) : Math.round(E);
+  document.getElementById('calc-latency').textContent = tWall.toFixed(1);
+  document.getElementById('calc-decode-pct').textContent = Math.round(decPct) + '%';
+
+  document.getElementById('calc-bar-pre').style.width = Math.max(prePct, 3) + '%';
+  document.getElementById('calc-bar-dec').style.width = Math.max(decPct, 3) + '%';
+  document.getElementById('calc-bar-pre').textContent = prePct > 8 ? 'Prefill ' + Math.round(prePct) + '%' : '';
+  document.getElementById('calc-bar-dec').textContent = 'Decode ' + Math.round(decPct) + '%';
+
+  const halfE = Pbar * (m.ap * Nin + m.ad * Math.round(Nout/2) + m.b);
+  const saving = ((E - halfE) / E * 100).toFixed(0);
+  document.getElementById('calc-note').textContent =
+    'Halving output tokens (→' + Math.round(Nout/2) + ') would save ~' + saving + '% energy. Power fingerprint: ' + Pbar.toFixed(1) + ' W.';
+}
+calcUpdate();
 </script>
 </body>
 </html>
