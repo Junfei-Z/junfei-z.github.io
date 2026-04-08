@@ -81,6 +81,42 @@ TRACKS = {
 - SA(Scalable Architectures): long-horizon, streaming, multi-agent, lifelong, edge部署
 
 排除：纯功能性memory分类(无效率分析)、纯RAG(无动态memory管理)、纯应用(无memory设计贡献)、纯训练/微调、硬件memory(GPU/RAM)"""
+    },
+    "edge_intelligence": {
+        "name_zh": "Edge Intelligence",
+        "name_en": "Edge Intelligence",
+        "categories": ["cs.NI", "cs.DC", "cs.LG", "cs.AI", "cs.SY", "eess.SP", "cs.MA"],
+        "keywords": [
+            "edge intelligence", "edge computing", "IoT intelligence",
+            "task offloading", "computation offloading", "resource scheduling",
+            "mobile edge computing", "MEC", "fog computing",
+            "federated learning edge", "split inference",
+            "edge-cloud collaboration", "cooperative inference",
+            "communication-efficient", "over-the-air computation",
+            "semantic communication", "joint communication and computation",
+            "device-edge co-inference", "IoT scheduling",
+            "heterogeneous edge", "multi-access edge",
+            "latency optimization edge", "energy harvesting IoT",
+            "age of information", "digital twin edge",
+            "LLM edge deployment", "on-device AI",
+            "intelligent scheduling", "network slicing edge"
+        ],
+        "filter_prompt": """你是一个Edge Intelligence方向的论文筛选助手。用户研究方向：
+- 边缘智能系统中的任务调度与资源优化
+- IoT场景下的计算卸载与通信-计算联合优化
+- 边缘设备上的AI模型部署、推理优化与协同
+- 语义通信、Over-the-Air Computation等通信高效技术
+- 联邦学习、分布式推理在边缘网络中的应用
+- LLM/SLM在边缘智能场景的部署与优化
+
+筛选规则（满足任一即推荐）：
+1. 边缘计算调度类：(task offloading/computation offloading/resource allocation/scheduling) + (edge/MEC/IoT/fog)
+2. 通信计算联合优化类：(communication/bandwidth/spectrum) + (computation/inference/edge) + (joint/co-design/trade-off)
+3. 边缘AI部署类：(model deployment/split inference/cooperative inference/federated) + (edge/IoT/heterogeneous devices)
+4. 语义通信类：(semantic communication/over-the-air/AirComp) + (edge/IoT/inference)
+5. 边缘LLM类：(LLM/language model/foundation model) + (edge/IoT/on-device/mobile) + (scheduling/deployment/serving)
+6. 加分：digital twin + edge, age of information + scheduling, multi-agent + edge network, reinforcement learning + offloading
+排除：纯理论无实验、纯数据中心/云端优化（无边缘）、纯无线通信物理层（无计算/AI）、纯综述（除非核心方向最新综述）"""
     }
 }
 
@@ -331,6 +367,7 @@ def generate_wordclouds(all_tracks):
     colors = {
         "edge_ai": {"colormap": "cool", "bg": "#fafafa"},
         "agent_memory": {"colormap": "autumn", "bg": "#fafafa"},
+        "edge_intelligence": {"colormap": "winter", "bg": "#fafafa"},
     }
 
     for track_key, track_data in all_tracks.items():
@@ -419,6 +456,117 @@ def main():
         json.dump(output, f, ensure_ascii=False, indent=2)
 
     print(f"\n=== Done. Total {output['total_count']} papers saved to {OUTPUT_PATH} ===")
+
+    # Send email notifications
+    send_email_notifications(output)
+
+
+# ─── Email Notifications ───
+
+def build_email_html(data, track_keys=None):
+    """Build HTML email for given tracks (None = all tracks)."""
+    tracks = data.get("tracks", {})
+    if track_keys:
+        tracks = {k: v for k, v in tracks.items() if k in track_keys}
+
+    total = sum(t["count"] for t in tracks.values())
+    track_names = " / ".join(t["name_en"] for t in tracks.values())
+
+    html = f'''<html><body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:700px;margin:0 auto;padding:20px;background:#fafbff">
+<div style="text-align:center;padding:24px;background:linear-gradient(135deg,#1e1b4b,#4338ca,#0e7490);border-radius:16px;margin-bottom:24px">
+<h1 style="color:#fff;margin:0;font-size:1.5rem">📚 arXiv Daily Papers</h1>
+<p style="color:rgba(255,255,255,0.7);margin:8px 0 0;font-size:0.85rem">{data.get("date","")} · {track_names} · {total} papers</p>
+</div>'''
+
+    for tk, tv in tracks.items():
+        name = tv.get("name_en", tk)
+        count = tv.get("count", 0)
+        html += f'<h2 style="color:#4338ca;border-bottom:2px solid #e2e8f0;padding-bottom:8px;margin-top:32px">{name} ({count} papers)</h2>'
+
+        for i, p in enumerate(tv.get("papers", [])):
+            prio = p.get("priority", "")
+            prio_color = {"高": "#ef4444", "中": "#f59e0b", "低": "#94a3b8"}.get(prio, "#94a3b8")
+            venue = p.get("venue", "")
+            venue_html = f'<span style="background:#ede9fe;color:#7c3aed;padding:2px 8px;border-radius:4px;font-size:0.7rem;font-weight:bold">📍{venue}</span> ' if venue else ""
+
+            summary_html = ""
+            for field, label, bg, color in [
+                ("problem_zh", "问题", "#fef2f2", "#ef4444"),
+                ("method_zh", "方法", "#eef2ff", "#6366f1"),
+                ("relevance_zh", "相关", "#fffbeb", "#f59e0b"),
+            ]:
+                val = p.get(field, "")
+                if val:
+                    summary_html += f'<div style="margin:4px 0"><span style="background:{bg};color:{color};padding:1px 6px;border-radius:3px;font-size:0.7rem;font-weight:600">{label}</span> {val}</div>'
+
+            authors = ", ".join(p.get("authors", [])[:3])
+            if len(p.get("authors", [])) > 3:
+                authors += " et al."
+
+            html += f'''
+<div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;margin:12px 0">
+  <div>
+    <span style="color:#6366f1;font-weight:bold;font-size:0.85rem;margin-right:8px">{i+1}</span>
+    {venue_html}<span style="background:{prio_color}20;color:{prio_color};padding:2px 8px;border-radius:4px;font-size:0.7rem;font-weight:bold">{prio}</span>
+    <h3 style="margin:6px 0;font-size:0.95rem"><a href="{p.get('link','')}" style="color:#1e293b;text-decoration:none">{p.get('title','')}</a></h3>
+    <p style="color:#94a3b8;font-size:0.78rem;margin:0 0 8px">{authors}</p>
+    <div style="font-size:0.85rem;color:#64748b;line-height:1.6">{summary_html}</div>
+    <div style="margin-top:8px">
+      <a href="{p.get('pdf','')}" style="background:#fef2f2;color:#ef4444;padding:3px 10px;border-radius:4px;font-size:0.7rem;text-decoration:none;font-weight:600">📄 PDF</a>
+      <span style="color:#cbd5e1;font-size:0.7rem;margin-left:8px">{p.get('published','')}</span>
+    </div>
+  </div>
+</div>'''
+
+    html += f'''
+<div style="text-align:center;padding:24px;color:#94a3b8;font-size:0.8rem;border-top:1px solid #e2e8f0;margin-top:32px">
+  <p><a href="https://junfei-z.github.io/diary/" style="color:#6366f1">View in Diary</a> · Powered by arXiv Daily Bot</p>
+</div></body></html>'''
+    return html, total
+
+
+def send_email_notifications(data):
+    """Send email notifications to configured recipients."""
+    import smtplib
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
+
+    gmail_addr = os.environ.get("GMAIL_ADDRESS")
+    gmail_pass = os.environ.get("GMAIL_APP_PASSWORD")
+    if not gmail_addr or not gmail_pass:
+        print("\nNo GMAIL credentials, skipping email notifications")
+        return
+
+    date = data.get("date", "")
+
+    # Recipient config: (email, track_keys or None for all, label)
+    recipients = [
+        (os.environ.get("NOTIFY_EMAIL", ""), None, "all tracks"),  # all tracks
+        (os.environ.get("NOTIFY_EMAIL_EI", ""), ["edge_intelligence"], "Edge Intelligence only"),
+    ]
+
+    for addr, track_keys, label in recipients:
+        if not addr:
+            continue
+        try:
+            html, total = build_email_html(data, track_keys)
+            if total == 0:
+                print(f"  Skipping {addr} ({label}): no papers")
+                continue
+
+            track_label = " / ".join(track_keys) if track_keys else "All Tracks"
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = f"📚 arXiv Daily: {date} - {total} papers ({track_label})"
+            msg["From"] = gmail_addr
+            msg["To"] = addr
+            msg.attach(MIMEText(html, "html"))
+
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+                server.login(gmail_addr, gmail_pass)
+                server.send_message(msg)
+            print(f"  ✉️ Email sent to {addr} ({label})")
+        except Exception as e:
+            print(f"  ❌ Failed to send to {addr}: {e}")
 
 
 if __name__ == "__main__":
