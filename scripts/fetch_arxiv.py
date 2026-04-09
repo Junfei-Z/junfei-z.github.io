@@ -13,7 +13,9 @@ from datetime import datetime
 
 OUTPUT_PATH = "static/diary/arxiv-daily.json"
 PREFS_PATH = "static/diary/arxiv-prefs.json"
+SEEN_PATH = "static/diary/arxiv-seen.json"
 MAX_PER_TRACK = 10
+SEEN_HISTORY_DAYS = 30  # keep 30 days of seen IDs to avoid unbounded growth
 
 # ─── Track definitions ───
 
@@ -211,6 +213,28 @@ def detect_venue(comment):
         if re.search(r'\b' + re.escape(keyword) + r'\b', comment_lower):
             return TOP_VENUES[keyword]
     return ""
+
+
+# ─── Deduplication ───
+
+def load_seen_ids():
+    """Load previously seen paper IDs from disk."""
+    if not os.path.exists(SEEN_PATH):
+        return {}
+    try:
+        with open(SEEN_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def save_seen_ids(seen_dict):
+    """Save seen IDs, pruning entries older than SEEN_HISTORY_DAYS."""
+    cutoff = (datetime.utcnow() - __import__("datetime").timedelta(days=SEEN_HISTORY_DAYS)).strftime("%Y-%m-%d")
+    pruned = {k: v for k, v in seen_dict.items() if v >= cutoff}
+    os.makedirs(os.path.dirname(SEEN_PATH), exist_ok=True)
+    with open(SEEN_PATH, "w", encoding="utf-8") as f:
+        json.dump(pruned, f, ensure_ascii=False)
 
 
 # ─── arXiv fetching ───
@@ -415,6 +439,8 @@ def main():
     provider_idx = 0
     all_tracks = {}
     user_prefs = load_user_prefs()
+    seen_ids = load_seen_ids()
+    today = datetime.utcnow().strftime("%Y-%m-%d")
 
     for track_key, track_info in TRACKS.items():
         print(f"\n--- Track: {track_info['name_en']} ---")
@@ -422,6 +448,12 @@ def main():
 
         papers = fetch_arxiv(track_info["categories"], track_info["keywords"], max_results=40)
         print(f"  Fetched {len(papers)} candidate papers")
+
+        # Deduplicate: skip papers already seen in the last {SEEN_HISTORY_DAYS} days
+        before = len(papers)
+        papers = [p for p in papers if p["id"] not in seen_ids]
+        if before != len(papers):
+            print(f"  Dedup: removed {before - len(papers)} previously seen papers, {len(papers)} remaining")
 
         if papers and providers:
             print(f"  Filtering with LLM...")
@@ -432,6 +464,10 @@ def main():
         else:
             filtered = papers[:MAX_PER_TRACK]
 
+        # Mark selected papers as seen
+        for p in filtered:
+            seen_ids[p["id"]] = today
+
         all_tracks[track_key] = {
             "name_zh": track_info["name_zh"],
             "name_en": track_info["name_en"],
@@ -439,6 +475,10 @@ def main():
             "papers": filtered
         }
         time.sleep(3)  # respect arXiv rate limit
+
+    # Persist seen IDs for future dedup
+    save_seen_ids(seen_ids)
+    print(f"\nSaved {len(seen_ids)} seen paper IDs (rolling {SEEN_HISTORY_DAYS}-day window)")
 
     # Generate word clouds
     print("\nGenerating word clouds...")
