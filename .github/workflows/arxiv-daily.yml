@@ -2,8 +2,8 @@ name: Daily arXiv Paper Fetch
 
 on:
   schedule:
-    # Run at 11:00 UTC daily (07:00 US Eastern / EDT)
-    - cron: '0 11 * * *'
+    # Run at 11:00 UTC Mon-Fri (07:00 US Eastern / EDT), arXiv has no weekend updates
+    - cron: '0 11 * * 1-5'
   workflow_dispatch: # Allow manual trigger
 
 permissions:
