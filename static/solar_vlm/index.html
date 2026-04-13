@@ -238,7 +238,7 @@ let earthAngle=0; // Earth's orbital angle around Sun
 function init(){
   scene=new THREE.Scene();
   scene.background=new THREE.Color(0x080812);
-  scene.fog=new THREE.FogExp2(0x080812,.0008);
+  scene.fog=new THREE.FogExp2(0x080812,.0004);
   camera=new THREE.PerspectiveCamera(45,innerWidth/innerHeight,.1,2000);
   camera.position.set(0,40,80);
 
@@ -253,7 +253,7 @@ function init(){
   controls.enableDamping=true;
   controls.dampingFactor=.05;
   controls.minDistance=15;
-  controls.maxDistance=200;
+  controls.maxDistance=350;
 
   buildStars();
   buildSolarSystem();
@@ -418,6 +418,47 @@ function buildSolarSystem(){
 
   // Earth axial tilt
   solarEarth.rotation.z=23.4*Math.PI/180;
+
+  // Background planets — small, distant, decorative
+  const bgPlanets=[
+    {name:'Mercury',r:.8,orbit:22,color:0x9a8a7a,speed:.012},
+    {name:'Venus',  r:1.8,orbit:36,color:0xe8c870,speed:.007},
+    // Earth is at orbit 50
+    {name:'Mars',   r:1.2,orbit:70,color:0xc45030,speed:.003},
+    {name:'Jupiter',r:5,  orbit:120,color:0xc8a870,speed:.0012,hasStripes:true},
+    {name:'Saturn', r:4,  orbit:170,color:0xd4b878,speed:.0008,hasRing:true},
+  ];
+  bgPlanets.forEach(p=>{
+    const geo=new THREE.SphereGeometry(p.r,24,24);
+    let mat;
+    if(p.hasStripes){
+      // Jupiter — procedural bands
+      mat=new THREE.ShaderMaterial({
+        uniforms:{base:{value:new THREE.Color(p.color)}},
+        vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+        fragmentShader:`uniform vec3 base;varying vec2 vUv;void main(){float b=sin(vUv.y*28.)*.12;vec3 c=base+vec3(b,-b*.5,-b);gl_FragColor=vec4(c,1.);}`,
+      });
+    } else {
+      mat=new THREE.MeshStandardMaterial({color:p.color,roughness:.8,metalness:.1});
+    }
+    const mesh=new THREE.Mesh(geo,mat);
+    const a=Math.random()*Math.PI*2;
+    mesh.position.set(Math.cos(a)*p.orbit,Math.random()*4-2,Math.sin(a)*p.orbit);
+    mesh.userData.orbit=p.orbit;mesh.userData.speed=p.speed;mesh.userData.angle=a;
+    scene.add(mesh);
+    // Saturn ring
+    if(p.hasRing){
+      const ringGeo=new THREE.RingGeometry(p.r*1.4,p.r*2.2,48);
+      const ringMat=new THREE.MeshBasicMaterial({color:0xc8b080,transparent:true,opacity:.4,side:THREE.DoubleSide,depthWrite:false});
+      const ring=new THREE.Mesh(ringGeo,ringMat);
+      ring.rotation.x=Math.PI*0.42;
+      mesh.add(ring);
+    }
+    // Orbit path (very subtle)
+    const opts=[];
+    for(let i=0;i<=64;i++){const aa=i/64*Math.PI*2;opts.push(new THREE.Vector3(Math.cos(aa)*p.orbit,0,Math.sin(aa)*p.orbit));}
+    scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(opts),new THREE.LineBasicMaterial({color:0x222233,transparent:true,opacity:.15})));
+  });
 }
 
 /* ═══════ LEO SCENE BUILDER ═══════ */
@@ -618,7 +659,7 @@ function zoomOut(){
   camera.position.set(0,40,80);
   controls.target.set(0,0,0);
   controls.minDistance=15;
-  controls.maxDistance=200;
+  controls.maxDistance=350;
 
   // Hide LEO UI, show solar UI
   document.getElementById('solar-info').style.display='block';
@@ -959,6 +1000,15 @@ function animate(){
     solarSun.rotation.y+=.001;
     // Pulse sun glow
     solarGlows.forEach((g,i)=>{g.material.opacity=g.userData.baseOp*(1+Math.sin(fc*.015+i)*.15);});
+    // Background planets orbit
+    scene.children.forEach(c=>{
+      if(c.userData.orbit){
+        c.userData.angle+=c.userData.speed;
+        c.position.x=Math.cos(c.userData.angle)*c.userData.orbit;
+        c.position.z=Math.sin(c.userData.angle)*c.userData.orbit;
+        c.rotation.y+=.005;
+      }
+    });
   }
 
   if(mode==='leo'){
