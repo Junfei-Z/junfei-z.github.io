@@ -1013,12 +1013,18 @@ window.exportPDF=async()=>{
   const btn=document.querySelector('.btn-export');btn.textContent='Capturing...';
   try{
     renderer.render(scene,camera);const img=renderer.domElement.toDataURL('image/png');
-    const{jsPDF}=window.jspdf;const pdf=new jsPDF('landscape','mm','a4');
-    pdf.addImage(img,'PNG',5,5,287,160);
-    pdf.setFontSize(14);pdf.setFont(undefined,'bold');
-    pdf.text('Solar-Powered Collaborative VLM Inference over LEO Constellation',148,175,{align:'center'});
-    pdf.setFontSize(9);pdf.setFont(undefined,'normal');
-    pdf.text('Junfei Zhan, Tengjiao He',148,182,{align:'center'});
+    // Match PDF page to canvas aspect ratio — no stretching
+    const cw=renderer.domElement.width,ch=renderer.domElement.height;
+    const landscape=cw>=ch;
+    const{jsPDF}=window.jspdf;
+    const pdf=new jsPDF(landscape?'landscape':'portrait','mm','a4');
+    const pageW=pdf.internal.pageSize.getWidth(),pageH=pdf.internal.pageSize.getHeight();
+    const scale=Math.min(pageW/cw,pageH/ch);
+    const w=cw*scale,h=ch*scale;
+    const x=(pageW-w)/2,y=(pageH-h)/2;
+    // Fill black background
+    pdf.setFillColor(8,8,18);pdf.rect(0,0,pageW,pageH,'F');
+    pdf.addImage(img,'PNG',x,y,w,h);
     pdf.save('leo-vlm-constellation.pdf');
   }catch(e){console.error(e);}
   btn.textContent='Export PDF';
