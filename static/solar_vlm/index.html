@@ -79,6 +79,21 @@ canvas{display:block}
 #overlay-toggles{position:fixed;top:56px;right:12px;z-index:90;flex-direction:column;gap:4px}
 #overlay-toggles .btn{font-size:.65rem;padding:4px 10px;text-align:left}
 
+/* Settings panel */
+#settings-panel{position:fixed;top:46px;left:0;width:280px;bottom:80px;z-index:95;background:rgba(18,18,30,.94);backdrop-filter:blur(10px);border-right:1px solid var(--border);padding:16px;overflow-y:auto;transform:translateX(-100%);transition:transform .3s}
+#settings-panel.open{transform:translateX(0)}
+#settings-panel h2{font-size:.82rem;font-weight:700;color:var(--cyan);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px}
+.setting-group{margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.setting-group:last-child{border:none}
+.setting-label{font-size:.68rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:flex;justify-content:space-between}
+.setting-label b{color:var(--text);font-size:.82rem}
+.setting-slider{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:rgba(255,255,255,.1);outline:none;margin-top:4px}
+.setting-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--cyan);cursor:pointer;border:2px solid var(--bg)}
+.setting-note{font-size:.62rem;color:var(--text-dim);margin-top:4px;font-style:italic}
+#settings-total{font-size:1rem;font-weight:800;color:var(--gold);text-align:center;padding:8px;background:rgba(240,168,48,.08);border-radius:8px;margin-bottom:14px}
+.btn-apply{width:100%;padding:8px;border-radius:8px;border:1px solid var(--cyan);background:rgba(0,212,255,.1);color:var(--cyan);font-size:.78rem;font-weight:700;cursor:pointer;transition:all .2s;margin-top:8px}
+.btn-apply:hover{background:rgba(0,212,255,.25)}
+
 /* Back button */
 #btn-back{position:fixed;top:56px;left:12px;z-index:100;padding:8px 16px;border-radius:8px;background:rgba(18,18,30,.9);border:1px solid var(--border);color:var(--text);font-size:.78rem;cursor:pointer;font-weight:600;transition:all .2s}
 #btn-back:hover{border-color:var(--gold);color:var(--gold)}
@@ -115,6 +130,7 @@ canvas{display:block}
 <div id="top-bar" class="leo-ui-flex" style="display:none">
   <h1><span>&#9788;</span> LEO Constellation &mdash; Collaborative VLM Inference</h1>
   <div class="controls">
+    <button class="btn" id="btn-settings" onclick="toggleSettings()">&#9881; Settings</button>
     <button class="btn" id="btn-play" onclick="togglePlay()">&#9654; Play</button>
     <button class="btn" id="btn-speed" onclick="cycleSpeed()">1x</button>
     <button class="btn btn-export" onclick="exportPDF()">&#128196; Export PDF</button>
@@ -138,6 +154,28 @@ canvas{display:block}
   <button class="btn active" onclick="toggleLayer(this,'inference')">Inference</button>
   <button class="btn active" onclick="toggleLayer(this,'beams')">Beams</button>
   <button class="btn active" onclick="toggleLayer(this,'battery')">Battery</button>
+</div>
+
+<div id="settings-panel" class="leo-ui" style="display:none">
+  <h2>&#9881; Constellation Settings</h2>
+  <div id="settings-total">Total: 60 satellites</div>
+  <div class="setting-group">
+    <div class="setting-label">Orbital Planes<b id="val-planes">6</b></div>
+    <input type="range" class="setting-slider" id="sl-planes" min="2" max="12" value="6" step="1" oninput="onSettingChange()">
+    <div class="setting-note">Number of distinct orbital planes</div>
+  </div>
+  <div class="setting-group">
+    <div class="setting-label">Sats per Plane<b id="val-sats">10</b></div>
+    <input type="range" class="setting-slider" id="sl-sats" min="4" max="20" value="10" step="1" oninput="onSettingChange()">
+    <div class="setting-note">Satellites evenly spaced in each plane</div>
+  </div>
+  <div class="setting-group">
+    <div class="setting-label">Orbit Altitude<b id="val-alt">1.8</b></div>
+    <input type="range" class="setting-slider" id="sl-alt" min="0.8" max="4.0" value="1.8" step="0.1" oninput="onSettingChange()">
+    <div class="setting-note">Height above Earth surface (visual units)</div>
+  </div>
+  <button class="btn-apply" onclick="applySettings()">Apply &amp; Rebuild</button>
+  <div class="setting-note" style="text-align:center;margin-top:8px">Rebuilds the constellation with new parameters</div>
 </div>
 
 <div id="side-panel" class="leo-ui" style="display:none">
@@ -169,8 +207,9 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 /* ═══════ CONSTANTS ═══════ */
-const NP=6, NS=10, TOTAL=NP*NS;
-const ER=5, OA=1.8, OR=ER+OA, OP=95, SF=0.6;
+let NP=6, NS=10, TOTAL=NP*NS;
+const ER=5; let OA=1.8, OR=ER+OA;
+const OP=95, SF=0.6;
 const SUN_DIR=new THREE.Vector3(1,.17,.67).normalize();
 const VLMS=[
   {name:'ViT-B/16 INT8',color:0x22c55e,quality:.72,power:8},
@@ -846,6 +885,45 @@ window.cycleSpeed=()=>{const sp=[1,2,5,10];speed=sp[(sp.indexOf(speed)+1)%sp.len
 window.toggleLayer=(btn,l)=>{layers[l]=!layers[l];btn.classList.toggle('active');};
 window.onSliderInput=v=>{simTime=parseInt(v);};
 window.zoomOut=zoomOut;
+
+/* ═══════ SETTINGS ═══════ */
+window.toggleSettings=()=>{
+  const p=document.getElementById('settings-panel');
+  p.classList.toggle('open');
+  // Close satellite detail when settings open
+  if(p.classList.contains('open')){document.getElementById('side-panel').classList.remove('open');selSat=null;}
+};
+window.onSettingChange=()=>{
+  const np=parseInt(document.getElementById('sl-planes').value);
+  const ns=parseInt(document.getElementById('sl-sats').value);
+  const oa=parseFloat(document.getElementById('sl-alt').value);
+  document.getElementById('val-planes').textContent=np;
+  document.getElementById('val-sats').textContent=ns;
+  document.getElementById('val-alt').textContent=oa.toFixed(1);
+  document.getElementById('settings-total').textContent=`Total: ${np*ns} satellites`;
+};
+window.applySettings=()=>{
+  const np=parseInt(document.getElementById('sl-planes').value);
+  const ns=parseInt(document.getElementById('sl-sats').value);
+  const oa=parseFloat(document.getElementById('sl-alt').value);
+  NP=np;NS=ns;TOTAL=NP*NS;OA=oa;OR=ER+OA;
+  rebuildLEO();
+  document.getElementById('settings-panel').classList.remove('open');
+};
+
+function rebuildLEO(){
+  // Clear old LEO objects
+  selSat=null;
+  document.getElementById('side-panel').classList.remove('open');
+  sats=[];islIntra=[];islInter=[];gMarkers=[];beams=[];flows=[];
+  // Remove all children from leoGroup except keep the group itself
+  while(leoGroup.children.length>0)leoGroup.remove(leoGroup.children[0]);
+  leoEarth=null;
+  leoBuilt=false;
+  buildLEO();
+  leoGroup.visible=true;
+}
+
 window.exportPDF=async()=>{
   const btn=document.querySelector('.btn-export');btn.textContent='Capturing...';
   try{
