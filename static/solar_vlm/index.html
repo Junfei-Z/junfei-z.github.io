@@ -125,10 +125,10 @@ canvas{display:block}
 
 <div id="legend" class="leo-ui" style="display:none">
   <h3>Legend</h3>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--gold);box-shadow:0 0 6px var(--gold)"></div>Sunlit satellite</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#2a2a3e;border:1px solid #4a4a6a"></div>Eclipse satellite</div>
-  <div class="legend-item"><div class="legend-line" style="background:var(--gold)"></div>Intra-plane ISL</div>
-  <div class="legend-item"><div class="legend-line" style="background:var(--cyan);border-top:2px dashed var(--cyan);height:0"></div>Inter-plane ISL</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--gold);box-shadow:0 0 8px var(--gold),0 0 16px rgba(240,168,48,.4)"></div>Sunlit (solar harvesting)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1a1a2e;border:2px solid #555;box-shadow:none"></div>Eclipse (battery only)</div>
+  <div class="legend-item"><svg width="24" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="24" y2="3" stroke="#f0a830" stroke-width="2"/></svg>Intra-plane ISL</div>
+  <div class="legend-item"><svg width="24" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="24" y2="3" stroke="#00d4ff" stroke-width="2" stroke-dasharray="4,3"/></svg>Inter-plane ISL</div>
   <div class="legend-item"><div class="legend-line" style="background:linear-gradient(90deg,var(--purple),var(--pink));height:3px"></div>VLM activation flow</div>
   <div class="legend-item"><div class="legend-dot" style="background:var(--green);width:8px;height:8px"></div>Sensing beam</div>
 </div>
@@ -657,14 +657,20 @@ function updateLEO(t){
     const dot=pos.clone().normalize().dot(SUN_DIR);
     sat.ecl=dot<-.15;
     if(sat.ecl){
-      sat.pL.material.color.setHex(0x1a1a2e);sat.pL.material.emissive.setHex(0);sat.pL.material.emissiveIntensity=0;
-      sat.pR.material.color.setHex(0x1a1a2e);sat.pR.material.emissive.setHex(0);sat.pR.material.emissiveIntensity=0;
-      sat.body.material.color.setHex(0x2a2a3e);sat.halo.material.opacity=0;sat.solar=0;
+      // Eclipse: very dark, no glow, panels folded-dark
+      sat.pL.material.color.setHex(0x0e0e1a);sat.pL.material.emissive.setHex(0);sat.pL.material.emissiveIntensity=0;
+      sat.pR.material.color.setHex(0x0e0e1a);sat.pR.material.emissive.setHex(0);sat.pR.material.emissiveIntensity=0;
+      sat.body.material.color.setHex(0x1a1a2e);sat.body.material.emissive.setHex(0);
+      sat.halo.material.opacity=0;sat.halo.material.color.setHex(0x333355);
+      sat.solar=0;
     } else {
+      // Sunlit: bright golden panels, strong glow halo
       const I=Math.max(0,dot)*.8+.2;
-      sat.pL.material.color.setHex(0xf0a830);sat.pL.material.emissive.setHex(0xf0a830);sat.pL.material.emissiveIntensity=I*.6;
-      sat.pR.material.color.setHex(0xf0a830);sat.pR.material.emissive.setHex(0xf0a830);sat.pR.material.emissiveIntensity=I*.6;
-      sat.body.material.color.setHex(0xaaaabb);sat.halo.material.opacity=I*.25;sat.solar=8+I*12;
+      sat.pL.material.color.setHex(0xf0a830);sat.pL.material.emissive.setHex(0xf0a830);sat.pL.material.emissiveIntensity=I*.8;
+      sat.pR.material.color.setHex(0xf0a830);sat.pR.material.emissive.setHex(0xf0a830);sat.pR.material.emissiveIntensity=I*.8;
+      sat.body.material.color.setHex(0xccccdd);sat.body.material.emissive.setHex(0x222233);
+      sat.halo.material.color.setHex(0xf0a830);sat.halo.material.opacity=I*.45;
+      sat.solar=8+I*12;
     }
     const vlm=VLMS[sat.vi];sat.pwr=sat.busy?vlm.power:2;
     sat.bat=Math.max(0,Math.min(1,sat.bat+(sat.solar-sat.pwr)*.0003));
