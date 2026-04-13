@@ -252,8 +252,22 @@ def fetch_arxiv(categories, keywords, max_results=50):
     url = f"http://export.arxiv.org/api/query?{params}"
     req = urllib.request.Request(url, headers={"User-Agent": "DailyArxivBot/1.0"})
 
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        data = resp.read().decode("utf-8")
+    # Retry with backoff on 429/5xx
+    data = None
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                data = resp.read().decode("utf-8")
+            break
+        except urllib.error.HTTPError as e:
+            if e.code in (429, 500, 503) and attempt < 3:
+                wait = 10 * (2 ** attempt)  # 10s, 20s, 40s
+                print(f"arXiv returned {e.code}, retrying in {wait}s (attempt {attempt+1}/3)...")
+                time.sleep(wait)
+            else:
+                raise
+    if data is None:
+        raise RuntimeError("Failed to fetch from arXiv after retries")
 
     ns = {"atom": "http://www.w3.org/2005/Atom"}
     root = ET.fromstring(data)
@@ -442,7 +456,9 @@ def main():
     seen_ids = load_seen_ids()
     today = datetime.utcnow().strftime("%Y-%m-%d")
 
-    for track_key, track_info in TRACKS.items():
+    for ti, (track_key, track_info) in enumerate(TRACKS.items()):
+        if ti > 0:
+            time.sleep(3)  # polite delay between arXiv API calls
         print(f"\n--- Track: {track_info['name_en']} ---")
         print(f"  Categories: {track_info['categories']}")
 
