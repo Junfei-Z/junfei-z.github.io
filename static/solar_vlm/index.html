@@ -142,9 +142,12 @@ canvas{display:block}
 
 <div id="side-panel" class="leo-ui" style="display:none">
   <h2 id="panel-title">Satellite Detail</h2>
+  <div class="panel-section"><div class="panel-label">Illumination</div><div class="panel-row" id="panel-illum" style="font-weight:700;font-size:.95rem">—</div></div>
   <div class="panel-section"><div class="panel-label">VLM Configuration</div><div class="panel-value" id="panel-vlm" style="color:var(--cyan)">—</div></div>
   <div class="panel-section"><div class="panel-label">Battery Level</div><div class="panel-row"><span id="panel-battery-pct">—</span></div><div class="bar-mini"><div class="bar-mini-fill" id="panel-battery-bar" style="width:70%;background:var(--green)"></div></div></div>
-  <div class="panel-section"><div class="panel-label">Power</div><div class="panel-row"><span>Solar</span><b id="panel-solar">—</b></div><div class="panel-row"><span>Load</span><b id="panel-power">—</b></div><div class="panel-row"><span>Cap</span><b id="panel-cap">—</b></div></div>
+  <div class="panel-section"><div class="panel-label">Power</div><div class="panel-row"><span>Solar In</span><b id="panel-solar">—</b></div><div class="panel-row"><span>Load</span><b id="panel-power">—</b></div><div class="panel-row"><span>Cap</span><b id="panel-cap">—</b></div></div>
+  <div class="panel-section"><div class="panel-label">ISL Neighbors</div><div id="panel-isl-intra" style="font-size:.75rem;margin-bottom:6px"></div><div id="panel-isl-inter" style="font-size:.75rem"></div></div>
+  <div class="panel-section"><div class="panel-label">Degree (# links)</div><div class="panel-row"><span>Intra-plane</span><b id="panel-deg-intra">—</b></div><div class="panel-row"><span>Inter-plane</span><b id="panel-deg-inter">—</b></div><div class="panel-row"><span>Total</span><b id="panel-deg-total">—</b></div></div>
   <div class="panel-section"><div class="panel-label">Virtual Queues</div><div class="queue-row"><div class="queue-badge"><b id="panel-qe" style="color:var(--gold)">0</b>Q<sup>E</sup></div><div class="queue-badge"><b id="panel-qp" style="color:var(--cyan)">0</b>Q<sup>P</sup></div><div class="queue-badge"><b id="panel-qu" style="color:var(--purple)">0</b>Q<sup>U</sup></div></div></div>
   <div class="panel-section"><div class="panel-label">Status</div><div class="panel-row" id="panel-status" style="color:var(--green)">Idle</div></div>
 </div>
@@ -603,10 +606,11 @@ function onClickGlobal(e){
     // Click mini sun to go back
     const sunObj=leoGroup.getObjectByName('leoSun');
     if(sunObj){const sh=ray.intersectObject(sunObj);if(sh.length>0){zoomOut();return;}}
-    // Satellite click
-    const bodies=sats.map(s=>s.body);
-    const h=ray.intersectObjects(bodies);
-    if(h.length>0){const i=bodies.indexOf(h[0].object);if(i>=0){selSat=i;document.getElementById('side-panel').classList.add('open');return;}}
+    // Satellite click — check all child meshes (body, panels, halo, gpu)
+    const allMeshes=[];const meshToSat=new Map();
+    sats.forEach((s,i)=>{s.g.traverse(c=>{if(c.isMesh||c.isSprite){allMeshes.push(c);meshToSat.set(c,i);}});});
+    const h=ray.intersectObjects(allMeshes);
+    if(h.length>0){const i=meshToSat.get(h[0].object);if(i!==undefined){selSat=i;document.getElementById('side-panel').classList.add('open');return;}}
     // Ground click
     const pins=gMarkers.map(g=>g.pin);
     const ph=ray.intersectObjects(pins);
@@ -769,8 +773,14 @@ function updateLEO(t){
 
 function updatePanel(){
   if(selSat===null)return;
-  const s=sats[selSat],v=VLMS[s.vi];
-  document.getElementById('panel-title').textContent=`Satellite ${s.plane+1}-${s.idx+1}`;
+  const s=sats[selSat],v=VLMS[s.vi],idx=selSat;
+  document.getElementById('panel-title').textContent=`Satellite ${s.plane+1}-${s.idx+1}  (Plane ${s.plane+1}, Slot ${s.idx+1})`;
+
+  // Illumination
+  const illum=document.getElementById('panel-illum');
+  if(s.ecl){illum.textContent='Eclipse (in shadow)';illum.style.color='var(--yellow)';}
+  else{illum.textContent='Sunlit (harvesting solar)';illum.style.color='var(--gold)';}
+
   document.getElementById('panel-vlm').textContent=v.name;
   document.getElementById('panel-vlm').style.color='#'+v.color.toString(16).padStart(6,'0');
   document.getElementById('panel-battery-pct').textContent=(s.bat*100).toFixed(1)+'%';
@@ -779,6 +789,30 @@ function updatePanel(){
   document.getElementById('panel-solar').textContent=s.solar.toFixed(1)+' W';
   document.getElementById('panel-power').textContent=s.pwr.toFixed(1)+' W';
   document.getElementById('panel-cap').textContent=s.pCap.toFixed(0)+' W';
+
+  // ISL neighbors
+  const intraNeighbors=[], interNeighbors=[];
+  // Intra-plane: prev and next in same plane
+  const prevS=(s.idx-1+NS)%NS, nextS=(s.idx+1)%NS;
+  intraNeighbors.push(`${s.plane+1}-${prevS+1}`, `${s.plane+1}-${nextS+1}`);
+  // Inter-plane: same slot in adjacent planes (if active)
+  islInter.forEach(l=>{
+    if(l.a===idx&&l.active)interNeighbors.push(`${sats[l.b].plane+1}-${sats[l.b].idx+1}`);
+    if(l.b===idx&&l.active)interNeighbors.push(`${sats[l.a].plane+1}-${sats[l.a].idx+1}`);
+  });
+
+  document.getElementById('panel-isl-intra').innerHTML=
+    `<span style="color:var(--gold)">Intra:</span> ${intraNeighbors.map(n=>`<span style="color:var(--text)">${n}</span>`).join(', ')}`;
+  document.getElementById('panel-isl-inter').innerHTML=
+    `<span style="color:var(--cyan)">Inter:</span> ${interNeighbors.length?interNeighbors.map(n=>`<span style="color:var(--text)">${n}</span>`).join(', '):'<span style="color:var(--text-dim)">none (too far)</span>'}`;
+
+  // Degree
+  const degIntra=2; // always 2 (ring topology)
+  const degInter=interNeighbors.length;
+  document.getElementById('panel-deg-intra').textContent=degIntra;
+  document.getElementById('panel-deg-inter').textContent=degInter;
+  document.getElementById('panel-deg-total').textContent=degIntra+degInter;
+
   document.getElementById('panel-qe').textContent=s.qE.toFixed(1);
   document.getElementById('panel-qp').textContent=s.qP.toFixed(1);
   document.getElementById('panel-qu').textContent=s.qU.toFixed(1);
