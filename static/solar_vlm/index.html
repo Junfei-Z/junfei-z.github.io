@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solar-Powered Collaborative VLM Inference over LEO Constellation</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0d1a;--panel:#141422;--border:#222238;
+  --gold:#f0a830;--gray-sat:#3a3a4a;
+  --cyan:#00d4ff;--purple:#a855f7;--pink:#ec4899;
+  --green:#22c55e;--yellow:#eab308;--red:#ef4444;
+  --text:#e0e0e8;--text-dim:#6a6a80;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+canvas{display:block}
+
+/* ── Shared UI ── */
+.btn{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--panel);color:var(--text);font-size:.72rem;cursor:pointer;transition:all .2s;font-weight:600}
+.btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn.active{border-color:var(--gold);color:var(--gold);background:rgba(240,168,48,.1)}
+
+/* ── Solar System Hint ── */
+#solar-hint{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);z-index:100;
+  background:rgba(18,18,30,.9);border:1px solid var(--gold);border-radius:12px;padding:12px 28px;
+  font-size:.88rem;font-weight:600;color:var(--gold);text-align:center;pointer-events:none;
+  animation:hintPulse 2.5s ease-in-out infinite}
+@keyframes hintPulse{0%,100%{opacity:.7;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.04)}}
+#solar-info{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:100;text-align:center}
+#solar-info h1{font-size:1.3rem;font-weight:800;margin-bottom:4px}
+#solar-info h1 span{color:var(--gold)}
+#solar-info p{font-size:.78rem;color:var(--text-dim)}
+
+/* ── LEO UI (hidden initially) ── */
+.leo-ui{display:none}
+.leo-ui.show{display:block}
+.leo-ui-flex.show{display:flex}
+
+#top-bar{position:fixed;top:0;left:0;right:0;z-index:100;align-items:center;padding:10px 20px;background:rgba(10,10,20,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+#top-bar h1{font-size:.85rem;font-weight:700;letter-spacing:.5px}
+#top-bar h1 span{color:var(--gold)}
+#top-bar .controls{margin-left:auto;display:flex;gap:8px;align-items:center}
+
+#side-panel{position:fixed;top:46px;right:0;width:320px;bottom:80px;z-index:90;background:rgba(18,18,30,.92);backdrop-filter:blur(10px);border-left:1px solid var(--border);padding:16px;overflow-y:auto;transform:translateX(100%);transition:transform .3s}
+#side-panel.open{transform:translateX(0)}
+#side-panel h2{font-size:.82rem;font-weight:700;color:var(--gold);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px}
+.panel-section{margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.panel-section:last-child{border:none}
+.panel-label{font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.panel-value{font-size:1.1rem;font-weight:800}
+.panel-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:.78rem}
+.bar-mini{height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:3px}
+.bar-mini-fill{height:100%;border-radius:3px;transition:width .5s}
+.queue-row{display:flex;gap:6px;margin-bottom:6px}
+.queue-badge{flex:1;text-align:center;padding:6px 4px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid var(--border);font-size:.68rem}
+.queue-badge b{display:block;font-size:.9rem;margin-bottom:2px}
+
+#timeline{position:fixed;bottom:0;left:0;right:0;z-index:100;height:80px;background:rgba(10,10,20,.9);backdrop-filter:blur(10px);border-top:1px solid var(--border);padding:8px 20px}
+#timeline-label{font-size:.65rem;color:var(--text-dim);margin-bottom:4px;display:flex;justify-content:space-between}
+#orbit-bar{position:relative;height:22px;border-radius:4px;overflow:hidden;background:rgba(255,255,255,.05);margin-bottom:6px}
+#orbit-bar .sunlit{position:absolute;height:100%;background:rgba(240,168,48,.25);border-right:2px solid var(--gold)}
+#orbit-bar .eclipse{position:absolute;height:100%;background:rgba(80,80,140,.2);border-right:2px solid #4a4a6a}
+#orbit-bar .playhead{position:absolute;top:0;height:100%;width:2px;background:var(--cyan);z-index:2}
+#time-slider{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,.1);outline:none}
+#time-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--cyan);cursor:pointer;border:2px solid var(--bg)}
+#timeline-stats{display:flex;gap:16px;font-size:.68rem;color:var(--text-dim);margin-top:4px}
+#timeline-stats span b{color:var(--text);font-weight:700}
+
+#legend{position:fixed;top:56px;left:12px;z-index:90;background:rgba(18,18,30,.88);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.68rem}
+#legend h3{font-size:.7rem;font-weight:700;color:var(--text-dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.legend-item{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.legend-dot{width:10px;height:10px;border-radius:50%}
+.legend-line{width:16px;height:2px;border-radius:1px}
+
+#tooltip{position:fixed;z-index:200;pointer-events:none;background:rgba(18,18,30,.95);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:.75rem;display:none;max-width:220px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+#tooltip h4{font-size:.78rem;font-weight:700;margin-bottom:4px}
+
+#overlay-toggles{position:fixed;top:56px;right:12px;z-index:90;flex-direction:column;gap:4px}
+#overlay-toggles .btn{font-size:.65rem;padding:4px 10px;text-align:left}
+
+/* Back button */
+#btn-back{position:fixed;top:56px;left:12px;z-index:100;padding:8px 16px;border-radius:8px;background:rgba(18,18,30,.9);border:1px solid var(--border);color:var(--text);font-size:.78rem;cursor:pointer;font-weight:600;transition:all .2s}
+#btn-back:hover{border-color:var(--gold);color:var(--gold)}
+
+.btn-export{background:rgba(168,85,247,.15);border-color:var(--purple);color:var(--purple)}
+.btn-export:hover{background:rgba(168,85,247,.3)}
+
+/* Loading */
+#loading{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s}
+#loading.done{opacity:0;pointer-events:none}
+#loading h2{font-size:1.2rem;font-weight:800;margin-bottom:8px}
+#loading h2 span{color:var(--gold)}
+#loading p{color:var(--text-dim);font-size:.82rem}
+.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <h2>Solar-Powered <span>LEO VLM</span> Constellation</h2>
+  <p>Initializing orbital mechanics...</p>
+</div>
+
+<!-- Solar System UI -->
+<div id="solar-info">
+  <h1><span>&#9788;</span> Solar-Powered LEO <span>VLM</span> Constellation</h1>
+  <p>Online Collaborative VLM Inference via Robust Lyapunov Optimization</p>
+</div>
+<div id="solar-hint">Click on Earth to explore the LEO constellation</div>
+
+<!-- LEO Scene UI (hidden) -->
+<div id="top-bar" class="leo-ui-flex" style="display:none">
+  <h1><span>&#9788;</span> LEO Constellation &mdash; Collaborative VLM Inference</h1>
+  <div class="controls">
+    <button class="btn" id="btn-play" onclick="togglePlay()">&#9654; Play</button>
+    <button class="btn" id="btn-speed" onclick="cycleSpeed()">1x</button>
+    <button class="btn btn-export" onclick="exportPDF()">&#128196; Export PDF</button>
+  </div>
+</div>
+
+<button id="btn-back" class="leo-ui" onclick="zoomOut()" style="display:none">&#8592; Solar System</button>
+
+<div id="legend" class="leo-ui" style="display:none">
+  <h3>Legend</h3>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--gold);box-shadow:0 0 6px var(--gold)"></div>Sunlit satellite</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#2a2a3e;border:1px solid #4a4a6a"></div>Eclipse satellite</div>
+  <div class="legend-item"><div class="legend-line" style="background:var(--gold)"></div>Intra-plane ISL</div>
+  <div class="legend-item"><div class="legend-line" style="background:var(--cyan);border-top:2px dashed var(--cyan);height:0"></div>Inter-plane ISL</div>
+  <div class="legend-item"><div class="legend-line" style="background:linear-gradient(90deg,var(--purple),var(--pink));height:3px"></div>VLM activation flow</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--green);width:8px;height:8px"></div>Sensing beam</div>
+</div>
+
+<div id="overlay-toggles" class="leo-ui" style="display:none">
+  <button class="btn active" onclick="toggleLayer(this,'isl')">ISL Links</button>
+  <button class="btn active" onclick="toggleLayer(this,'inference')">Inference</button>
+  <button class="btn active" onclick="toggleLayer(this,'beams')">Beams</button>
+  <button class="btn active" onclick="toggleLayer(this,'battery')">Battery</button>
+</div>
+
+<div id="side-panel" class="leo-ui" style="display:none">
+  <h2 id="panel-title">Satellite Detail</h2>
+  <div class="panel-section"><div class="panel-label">VLM Configuration</div><div class="panel-value" id="panel-vlm" style="color:var(--cyan)">—</div></div>
+  <div class="panel-section"><div class="panel-label">Battery Level</div><div class="panel-row"><span id="panel-battery-pct">—</span></div><div class="bar-mini"><div class="bar-mini-fill" id="panel-battery-bar" style="width:70%;background:var(--green)"></div></div></div>
+  <div class="panel-section"><div class="panel-label">Power</div><div class="panel-row"><span>Solar</span><b id="panel-solar">—</b></div><div class="panel-row"><span>Load</span><b id="panel-power">—</b></div><div class="panel-row"><span>Cap</span><b id="panel-cap">—</b></div></div>
+  <div class="panel-section"><div class="panel-label">Virtual Queues</div><div class="queue-row"><div class="queue-badge"><b id="panel-qe" style="color:var(--gold)">0</b>Q<sup>E</sup></div><div class="queue-badge"><b id="panel-qp" style="color:var(--cyan)">0</b>Q<sup>P</sup></div><div class="queue-badge"><b id="panel-qu" style="color:var(--purple)">0</b>Q<sup>U</sup></div></div></div>
+  <div class="panel-section"><div class="panel-label">Status</div><div class="panel-row" id="panel-status" style="color:var(--green)">Idle</div></div>
+</div>
+
+<div id="tooltip"><h4 id="tt-title"></h4><div id="tt-body"></div></div>
+
+<div id="timeline" class="leo-ui" style="display:none">
+  <div id="timeline-label"><span id="tl-phase">Phase: <b style="color:var(--gold)">Sunlit</b></span><span id="tl-time">Slot: <b>0</b>/95</span></div>
+  <div id="orbit-bar"><div class="sunlit" style="left:0;width:60%"></div><div class="eclipse" style="left:60%;width:40%"></div><div class="playhead" id="playhead" style="left:0"></div></div>
+  <input type="range" id="time-slider" min="0" max="95" value="0" step="1" oninput="onSliderInput(this.value)">
+  <div id="timeline-stats"><span>Solar: <b id="stat-solar">—</b></span><span>Battery: <b id="stat-battery">—</b></span><span>Tasks: <b id="stat-tasks">—</b></span><span>Quality: <b id="stat-quality">—</b></span></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+/* ═══════ CONSTANTS ═══════ */
+const NP=6, NS=10, TOTAL=NP*NS;
+const ER=5, OA=1.8, OR=ER+OA, OP=95, SF=0.6;
+const SUN_DIR=new THREE.Vector3(1,.17,.67).normalize();
+const VLMS=[
+  {name:'ViT-B/16 INT8',color:0x22c55e,quality:.72,power:8},
+  {name:'ViT-L/14 Q8',  color:0x3b82f6,quality:.81,power:14},
+  {name:'ViT-H/14 Q6',  color:0xa855f7,quality:.88,power:20},
+  {name:'ViT-G/14 FP16',color:0xec4899,quality:.94,power:28},
+];
+const TARGETS=[
+  {name:'Amazon',lat:-3.4,lon:-60},{name:'Shanghai',lat:31.2,lon:121.5},
+  {name:'Sahara',lat:23.4,lon:25},{name:'Arctic',lat:71,lon:25},{name:'Reef',lat:-18,lon:147},
+];
+
+const loader=new THREE.TextureLoader();
+let scene, camera, renderer, controls;
+let sats=[], islIntra=[], islInter=[], gMarkers=[], beams=[], flows=[];
+let simTime=0, playing=false, speed=1, selSat=null;
+let layers={isl:true,inference:true,beams:true,battery:true};
+
+/* ═══════ SCENE MODE ═══════ */
+let mode='solar'; // 'solar' | 'leo' | 'transitioning'
+let solarEarth, solarSun, solarOrbitLine, solarMoon;
+let leoGroup; // group holding all LEO objects
+let earthAngle=0; // Earth's orbital angle around Sun
+
+/* ═══════ INIT ═══════ */
+function init(){
+  scene=new THREE.Scene();
+  scene.background=new THREE.Color(0x080812);
+  scene.fog=new THREE.FogExp2(0x080812,.0008);
+  camera=new THREE.PerspectiveCamera(45,innerWidth/innerHeight,.1,2000);
+  camera.position.set(0,40,80);
+
+  renderer=new THREE.WebGLRenderer({antialias:true});
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.2;
+  document.body.appendChild(renderer.domElement);
+
+  controls=new OrbitControls(camera,renderer.domElement);
+  controls.enableDamping=true;
+  controls.dampingFactor=.05;
+  controls.minDistance=15;
+  controls.maxDistance=200;
+
+  buildStars();
+  buildSolarSystem();
+
+  // LEO group (hidden initially)
+  leoGroup=new THREE.Group();
+  leoGroup.visible=false;
+  scene.add(leoGroup);
+
+  addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+  renderer.domElement.addEventListener('click',onClickGlobal);
+  renderer.domElement.addEventListener('mousemove',onHover);
+
+  setTimeout(()=>document.getElementById('loading').classList.add('done'),1500);
+  animate();
+}
+
+/* ═══════ STARS ═══════ */
+function buildStars(){
+  const N=8000;
+  const v=new Float32Array(N*3),c=new Float32Array(N*3),sz=new Float32Array(N);
+  for(let i=0;i<N;i++){
+    const r=150+Math.random()*650,t=Math.random()*Math.PI*2,p=Math.acos(2*Math.random()-1);
+    v[i*3]=r*Math.sin(p)*Math.cos(t);v[i*3+1]=r*Math.sin(p)*Math.sin(t);v[i*3+2]=r*Math.cos(p);
+    // Varying star colors: mostly white, some warm, some blue
+    const temp=Math.random();
+    if(temp<.15){c[i*3]=1;c[i*3+1]=.75;c[i*3+2]=.5;}       // warm
+    else if(temp<.25){c[i*3]=.7;c[i*3+1]=.8;c[i*3+2]=1;}    // blue
+    else{c[i*3]=.9+Math.random()*.1;c[i*3+1]=.9+Math.random()*.1;c[i*3+2]=.9+Math.random()*.1;}
+    sz[i]=.2+Math.random()*.6;
+  }
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.BufferAttribute(v,3));
+  g.setAttribute('color',new THREE.BufferAttribute(c,3));
+  g.setAttribute('size',new THREE.BufferAttribute(sz,1));
+  scene.add(new THREE.Points(g,new THREE.PointsMaterial({vertexColors:true,size:.4,sizeAttenuation:true})));
+}
+
+/* ═══════ SOLAR SYSTEM ═══════ */
+let solarGlows=[];
+function buildSolarSystem(){
+  // Sun — fireball with flowing plasma
+  const sunGeo=new THREE.SphereGeometry(8,64,64);
+  const sunMat=new THREE.ShaderMaterial({
+    uniforms:{time:{value:0}},
+    vertexShader:`varying vec2 vUv;varying vec3 vN,vP;void main(){vUv=uv;vN=normalize(normalMatrix*normal);vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+    fragmentShader:`
+      uniform float time;
+      varying vec2 vUv;varying vec3 vN,vP;
+      // 3D simplex-like noise for seamless sphere coverage
+      vec3 mod289(vec3 x){return x-floor(x*(1./289.))*289.;}
+      vec4 mod289(vec4 x){return x-floor(x*(1./289.))*289.;}
+      vec4 perm(vec4 x){return mod289(((x*34.)+1.)*x);}
+      float snoise(vec3 v){
+        const vec2 C=vec2(1./6.,1./3.);
+        vec3 i=floor(v+dot(v,C.yyy)),x0=v-i+dot(i,C.xxx);
+        vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.-g;
+        vec3 i1=min(g,l.zxy),i2=max(g,l.zxy);
+        vec3 x1=x0-i1+C.xxx,x2=x0-i2+C.yyy,x3=x0-.5;
+        i=mod289(i);
+        vec4 p=perm(perm(perm(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
+        vec4 j=p-49.*floor(p*(1./49.));
+        vec4 x_=floor(j*(1./7.)),y_=floor(j-7.*x_);
+        vec4 ox=(x_*2.+.5)/7.-1.,oy=(y_*2.+.5)/7.-1.;
+        vec4 gx=ox-floor(ox+.5),gy=oy-floor(oy+.5),gz=1.5-abs(gx)-abs(gy);
+        vec4 b0=vec4(gx.xy,gy.xy),b1=vec4(gx.zw,gy.zw);
+        vec4 s0=floor(b0)*2.+1.,s1=floor(b1)*2.+1.;
+        vec3 g0=vec3(b0.x*s0.x,b0.y*s0.y,gz.x);
+        vec3 g1=vec3(b0.z*s0.z,b0.w*s0.w,gz.y);
+        vec3 g2=vec3(b1.x*s1.x,b1.y*s1.y,gz.z);
+        vec3 g3=vec3(b1.z*s1.z,b1.w*s1.w,gz.w);
+        vec4 norm=1.79284291400159-.85373472095314*vec4(dot(g0,g0),dot(g1,g1),dot(g2,g2),dot(g3,g3));
+        g0*=norm.x;g1*=norm.y;g2*=norm.z;g3*=norm.w;
+        vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);
+        m=m*m;return 42.*dot(m*m,vec4(dot(g0,x0),dot(g1,x1),dot(g2,x2),dot(g3,x3)));
+      }
+      float fbm3(vec3 p){float v=0.,a=.5;for(int i=0;i<6;i++){v+=a*snoise(p);p*=2.1;a*=.48;}return v;}
+      void main(){
+        // Use 3D position on sphere for seamless noise
+        vec3 sp=normalize(vP)*3.;
+        // Slowly flowing turbulence — multiple scrolling layers
+        float t=time*.15;
+        float n1=fbm3(sp+vec3(t*.7,t*.3,-t*.5));
+        float n2=fbm3(sp*1.8+vec3(-t*.4,t*.6,t*.2));
+        float turb=n1*.6+n2*.4;
+        // Fire color ramp: white-hot core → yellow → orange → deep red
+        float v=turb*.5+.5; // remap to 0..1
+        vec3 col;
+        if(v>.75) col=mix(vec3(1.,.9,.4),vec3(1.,1.,.9),smoothstep(.75,1.,v));    // yellow→white
+        else if(v>.45) col=mix(vec3(1.,.45,.05),vec3(1.,.9,.4),smoothstep(.45,.75,v)); // orange→yellow
+        else col=mix(vec3(.6,.12,.0),vec3(1.,.45,.05),smoothstep(.15,.45,v));       // dark red→orange
+        // Limb darkening — edges redder and dimmer
+        float rim=max(dot(vN,vec3(0.,0.,1.)),0.);
+        float limb=.45+.55*pow(rim,.6);
+        col*=limb;
+        // Slight red shift at edge
+        col.g*=.7+.3*rim;
+        col.b*=.3+.7*rim;
+        // Brightness boost
+        col*=1.5;
+        gl_FragColor=vec4(col,1.);
+      }`
+  });
+  solarSun=new THREE.Mesh(sunGeo,sunMat);
+  scene.add(solarSun);
+  // Sun glow layers — brighter, more layers
+  [{r:10,op:.35,c:0xffcc44},{r:13,op:.18,c:0xffaa22},{r:18,op:.08,c:0xff8811},{r:25,op:.03,c:0xff6600}].forEach(({r,op,c})=>{
+    const m=new THREE.Mesh(new THREE.SphereGeometry(r,24,24),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:op,depthWrite:false}));
+    m.userData.baseOp=op;
+    scene.add(m);solarGlows.push(m);
+  });
+  // Sun light — stronger
+  const sl=new THREE.PointLight(0xfff4e0,4,500);
+  scene.add(sl);
+  scene.add(new THREE.AmbientLight(0x111122,.35));
+
+  // Earth orbit path
+  const orbitR=50;
+  const pts=[];
+  for(let i=0;i<=128;i++){const a=i/128*Math.PI*2;pts.push(new THREE.Vector3(Math.cos(a)*orbitR,0,Math.sin(a)*orbitR));}
+  const orbitGeo=new THREE.BufferGeometry().setFromPoints(pts);
+  solarOrbitLine=new THREE.Line(orbitGeo,new THREE.LineBasicMaterial({color:0x333355,transparent:true,opacity:.3}));
+  scene.add(solarOrbitLine);
+
+  // Earth
+  const earthGeo=new THREE.SphereGeometry(3,48,48);
+  const dayTex=loader.load('https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-blue-marble.jpg');
+  const nightTex=loader.load('https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-night.jpg');
+  const earthMat=new THREE.ShaderMaterial({
+    uniforms:{dayMap:{value:dayTex},nightMap:{value:nightTex},sunPos:{value:new THREE.Vector3()}},
+    vertexShader:`varying vec3 vN,vP;varying vec2 vUv;void main(){vN=normalize(normalMatrix*normal);vP=(modelMatrix*vec4(position,1.)).xyz;vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+    fragmentShader:`
+      uniform sampler2D dayMap,nightMap;uniform vec3 sunPos;
+      varying vec3 vN,vP;varying vec2 vUv;
+      void main(){
+        vec3 toSun=normalize(sunPos-vP);
+        float NdL=dot(vN,toSun);
+        float light=smoothstep(-.05,.1,NdL);
+        vec3 day=texture2D(dayMap,vUv).rgb;
+        vec3 night=texture2D(nightMap,vUv).rgb*1.5;
+        vec3 col=mix(night,day,light);
+        float rim=1.-max(dot(vN,normalize(cameraPosition-vP)),0.);
+        col+=vec3(.15,.4,1.)*pow(rim,3.)*.3*max(light,.1);
+        gl_FragColor=vec4(col,1.);
+      }`
+  });
+  solarEarth=new THREE.Mesh(earthGeo,earthMat);
+  solarEarth.position.set(50,0,0);
+  scene.add(solarEarth);
+
+  // Earth atmosphere
+  const atmo=new THREE.Mesh(
+    new THREE.SphereGeometry(3.12,32,32),
+    new THREE.MeshBasicMaterial({color:0x4488ff,transparent:true,opacity:.08,side:THREE.BackSide,depthWrite:false})
+  );
+  solarEarth.add(atmo);
+
+  // Moon
+  solarMoon=new THREE.Mesh(new THREE.SphereGeometry(.8,16,16),new THREE.MeshStandardMaterial({color:0xaaaaaa,roughness:.9}));
+  solarMoon.position.set(6,0,0);
+  solarEarth.add(solarMoon);
+
+  // Earth axial tilt
+  solarEarth.rotation.z=23.4*Math.PI/180;
+}
+
+/* ═══════ LEO SCENE BUILDER ═══════ */
+let leoBuilt=false;
+function buildLEO(){
+  if(leoBuilt)return;
+  leoBuilt=true;
+
+  // Directional light matching sun direction
+  const dl=new THREE.DirectionalLight(0xfff4e0,3);
+  dl.position.copy(SUN_DIR.clone().multiplyScalar(35));
+  leoGroup.add(dl);
+  leoGroup.add(new THREE.AmbientLight(0x0a0a1a,.3));
+
+  // Mini sun in distance — clickable to go back
+  const miniSunGeo=new THREE.SphereGeometry(2,32,32);
+  const miniSunMat=new THREE.MeshBasicMaterial({color:0xffdd66});
+  const miniSun=new THREE.Mesh(miniSunGeo,miniSunMat);
+  miniSun.position.copy(SUN_DIR.clone().multiplyScalar(50));
+  miniSun.name='leoSun';
+  leoGroup.add(miniSun);
+  // Mini sun glow
+  const miniGlow=new THREE.Mesh(new THREE.SphereGeometry(3.5,16,16),new THREE.MeshBasicMaterial({color:0xffaa22,transparent:true,opacity:.2,depthWrite:false}));
+  miniGlow.position.copy(miniSun.position);
+  leoGroup.add(miniGlow);
+
+  // Earth in LEO scene
+  const geo=new THREE.SphereGeometry(ER,64,64);
+  const dayTex=loader.load('https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-blue-marble.jpg');
+  const nightTex=loader.load('https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-night.jpg');
+  const mat=new THREE.ShaderMaterial({
+    uniforms:{sunDir:{value:SUN_DIR},dayMap:{value:dayTex},nightMap:{value:nightTex}},
+    vertexShader:`varying vec3 vN,vP;varying vec2 vUv;void main(){vN=normalize(normalMatrix*normal);vP=(modelMatrix*vec4(position,1.)).xyz;vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+    fragmentShader:`
+      uniform vec3 sunDir;uniform sampler2D dayMap,nightMap;
+      varying vec3 vN,vP;varying vec2 vUv;
+      void main(){
+        float NdL=dot(vN,sunDir);float light=smoothstep(-.05,.1,NdL);
+        vec3 day=texture2D(dayMap,vUv).rgb;
+        vec3 night=texture2D(nightMap,vUv).rgb*1.2;
+        vec3 col=mix(night,day,light);
+        float term=exp(-pow(NdL*12.,2.))*.3;col+=vec3(.9,.4,.1)*term;
+        float rim=1.-max(dot(vN,normalize(cameraPosition-vP)),0.);
+        col+=vec3(.15,.4,1.)*pow(rim,3.5)*.35*max(light,.1);
+        gl_FragColor=vec4(col,1.);
+      }`
+  });
+  const leoEarth=new THREE.Mesh(geo,mat);
+  leoGroup.add(leoEarth);
+  // Atmo
+  const atmo=new THREE.Mesh(new THREE.SphereGeometry(ER*1.03,64,64),new THREE.ShaderMaterial({
+    uniforms:{sunDir:{value:SUN_DIR}},
+    vertexShader:`varying vec3 vN,vW;void main(){vN=normalize(normalMatrix*normal);vW=(modelMatrix*vec4(position,1.)).xyz;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+    fragmentShader:`uniform vec3 sunDir;varying vec3 vN,vW;void main(){float rim=1.-max(dot(vN,normalize(cameraPosition-vW)),0.);float sun=max(dot(vN,sunDir),0.);vec3 c=mix(vec3(.05,.15,.6),vec3(.3,.5,1.),sun)*pow(rim,2.);gl_FragColor=vec4(c,pow(rim,2.5)*.5*max(sun,.1));}`,
+    transparent:true,side:THREE.BackSide,depthWrite:false
+  }));
+  leoGroup.add(atmo);
+
+  // Eclipse cone
+  const cone=new THREE.Mesh(new THREE.ConeGeometry(ER*1.3,28,32,1,true),new THREE.MeshBasicMaterial({color:0x050510,transparent:true,opacity:.12,side:THREE.DoubleSide,depthWrite:false}));
+  cone.rotation.z=Math.PI/2;cone.position.copy(SUN_DIR.clone().negate().multiplyScalar(16));
+  leoGroup.add(cone);
+
+  // Satellites
+  for(let p=0;p<NP;p++){
+    const pa=(p/NP)*Math.PI;
+    for(let s=0;s<NS;s++){
+      const po=(s/NS)*Math.PI*2+p*Math.PI*2/NP/NS;
+      const vi=Math.floor(Math.random()*VLMS.length);
+      const g=new THREE.Group();
+      const body=new THREE.Mesh(new THREE.BoxGeometry(.15,.1,.15),new THREE.MeshStandardMaterial({color:0x888899,metalness:.7,roughness:.3}));
+      g.add(body);
+      const pg=new THREE.BoxGeometry(.32,.015,.12);
+      const pmL=new THREE.MeshStandardMaterial({color:0xf0a830,metalness:.4,roughness:.4,emissive:0xf0a830,emissiveIntensity:.5});
+      const pL=new THREE.Mesh(pg,pmL);pL.position.x=-.24;g.add(pL);
+      const pR=new THREE.Mesh(pg,pmL.clone());pR.position.x=.24;g.add(pR);
+      const halo=new THREE.Mesh(new THREE.SphereGeometry(.25,8,8),new THREE.MeshBasicMaterial({color:0xf0a830,transparent:true,opacity:.2,depthWrite:false}));
+      g.add(halo);
+      const gpu=new THREE.Mesh(new THREE.BoxGeometry(.05,.05,.05),new THREE.MeshBasicMaterial({color:VLMS[vi].color}));gpu.position.y=.08;g.add(gpu);
+      const bc=document.createElement('canvas');bc.width=100;bc.height=20;
+      const bt=new THREE.CanvasTexture(bc);
+      const bs=new THREE.Sprite(new THREE.SpriteMaterial({map:bt,transparent:true,depthWrite:false}));bs.scale.set(.6,.12,1);bs.position.y=.3;g.add(bs);
+      const wr=new THREE.Mesh(new THREE.RingGeometry(.3,.35,16),new THREE.MeshBasicMaterial({color:0xef4444,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}));g.add(wr);
+      leoGroup.add(g);
+      sats.push({g,body,pL,pR,halo,gpu,bs,bc,bt,wr,plane:p,idx:s,pa,po,vi,bat:.5+Math.random()*.5,pCap:25+Math.random()*10,solar:0,pwr:0,ecl:false,busy:false,qE:Math.random()*5,qP:Math.random()*3,qU:Math.random()*4});
+    }
+  }
+
+  // ISL — Intra-plane: gold/yellow, Inter-plane: cyan
+  for(let p=0;p<NP;p++) for(let s=0;s<NS;s++){
+    const geo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]);
+    const line=new THREE.Line(geo,new THREE.LineBasicMaterial({color:0xf0a830,transparent:true,opacity:.25}));
+    leoGroup.add(line);
+    islIntra.push({line,a:p*NS+s,b:p*NS+(s+1)%NS});
+  }
+  for(let p=0;p<NP-1;p++) for(let s=0;s<NS;s++){
+    const geo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]);
+    const line=new THREE.Line(geo,new THREE.LineDashedMaterial({color:0x00d4ff,transparent:true,opacity:0,dashSize:.15,gapSize:.1}));
+    leoGroup.add(line);
+    islInter.push({line,a:p*NS+s,b:(p+1)*NS+s,active:false});
+  }
+
+  // Ground targets
+  TARGETS.forEach(t=>{
+    const pos=ll2v(t.lat,t.lon,ER*1.005);
+    const g=new THREE.Group();g.position.copy(pos);
+    const pin=new THREE.Mesh(new THREE.SphereGeometry(.1,8,8),new THREE.MeshBasicMaterial({color:0x22c55e}));g.add(pin);
+    const ring=new THREE.Mesh(new THREE.RingGeometry(.12,.18,16),new THREE.MeshBasicMaterial({color:0x22c55e,transparent:true,opacity:.5,side:THREE.DoubleSide}));
+    ring.lookAt(pos.clone().multiplyScalar(2));g.add(ring);
+    leoGroup.add(g);
+    gMarkers.push({g,pin,ring,pos,data:t});
+  });
+
+  // Beams
+  for(let i=0;i<5;i++){
+    const mesh=new THREE.Mesh(new THREE.CylinderGeometry(.03,.2,1,8,1,true),new THREE.MeshBasicMaterial({color:0x22c55e,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}));
+    mesh.visible=false;leoGroup.add(mesh);
+    beams.push({mesh,active:false,gIdx:-1,sIdx:-1,timer:0});
+  }
+
+  // Flows
+  for(let i=0;i<8;i++){
+    const geo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]);
+    const line=new THREE.Line(geo,new THREE.LineBasicMaterial({color:0xa855f7,transparent:true,opacity:0}));
+    leoGroup.add(line);
+    const particles=[];
+    for(let j=0;j<4;j++){
+      const pm=new THREE.Mesh(new THREE.SphereGeometry(.05,6,6),new THREE.MeshBasicMaterial({color:j%2?0xec4899:0xa855f7,transparent:true,opacity:0}));
+      leoGroup.add(pm);particles.push(pm);
+    }
+    flows.push({line,particles,active:false,a:-1,b:-1,prog:0});
+  }
+}
+
+/* ═══════ ZOOM TRANSITION ═══════ */
+function zoomIn(){
+  if(mode!=='solar')return;
+  mode='transitioning';
+  buildLEO();
+
+  // Animate camera to Earth
+  const earthPos=solarEarth.position.clone();
+  const startPos=camera.position.clone();
+  const startTarget=controls.target.clone();
+  const duration=2000;
+  const start=performance.now();
+
+  function step(now){
+    const t=Math.min((now-start)/duration,1);
+    const ease=t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2; // easeInOutCubic
+
+    // Move camera toward Earth
+    camera.position.lerpVectors(startPos,earthPos.clone().add(new THREE.Vector3(0,8,18)),ease);
+    controls.target.lerpVectors(startTarget,earthPos,ease);
+
+    if(t<1){
+      requestAnimationFrame(step);
+    } else {
+      // Switch to LEO mode
+      solarSun.visible=false;
+      solarEarth.visible=false;
+      solarOrbitLine.visible=false;
+      scene.children.forEach(c=>{
+        if(c.type==='Mesh'&&c!==leoGroup&&!c.isPoints) c.visible=false;
+      });
+      // Hide solar glow spheres
+      scene.children.forEach(c=>{if(c.isMesh&&c.material&&c.material.transparent&&c.position.length()>30)c.visible=false;});
+
+      leoGroup.visible=true;
+      camera.position.set(0,8,18);
+      controls.target.set(0,0,0);
+      controls.minDistance=8;
+      controls.maxDistance=40;
+      mode='leo';
+      playing=true;
+      document.getElementById('btn-play').innerHTML='&#9646;&#9646; Pause';
+
+      // Show LEO UI, hide solar UI
+      document.getElementById('solar-info').style.display='none';
+      document.getElementById('solar-hint').style.display='none';
+      document.querySelectorAll('.leo-ui').forEach(e=>e.style.display='block');
+      document.querySelectorAll('.leo-ui-flex').forEach(e=>e.style.display='flex');
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+function zoomOut(){
+  if(mode!=='leo')return;
+  mode='solar';
+  playing=false;
+  leoGroup.visible=false;
+
+  // Restore solar system
+  scene.children.forEach(c=>{c.visible=true;});
+  leoGroup.visible=false;
+
+  camera.position.set(0,40,80);
+  controls.target.set(0,0,0);
+  controls.minDistance=15;
+  controls.maxDistance=200;
+
+  // Hide LEO UI, show solar UI
+  document.getElementById('solar-info').style.display='block';
+  document.getElementById('solar-hint').style.display='block';
+  document.querySelectorAll('.leo-ui').forEach(e=>e.style.display='none');
+  document.querySelectorAll('.leo-ui-flex').forEach(e=>e.style.display='none');
+  document.getElementById('side-panel').classList.remove('open');
+  selSat=null;
+}
+
+/* ═══════ CLICK HANDLER ═══════ */
+const ray=new THREE.Raycaster(),mouse=new THREE.Vector2();
+
+function onClickGlobal(e){
+  mouse.x=(e.clientX/innerWidth)*2-1;mouse.y=-(e.clientY/innerHeight)*2+1;
+  ray.setFromCamera(mouse,camera);
+
+  if(mode==='solar'){
+    const hits=ray.intersectObject(solarEarth);
+    if(hits.length>0) zoomIn();
+    return;
+  }
+  if(mode==='leo'){
+    // Click mini sun to go back
+    const sunObj=leoGroup.getObjectByName('leoSun');
+    if(sunObj){const sh=ray.intersectObject(sunObj);if(sh.length>0){zoomOut();return;}}
+    // Satellite click
+    const bodies=sats.map(s=>s.body);
+    const h=ray.intersectObjects(bodies);
+    if(h.length>0){const i=bodies.indexOf(h[0].object);if(i>=0){selSat=i;document.getElementById('side-panel').classList.add('open');return;}}
+    // Ground click
+    const pins=gMarkers.map(g=>g.pin);
+    const ph=ray.intersectObjects(pins);
+    if(ph.length>0)return;
+    document.getElementById('side-panel').classList.remove('open');selSat=null;
+  }
+}
+
+function onHover(e){
+  mouse.x=(e.clientX/innerWidth)*2-1;mouse.y=-(e.clientY/innerHeight)*2+1;
+  ray.setFromCamera(mouse,camera);
+  const tt=document.getElementById('tooltip');
+
+  if(mode==='solar'){
+    const h=ray.intersectObject(solarEarth);
+    renderer.domElement.style.cursor=h.length>0?'pointer':'default';
+    tt.style.display='none';
+    return;
+  }
+  if(mode==='leo'&&sats.length>0){
+    // Hover on mini sun
+    const sunObj=leoGroup.getObjectByName('leoSun');
+    if(sunObj){const sh=ray.intersectObject(sunObj);if(sh.length>0){renderer.domElement.style.cursor='pointer';tt.style.display='block';document.getElementById('tt-title').textContent='Sun';document.getElementById('tt-body').innerHTML='Click to return to solar system';tt.style.left=e.clientX+12+'px';tt.style.top=e.clientY+12+'px';return;}}
+    const bodies=sats.map(s=>s.body);
+    const h=ray.intersectObjects(bodies);
+    if(h.length>0){
+      const i=bodies.indexOf(h[0].object);
+      if(i>=0){
+        const s=sats[i],v=VLMS[s.vi];
+        document.getElementById('tt-title').textContent=`Sat ${s.plane+1}-${s.idx+1}`;
+        document.getElementById('tt-body').innerHTML=`VLM: ${v.name}<br>Battery: ${(s.bat*100)|0}%<br>${s.ecl?'Eclipse':'Sunlit'}`;
+        tt.style.display='block';tt.style.left=e.clientX+12+'px';tt.style.top=e.clientY+12+'px';
+        renderer.domElement.style.cursor='pointer';return;
+      }
+    }
+    tt.style.display='none';renderer.domElement.style.cursor='default';
+  }
+}
+
+/* ═══════ LEO SIMULATION ═══════ */
+function updateLEO(t){
+  const w=Math.PI*2/OP;
+  sats.forEach(sat=>{
+    const a=sat.po+t*w;
+    const pos=new THREE.Vector3(OR*Math.cos(a),0,OR*Math.sin(a));
+    pos.applyAxisAngle(new THREE.Vector3(Math.sin(sat.pa),0,Math.cos(sat.pa)),.9);
+    sat.g.position.copy(pos);sat.g.lookAt(0,0,0);
+    const dot=pos.clone().normalize().dot(SUN_DIR);
+    sat.ecl=dot<-.15;
+    if(sat.ecl){
+      sat.pL.material.color.setHex(0x1a1a2e);sat.pL.material.emissive.setHex(0);sat.pL.material.emissiveIntensity=0;
+      sat.pR.material.color.setHex(0x1a1a2e);sat.pR.material.emissive.setHex(0);sat.pR.material.emissiveIntensity=0;
+      sat.body.material.color.setHex(0x2a2a3e);sat.halo.material.opacity=0;sat.solar=0;
+    } else {
+      const I=Math.max(0,dot)*.8+.2;
+      sat.pL.material.color.setHex(0xf0a830);sat.pL.material.emissive.setHex(0xf0a830);sat.pL.material.emissiveIntensity=I*.6;
+      sat.pR.material.color.setHex(0xf0a830);sat.pR.material.emissive.setHex(0xf0a830);sat.pR.material.emissiveIntensity=I*.6;
+      sat.body.material.color.setHex(0xaaaabb);sat.halo.material.opacity=I*.25;sat.solar=8+I*12;
+    }
+    const vlm=VLMS[sat.vi];sat.pwr=sat.busy?vlm.power:2;
+    sat.bat=Math.max(0,Math.min(1,sat.bat+(sat.solar-sat.pwr)*.0003));
+    sat.qE=Math.max(0,sat.qE+(sat.pwr-sat.solar)*.01);
+    sat.qP=Math.max(0,sat.qP+(sat.pwr-sat.pCap)*.005);
+    if(sat.busy)sat.qU=Math.max(0,sat.qU-vlm.quality*.02);else sat.qU=Math.min(10,sat.qU+.01);
+    if(sat.pwr/sat.pCap>.85)sat.wr.material.opacity=.3+Math.sin(t*3)*.3;else sat.wr.material.opacity=0;
+    if(layers.battery){
+      sat.bs.visible=true;const cx=sat.bc.getContext('2d');const W=100,H=20;
+      cx.clearRect(0,0,W,H);
+      // Battery outline
+      cx.strokeStyle='rgba(255,255,255,.6)';cx.lineWidth=1.5;
+      cx.beginPath();cx.rect(2,3,W-12,H-6);cx.stroke();
+      // Battery terminal nub
+      cx.fillStyle='rgba(255,255,255,.5)';cx.fillRect(W-10,7,6,6);
+      // Battery fill
+      const fillW=(sat.bat*(W-16));
+      cx.fillStyle=sat.bat>.5?'#22c55e':sat.bat>.2?'#eab308':'#ef4444';
+      cx.fillRect(4,5,fillW,H-10);
+      // Percentage text
+      cx.fillStyle='#fff';cx.font='bold 10px sans-serif';cx.textAlign='center';cx.textBaseline='middle';
+      cx.fillText(Math.round(sat.bat*100)+'%',(W-10)/2,H/2);
+      sat.bt.needsUpdate=true;
+    }else sat.bs.visible=false;
+  });
+
+  // ISL
+  islIntra.forEach(l=>{
+    const pA=sats[l.a].g.position,pB=sats[l.b].g.position;
+    const arr=l.line.geometry.attributes.position.array;
+    arr[0]=pA.x;arr[1]=pA.y;arr[2]=pA.z;arr[3]=pB.x;arr[4]=pB.y;arr[5]=pB.z;
+    l.line.geometry.attributes.position.needsUpdate=true;
+    l.line.material.opacity=layers.isl?.3:0;l.line.visible=layers.isl;
+  });
+  islInter.forEach(l=>{
+    const pA=sats[l.a].g.position,pB=sats[l.b].g.position;
+    const dist=pA.distanceTo(pB);l.active=dist<OA*3.5;
+    const arr=l.line.geometry.attributes.position.array;
+    arr[0]=pA.x;arr[1]=pA.y;arr[2]=pA.z;arr[3]=pB.x;arr[4]=pB.y;arr[5]=pB.z;
+    l.line.geometry.attributes.position.needsUpdate=true;
+    l.line.geometry.computeBoundingSphere();l.line.computeLineDistances();
+    l.line.material.opacity=l.active&&layers.isl?.55:0;l.line.visible=l.active&&layers.isl;
+  });
+
+  // Beams
+  beams.forEach(b=>{
+    if(!b.active&&Math.random()<.008){
+      b.gIdx=Math.floor(Math.random()*TARGETS.length);
+      b.sIdx=nearSat(gMarkers[b.gIdx].pos);b.active=true;b.timer=0;sats[b.sIdx].busy=true;
+    }
+    if(b.active){
+      b.timer++;
+      const gP=gMarkers[b.gIdx].pos,sP=sats[b.sIdx].g.position;
+      const mid=gP.clone().add(sP).multiplyScalar(.5);
+      b.mesh.position.copy(mid);b.mesh.lookAt(sP);b.mesh.rotateX(Math.PI/2);
+      b.mesh.scale.set(1,gP.distanceTo(sP),1);
+      b.mesh.material.opacity=Math.sin(b.timer*.12)*.25+.35;b.mesh.visible=layers.beams;
+      if(b.timer>100){b.active=false;b.mesh.visible=false;b.mesh.material.opacity=0;sats[b.sIdx].busy=false;}
+    }
+  });
+
+  // Flows (model splitting)
+  flows.forEach(f=>{
+    if(!f.active&&Math.random()<.006){
+      const p=Math.floor(Math.random()*NP),s1=Math.floor(Math.random()*NS);
+      f.a=p*NS+s1;f.b=p*NS+(s1+1)%NS;f.active=true;f.prog=0;sats[f.a].busy=true;sats[f.b].busy=true;
+    }
+    if(f.active){
+      f.prog+=.012;
+      const pA=sats[f.a].g.position,pB=sats[f.b].g.position;
+      const arr=f.line.geometry.attributes.position.array;
+      arr[0]=pA.x;arr[1]=pA.y;arr[2]=pA.z;arr[3]=pB.x;arr[4]=pB.y;arr[5]=pB.z;
+      f.line.geometry.attributes.position.needsUpdate=true;
+      f.line.material.opacity=layers.inference?.7:0;f.line.visible=layers.inference;
+      f.particles.forEach((pm,j)=>{
+        pm.position.lerpVectors(pA,pB,(f.prog+j*.25)%1);
+        pm.material.opacity=layers.inference?.85:0;pm.visible=layers.inference;
+      });
+      if(f.prog>3){
+        f.active=false;f.line.visible=false;f.line.material.opacity=0;
+        f.particles.forEach(pm=>{pm.visible=false;pm.material.opacity=0;});
+        sats[f.a].busy=false;sats[f.b].busy=false;
+      }
+    }
+  });
+
+  // Ground pulse
+  gMarkers.forEach((gm,i)=>{
+    const sc=1+Math.sin(t*.05+i*1.3)*.4;gm.ring.scale.set(sc,sc,1);
+    gm.ring.material.opacity=.25+Math.sin(t*.08+i)*.2;
+  });
+}
+
+function updatePanel(){
+  if(selSat===null)return;
+  const s=sats[selSat],v=VLMS[s.vi];
+  document.getElementById('panel-title').textContent=`Satellite ${s.plane+1}-${s.idx+1}`;
+  document.getElementById('panel-vlm').textContent=v.name;
+  document.getElementById('panel-vlm').style.color='#'+v.color.toString(16).padStart(6,'0');
+  document.getElementById('panel-battery-pct').textContent=(s.bat*100).toFixed(1)+'%';
+  const bar=document.getElementById('panel-battery-bar');
+  bar.style.width=(s.bat*100)+'%';bar.style.background=s.bat>.5?'var(--green)':s.bat>.2?'var(--yellow)':'var(--red)';
+  document.getElementById('panel-solar').textContent=s.solar.toFixed(1)+' W';
+  document.getElementById('panel-power').textContent=s.pwr.toFixed(1)+' W';
+  document.getElementById('panel-cap').textContent=s.pCap.toFixed(0)+' W';
+  document.getElementById('panel-qe').textContent=s.qE.toFixed(1);
+  document.getElementById('panel-qp').textContent=s.qP.toFixed(1);
+  document.getElementById('panel-qu').textContent=s.qU.toFixed(1);
+  const st=document.getElementById('panel-status');
+  if(s.busy){st.textContent='Running Inference';st.style.color='var(--cyan)';}
+  else if(s.ecl){st.textContent='Eclipse - Battery Only';st.style.color='var(--yellow)';}
+  else{st.textContent='Idle - Harvesting';st.style.color='var(--green)';}
+}
+
+function updateTimeline(){
+  const slot=Math.floor(simTime%OP),frac=(simTime%OP)/OP;
+  document.getElementById('playhead').style.left=(frac*100)+'%';
+  document.getElementById('time-slider').value=slot;
+  document.getElementById('tl-time').innerHTML=`Slot: <b>${slot}</b>/95`;
+  const pc=frac<SF?'var(--gold)':'#6a6a80';
+  document.getElementById('tl-phase').innerHTML=`Phase: <b style="color:${pc}">${frac<SF?'Sunlit':'Eclipse'}</b>`;
+  const avgB=sats.reduce((a,s)=>a+s.bat,0)/TOTAL;
+  document.getElementById('stat-battery').textContent=(avgB*100|0)+'%';
+  document.getElementById('stat-solar').textContent=(sats.reduce((a,s)=>a+s.solar,0)/TOTAL).toFixed(1)+' W';
+  document.getElementById('stat-tasks').textContent=sats.filter(s=>s.busy).length+' active';
+  document.getElementById('stat-quality').textContent=(sats.reduce((a,s)=>a+VLMS[s.vi].quality,0)/TOTAL).toFixed(2);
+}
+
+/* ═══════ UTILS ═══════ */
+function ll2v(lat,lon,r){const p=(90-lat)*Math.PI/180,t=(lon+180)*Math.PI/180;return new THREE.Vector3(-r*Math.sin(p)*Math.cos(t),r*Math.cos(p),r*Math.sin(p)*Math.sin(t));}
+function nearSat(pos){let d=Infinity,b=0;sats.forEach((s,i)=>{const dd=s.g.position.distanceTo(pos);if(dd<d){d=dd;b=i;}});return b;}
+
+/* ═══════ GLOBAL HANDLERS ═══════ */
+window.togglePlay=()=>{playing=!playing;document.getElementById('btn-play').innerHTML=playing?'&#9646;&#9646; Pause':'&#9654; Play';};
+window.cycleSpeed=()=>{const sp=[1,2,5,10];speed=sp[(sp.indexOf(speed)+1)%sp.length];document.getElementById('btn-speed').textContent=speed+'x';};
+window.toggleLayer=(btn,l)=>{layers[l]=!layers[l];btn.classList.toggle('active');};
+window.onSliderInput=v=>{simTime=parseInt(v);};
+window.zoomOut=zoomOut;
+window.exportPDF=async()=>{
+  const btn=document.querySelector('.btn-export');btn.textContent='Capturing...';
+  try{
+    renderer.render(scene,camera);const img=renderer.domElement.toDataURL('image/png');
+    const{jsPDF}=window.jspdf;const pdf=new jsPDF('landscape','mm','a4');
+    pdf.addImage(img,'PNG',5,5,287,160);
+    pdf.setFontSize(14);pdf.setFont(undefined,'bold');
+    pdf.text('Solar-Powered Collaborative VLM Inference over LEO Constellation',148,175,{align:'center'});
+    pdf.setFontSize(9);pdf.setFont(undefined,'normal');
+    pdf.text('Junfei Zhan, Tengjiao He',148,182,{align:'center'});
+    pdf.save('leo-vlm-constellation.pdf');
+  }catch(e){console.error(e);}
+  btn.textContent='Export PDF';
+};
+
+/* ═══════ ANIMATE ═══════ */
+let fc=0;
+function animate(){
+  requestAnimationFrame(animate);fc++;
+
+  if(mode==='solar'){
+    // Earth orbits Sun
+    earthAngle+=.003;
+    const orbitR=50;
+    solarEarth.position.set(Math.cos(earthAngle)*orbitR,0,Math.sin(earthAngle)*orbitR);
+    solarEarth.rotation.y+=.008; // Earth rotation
+    solarEarth.material.uniforms.sunPos.value.set(0,0,0);
+    // Moon orbits Earth
+    const moonA=earthAngle*12;
+    solarMoon.position.set(Math.cos(moonA)*6,.5,Math.sin(moonA)*6);
+    // Animate sun surface
+    if(solarSun.material.uniforms)solarSun.material.uniforms.time.value=fc*.01;
+    solarSun.rotation.y+=.001;
+    // Pulse sun glow
+    solarGlows.forEach((g,i)=>{g.material.opacity=g.userData.baseOp*(1+Math.sin(fc*.015+i)*.15);});
+  }
+
+  if(mode==='leo'){
+    if(playing)simTime+=speed*.02;
+    updateLEO(simTime);
+    if(fc%5===0){updateTimeline();if(selSat!==null)updatePanel();}
+  }
+
+  controls.update();
+  renderer.render(scene,camera);
+}
+
+init();
+</script>
+</body>
+</html>
