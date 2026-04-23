@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scalable Node-Level Vaccine Allocation — Interactive Demo</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f6f8fb;
+  --bg-soft:#eef2f7;
+  --panel:#ffffff;
+  --border:#e3e8ef;
+  --border-strong:#c7d0db;
+  --text:#1f2937;
+  --text-muted:#6b7280;
+  --text-faint:#9aa3af;
+  --accent:#2563eb;
+  --accent-soft:#dbeafe;
+  --accent-dark:#1d4ed8;
+  --amber:#f59e0b;
+  --amber-soft:#fef3c7;
+  --emerald:#10b981;
+  --emerald-soft:#d1fae5;
+  --violet:#8b5cf6;
+  --rose:#e11d48;
+
+  /* group colors */
+  --grp-x:#64748b;
+  --grp-y:#f59e0b;
+  --grp-z:#10b981;
+
+  /* state colors */
+  --st-S:#cbd5e1;
+  --st-E:#fde68a;
+  --st-P:#fdba74;
+  --st-A:#fbbf24;
+  --st-I:#ef4444;
+  --st-L:#b91c1c;
+  --st-H:#8b5cf6;
+  --st-R:#22c55e;
+  --st-V:#3b82f6;
+  --st-D:#111827;
+}
+html,body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body{min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+h1,h2,h3,h4{font-weight:700;line-height:1.25;color:#0f172a}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+canvas{display:block}
+
+/* ── Top navigation ── */
+#topnav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+#topnav .brand{font-size:.82rem;font-weight:700;color:var(--text)}
+#topnav .brand span{color:var(--accent)}
+#topnav nav{display:flex;gap:4px;flex-wrap:wrap}
+#topnav nav a{font-size:.78rem;color:var(--text-muted);padding:5px 10px;border-radius:6px;transition:all .15s}
+#topnav nav a:hover{background:var(--bg-soft);color:var(--text);text-decoration:none}
+#topnav .spacer{flex:1}
+#topnav .home-link{font-size:.76rem;color:var(--text-muted)}
+
+/* ── Layout ── */
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.section{padding:56px 0;border-bottom:1px solid var(--border)}
+.section:last-child{border:none}
+.eyebrow{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);background:var(--accent-soft);padding:4px 10px;border-radius:999px;margin-bottom:14px}
+.section h2{font-size:1.9rem;margin-bottom:10px}
+.section .lede{font-size:1.02rem;color:var(--text-muted);max-width:760px;margin-bottom:28px}
+
+/* ── Hero ── */
+#hero{padding:64px 0 40px}
+#hero h1{font-size:2.4rem;line-height:1.15;letter-spacing:-.01em;margin-bottom:14px}
+#hero h1 em{font-style:normal;color:var(--accent)}
+#hero .subtitle{font-size:1.08rem;color:var(--text-muted);max-width:760px;margin-bottom:18px}
+#hero .meta{display:flex;gap:16px;flex-wrap:wrap;font-size:.82rem;color:var(--text-faint)}
+#hero .meta b{color:var(--text);font-weight:600}
+
+/* ── Group cards ── */
+.grp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px}
+.grp-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:22px;position:relative;overflow:hidden;transition:transform .2s, box-shadow .2s}
+.grp-card:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(15,23,42,.08)}
+.grp-card .stripe{position:absolute;top:0;left:0;right:0;height:5px}
+.grp-card.x .stripe{background:var(--grp-x)}
+.grp-card.y .stripe{background:var(--grp-y)}
+.grp-card.z .stripe{background:var(--grp-z)}
+.grp-card .icon{width:60px;height:60px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.grp-card.x .icon{background:#f1f5f9;color:var(--grp-x)}
+.grp-card.y .icon{background:var(--amber-soft);color:var(--grp-y)}
+.grp-card.z .icon{background:var(--emerald-soft);color:var(--grp-z)}
+.grp-card .icon svg{width:34px;height:34px}
+.grp-card h3{font-size:1.1rem;margin-bottom:2px}
+.grp-card .grp-tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-faint);margin-bottom:10px}
+.grp-card p.desc{font-size:.88rem;color:var(--text-muted);margin-bottom:14px}
+.grp-card .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.78rem}
+.grp-card .stat{background:var(--bg-soft);border-radius:8px;padding:7px 10px}
+.grp-card .stat-label{color:var(--text-faint);font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;margin-bottom:1px}
+.grp-card .stat-value{font-weight:700;color:var(--text);font-size:.95rem}
+.grp-card .cfr{margin-top:10px;padding:8px 10px;background:var(--bg-soft);border-radius:8px;font-size:.78rem;color:var(--text-muted)}
+.grp-card .cfr b{color:var(--rose);font-weight:700;font-size:.95rem}
+
+/* ── Disease diagram ── */
+#disease-wrap{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:24px}
+#disease-diagram{width:100%;height:460px}
+#disease-info{background:var(--bg-soft);border-radius:10px;padding:16px;font-size:.86rem;min-height:200px}
+#disease-info h4{font-size:1rem;margin-bottom:6px}
+#disease-info .state-tag{display:inline-block;font-size:.68rem;padding:2px 8px;border-radius:999px;font-weight:700;margin-bottom:8px}
+#disease-info .state-meta{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:.78rem;color:var(--text-muted)}
+#disease-info p{color:var(--text-muted)}
+#disease-info .hint{font-size:.76rem;color:var(--text-faint);font-style:italic;margin-top:12px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;font-size:.76rem;color:var(--text-muted)}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-dot{width:10px;height:10px;border-radius:50%;border:1px solid rgba(0,0,0,.1)}
+@media (max-width:860px){
+  #disease-wrap{grid-template-columns:1fr}
+}
+
+/* ── BA growth ── */
+#ba-wrap{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:20px}
+#ba-canvas-wrap{position:relative}
+#ba-canvas{width:100%;height:460px;background:#fafbfc;border-radius:10px;border:1px solid var(--border)}
+#ba-status{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.92);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:.76rem;font-weight:600}
+#ba-status .n{color:var(--accent)}
+.ba-side h4{font-size:.9rem;margin-bottom:8px}
+#ba-hist{width:100%;height:200px;background:var(--bg-soft);border-radius:8px}
+.ba-controls{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+.ctl-row{display:flex;align-items:center;gap:10px;font-size:.8rem}
+.ctl-row label{flex:0 0 72px;color:var(--text-muted);font-size:.76rem}
+.ctl-row input[type=range]{flex:1}
+.ctl-row .val{flex:0 0 48px;text-align:right;font-weight:600;font-family:ui-monospace,monospace;font-size:.78rem}
+.ctl-btns{display:flex;gap:8px}
+.btn{padding:8px 14px;border-radius:8px;border:1px solid var(--border-strong);background:var(--panel);color:var(--text);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .15s}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-dark);border-color:var(--accent-dark);color:#fff}
+.btn.ghost{background:transparent}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+input[type=range]{-webkit-appearance:none;height:4px;background:var(--border);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(37,99,235,.4)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid #fff}
+.ba-hint{margin-top:16px;font-size:.78rem;color:var(--text-muted);line-height:1.5}
+.ba-hint b{color:var(--text)}
+.grp-legend{display:flex;gap:12px;margin-top:8px;font-size:.76rem;color:var(--text-muted)}
+@media (max-width:860px){
+  #ba-wrap{grid-template-columns:1fr}
+}
+
+/* ── Simulator ── */
+#sim-wrap{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;display:grid;grid-template-columns:260px minmax(0,1fr) 240px;gap:18px}
+#sim-sidebar, #sim-statpanel{background:var(--bg-soft);border-radius:10px;padding:16px;font-size:.82rem}
+#sim-sidebar h4, #sim-statpanel h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:10px;font-weight:700}
+.sim-group{border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:14px}
+.sim-group:last-child{border:none;margin-bottom:0;padding-bottom:0}
+.seed-split{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.seed-box{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:7px 4px;text-align:center;font-size:.76rem}
+.seed-box .seed-label{font-size:.66rem;font-weight:700;color:var(--text-faint);text-transform:uppercase}
+.seed-box .seed-num{font-size:1.05rem;font-weight:800;color:var(--text);margin-top:1px}
+.seed-box.x .seed-label{color:var(--grp-x)}
+.seed-box.y .seed-label{color:var(--grp-y)}
+.seed-box.z .seed-label{color:var(--grp-z)}
+.seed-split input[type=range]{width:100%;margin-top:4px}
+#sim-canvas-wrap{position:relative;background:#fafbfc;border-radius:10px;border:1px solid var(--border);min-height:520px;overflow:hidden}
+#sim-canvas{width:100%;height:520px}
+#sim-overlay{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.92);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:.78rem;font-weight:600;display:flex;gap:14px}
+#sim-overlay .day-val{color:var(--accent)}
+#sim-overlay .deaths-val{color:var(--rose)}
+#sim-overlay .infected-val{color:var(--amber)}
+#sim-banner{position:absolute;bottom:12px;left:12px;right:12px;background:rgba(225,29,72,.08);border:1px solid rgba(225,29,72,.35);border-radius:10px;padding:12px 16px;font-size:.84rem;color:var(--text);display:none;align-items:center;gap:10px}
+#sim-banner.show{display:flex}
+#sim-banner b{color:var(--rose);font-weight:800}
+.compartment-list{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.comp-row{display:flex;align-items:center;gap:6px;font-size:.76rem;padding:5px 8px;background:var(--panel);border-radius:6px}
+.comp-dot{width:10px;height:10px;border-radius:3px;flex:0 0 10px}
+.comp-name{flex:1;color:var(--text-muted)}
+.comp-num{font-weight:700;font-family:ui-monospace,monospace}
+#sim-chart{width:100%;height:120px;margin-top:12px;background:var(--panel);border-radius:8px;border:1px solid var(--border)}
+.stat-big{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.stat-big .stat-label{font-size:.66rem;text-transform:uppercase;color:var(--text-faint);font-weight:700;letter-spacing:.04em}
+.stat-big .stat-value{font-size:1.7rem;font-weight:800;line-height:1.1;margin-top:3px}
+.stat-big.deaths .stat-value{color:var(--rose)}
+.stat-big.infected .stat-value{color:var(--amber)}
+@media (max-width:1024px){
+  #sim-wrap{grid-template-columns:1fr;gap:14px}
+  #sim-canvas{height:420px}
+}
+
+/* ── Method placeholder ── */
+.method-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.method-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;position:relative}
+.method-card h4{font-size:1rem;margin-bottom:2px}
+.method-card .kind{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-faint);margin-bottom:8px}
+.method-card p{font-size:.82rem;color:var(--text-muted);margin-bottom:10px;min-height:60px}
+.method-card .pending{font-size:.72rem;color:var(--text-faint);font-style:italic;padding:6px 10px;background:var(--bg-soft);border-radius:6px;border:1px dashed var(--border-strong);display:inline-block}
+.method-card.oc{border-top:3px solid var(--accent)}
+.method-card.rl{border-top:3px solid var(--violet)}
+
+footer{padding:40px 24px;text-align:center;color:var(--text-faint);font-size:.78rem}
+footer a{color:var(--text-muted)}
+
+/* tooltip */
+#tooltip{position:fixed;z-index:200;pointer-events:none;background:rgba(17,24,39,.96);color:#fff;border-radius:8px;padding:8px 12px;font-size:.78rem;display:none;max-width:240px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+#tooltip .tt-title{font-weight:700;margin-bottom:2px}
+#tooltip .tt-sub{color:#cbd5e1;font-size:.72rem}
+
+</style>
+</head>
+<body>
+
+<div id="topnav">
+  <span class="brand">Vaccine <span>RL</span> · Interactive Demo</span>
+  <nav>
+    <a href="#groups">1&nbsp;Groups</a>
+    <a href="#disease">2&nbsp;Disease Model</a>
+    <a href="#network">3&nbsp;Network</a>
+    <a href="#simulator">4&nbsp;Simulator</a>
+    <a href="#methods">5&nbsp;Methods</a>
+  </nav>
+  <span class="spacer"></span>
+  <a class="home-link" href="https://junfei-z.github.io/">← Back to homepage</a>
+</div>
+
+<div class="container">
+
+<!-- ========== HERO ========== -->
+<section id="hero" class="section">
+  <span class="eyebrow">Master's Thesis · University of Pennsylvania · 2026</span>
+  <h1>Scalable Node-Level Vaccine Allocation<br>on <em>Contact Networks</em></h1>
+  <p class="subtitle">
+    In the first weeks of a pandemic, who should get the vaccine today?
+    This demo walks through the thesis — the population model, the disease dynamics, the contact network — and lets you run a stochastic outbreak with your own seed configuration.
+  </p>
+  <div class="meta">
+    <span><b>Junfei Zhan</b> · Advisor: Prof. Saswati Sarkar</span>
+    <span>·</span>
+    <span>10-state <b>SEPAILHRVD</b> model</span>
+    <span>·</span>
+    <span>Barabási–Albert <b>scale-free</b> contact network</span>
+    <span>·</span>
+    <span>Three-group risk stratification</span>
+  </div>
+</section>
+
+<!-- ========== SECTION 1 — GROUPS ========== -->
+<section id="groups" class="section">
+  <span class="eyebrow">Part 1</span>
+  <h2>Three population groups</h2>
+  <p class="lede">
+    Every individual in the network is assigned to exactly one of three demographic groups: a hub set defined by a degree threshold, a high-risk elderly subpopulation drawn by Bernoulli sampling on the remainder, and the baseline majority. Each group has its own symptomatic, hospitalisation, and case-fatality rates.
+  </p>
+  <div class="grp-grid">
+    <!-- X: baseline -->
+    <div class="grp-card x">
+      <div class="stripe"></div>
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="7" r="3.5"/>
+          <path d="M5 21c0-4.4 3.1-7 7-7s7 2.6 7 7"/>
+        </svg>
+      </div>
+      <div class="grp-tag">Group X — Baseline</div>
+      <h3>The general population</h3>
+      <p class="desc">The low-risk majority — working-age adults with typical contact patterns. Most of the population belongs here by default.</p>
+      <div class="stats">
+        <div class="stat"><div class="stat-label">Symptomatic</div><div class="stat-value">s<sub>X</sub> = 0.50</div></div>
+        <div class="stat"><div class="stat-label">Hosp.</div><div class="stat-value">p<sub>X</sub> = 0.05</div></div>
+        <div class="stat"><div class="stat-label">Fatality</div><div class="stat-value">d<sub>X</sub> = 0.02</div></div>
+        <div class="stat"><div class="stat-label">Prev.</div><div class="stat-value">~80%</div></div>
+      </div>
+      <div class="cfr">Compound case-fatality <b>≈ 0.05%</b></div>
+    </div>
+
+    <!-- Y: high risk elderly -->
+    <div class="grp-card y">
+      <div class="stripe"></div>
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="10" cy="5" r="2.5"/>
+          <path d="M7 21l1-6h4l1 6"/>
+          <path d="M10 7.5l-1 7.5"/>
+          <path d="M10 11l3 1"/>
+          <path d="M16 8v13"/>
+          <path d="M16 8c.8 0 1.5-.7 1.5-1.5S16.8 5 16 5"/>
+        </svg>
+      </div>
+      <div class="grp-tag">Group Y — High-risk</div>
+      <h3>Elderly (65+)</h3>
+      <p class="desc">Elevated disease severity across every branching probability. Moderate contact patterns but markedly worse clinical outcomes once infected.</p>
+      <div class="stats">
+        <div class="stat"><div class="stat-label">Symptomatic</div><div class="stat-value">s<sub>Y</sub> = 0.80</div></div>
+        <div class="stat"><div class="stat-label">Hosp.</div><div class="stat-value">p<sub>Y</sub> = 0.20</div></div>
+        <div class="stat"><div class="stat-label">Fatality</div><div class="stat-value">d<sub>Y</sub> = 0.27</div></div>
+        <div class="stat"><div class="stat-label">Prev.</div><div class="stat-value">~17%</div></div>
+      </div>
+      <div class="cfr">Compound case-fatality <b>≈ 4.3%</b> — 80× Group X</div>
+    </div>
+
+    <!-- Z: hub / high-contact -->
+    <div class="grp-card z">
+      <div class="stripe"></div>
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="5.5" r="2.5"/>
+          <path d="M9 11h6l1.5 5H7.5z"/>
+          <path d="M9 11v-2h6v2"/>
+          <circle cx="9" cy="19" r="2"/>
+          <circle cx="15" cy="19" r="2"/>
+          <path d="M4 13l3-2"/>
+          <path d="M20 13l-3-2"/>
+        </svg>
+      </div>
+      <div class="grp-tag">Group Z — Hub</div>
+      <h3>High-contact individuals</h3>
+      <p class="desc">Delivery workers, transit drivers, frontline retail — the <i>hubs</i> of the contact graph. Few in number but wired into a disproportionate share of all transmission pathways.</p>
+      <div class="stats">
+        <div class="stat"><div class="stat-label">Symptomatic</div><div class="stat-value">s<sub>Z</sub> = 0.60</div></div>
+        <div class="stat"><div class="stat-label">Hosp.</div><div class="stat-value">p<sub>Z</sub> = 0.08</div></div>
+        <div class="stat"><div class="stat-label">Fatality</div><div class="stat-value">d<sub>Z</sub> = 0.04</div></div>
+        <div class="stat"><div class="stat-label">Degree</div><div class="stat-value">≥ µ+ασ</div></div>
+      </div>
+      <div class="cfr">Structural role: drives <b>outbreak velocity</b> via rich-get-richer topology</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SECTION 2 — DISEASE MODEL ========== -->
+<section id="disease" class="section">
+  <span class="eyebrow">Part 2</span>
+  <h2>The 10-compartment SEPAILHRVD model</h2>
+  <p class="lede">
+    A COVID-style disease model with distinct latent, pre-symptomatic, asymptomatic, symptomatic, late-stage, hospitalised, recovered, vaccinated, and dead compartments. Three of them — P, A, I — drive onward transmission. Click a state to inspect it.
+  </p>
+  <div id="disease-wrap">
+    <svg id="disease-diagram" viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div id="disease-info">
+      <div class="state-tag" id="dinfo-tag">&nbsp;</div>
+      <h4 id="dinfo-title">Click any state</h4>
+      <p id="dinfo-desc">Explore the 10 compartments of the model. States in <b>red</b> are infectious. The three infectious weights w<sub>P</sub>=0.8, w<sub>A</sub>=0.5, w<sub>I</sub>=1.0 modulate how much each one contributes to the per-node force of infection.</p>
+      <div class="state-meta" id="dinfo-meta" style="display:none"></div>
+      <p class="hint">Latent 3d · Pre-symptomatic 2d · Asymptomatic / Late-stage 5d · Hospitalised 10d</p>
+    </div>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot" style="background:var(--st-S)"></span>S · Susceptible</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--st-E)"></span>E · Exposed</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--st-P)"></span>P · Pre-symptomatic</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--st-A)"></span>A · Asymptomatic</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--st-I)"></span>I · Symptomatic</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--st-L)"></span>L · Late-stage</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--st-H)"></span>H · Hospitalised</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--st-R)"></span>R · Recovered</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--st-V)"></span>V · Vaccinated</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--st-D);border-color:#000"></span>D · Dead</div>
+  </div>
+</section>
+
+<!-- ========== SECTION 3 — BA GROWTH ========== -->
+<section id="network" class="section">
+  <span class="eyebrow">Part 3</span>
+  <h2>Building a Barabási–Albert contact network</h2>
+  <p class="lede">
+    Real contact graphs are scale-free: most people have a few connections, a few people have many. The BA model reproduces this with a single rule — each new node attaches with probability proportional to existing degree, <span class="mono">P(v → u) = k<sub>u</sub> / Σ k<sub>w</sub></span>. Hit play and watch the hubs emerge.
+  </p>
+  <div id="ba-wrap">
+    <div id="ba-canvas-wrap">
+      <canvas id="ba-canvas" width="880" height="460"></canvas>
+      <div id="ba-status">Nodes: <span class="n" id="ba-n">0</span> / <span id="ba-target">500</span></div>
+    </div>
+    <div class="ba-side">
+      <h4>Degree distribution</h4>
+      <svg id="ba-hist" viewBox="0 0 260 200"></svg>
+      <div class="ba-controls">
+        <div class="ctl-row">
+          <label>Target N</label>
+          <input type="range" id="ba-slider-n" min="100" max="1500" step="50" value="500">
+          <span class="val" id="ba-slider-n-val">500</span>
+        </div>
+        <div class="ctl-row">
+          <label>Edges / node (m)</label>
+          <input type="range" id="ba-slider-m" min="1" max="6" step="1" value="2">
+          <span class="val" id="ba-slider-m-val">2</span>
+        </div>
+        <div class="ctl-row">
+          <label>Speed</label>
+          <input type="range" id="ba-slider-spd" min="1" max="20" step="1" value="6">
+          <span class="val" id="ba-slider-spd-val">6×</span>
+        </div>
+        <div class="ctl-btns">
+          <button class="btn primary" id="ba-play">▶ Grow</button>
+          <button class="btn ghost" id="ba-reset">Reset</button>
+        </div>
+      </div>
+      <p class="ba-hint">
+        After growth completes, nodes are coloured by group:
+      </p>
+      <div class="grp-legend">
+        <div class="legend-item"><span class="legend-dot" style="background:var(--grp-x)"></span>X</div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--grp-y)"></span>Y</div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--grp-z)"></span>Z hub</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SECTION 4 — SIMULATOR ========== -->
+<section id="simulator" class="section">
+  <span class="eyebrow">Part 4</span>
+  <h2>Run a stochastic outbreak</h2>
+  <p class="lede">
+    Pick your seed configuration — how many initial infections and which groups they land in — then press play. This is the <b>no-vaccination baseline</b>: what happens if nothing is done. The final death count is the upper bound that every allocation method must beat.
+  </p>
+  <div id="sim-wrap">
+    <!-- sidebar -->
+    <div id="sim-sidebar">
+      <div class="sim-group">
+        <h4>Network</h4>
+        <div class="ctl-row">
+          <label>N</label>
+          <input type="range" id="sim-N" min="200" max="1500" step="50" value="600">
+          <span class="val" id="sim-N-val">600</span>
+        </div>
+        <div class="ctl-row">
+          <label>m</label>
+          <input type="range" id="sim-m" min="1" max="5" step="1" value="2">
+          <span class="val" id="sim-m-val">2</span>
+        </div>
+        <button class="btn" id="sim-regen" style="width:100%;margin-top:8px">↻ Regenerate</button>
+      </div>
+      <div class="sim-group">
+        <h4>Initial seed</h4>
+        <div class="ctl-row">
+          <label>Total</label>
+          <input type="range" id="sim-seed" min="1" max="1000" step="1" value="30">
+          <span class="val" id="sim-seed-val">30</span>
+        </div>
+        <div style="font-size:.74rem;color:var(--text-muted);margin-top:6px;margin-bottom:4px">Distribution across groups:</div>
+        <div class="seed-split">
+          <div class="seed-box x">
+            <div class="seed-label">X</div>
+            <div class="seed-num" id="seed-x">3</div>
+            <input type="range" id="seed-x-sl" min="0" max="100" step="5" value="50">
+          </div>
+          <div class="seed-box y">
+            <div class="seed-label">Y</div>
+            <div class="seed-num" id="seed-y">3</div>
+            <input type="range" id="seed-y-sl" min="0" max="100" step="5" value="25">
+          </div>
+          <div class="seed-box z">
+            <div class="seed-label">Z</div>
+            <div class="seed-num" id="seed-z">4</div>
+            <input type="range" id="seed-z-sl" min="0" max="100" step="5" value="25">
+          </div>
+        </div>
+      </div>
+      <div class="sim-group">
+        <h4>Simulation</h4>
+        <div class="ctl-row">
+          <label>Horizon T</label>
+          <input type="range" id="sim-T" min="30" max="180" step="5" value="90">
+          <span class="val" id="sim-T-val">90d</span>
+        </div>
+        <div class="ctl-row">
+          <label>Speed</label>
+          <input type="range" id="sim-spd" min="1" max="20" step="1" value="6">
+          <span class="val" id="sim-spd-val">6×</span>
+        </div>
+        <div class="ctl-btns" style="margin-top:10px">
+          <button class="btn primary" id="sim-play">▶ Start</button>
+          <button class="btn" id="sim-step">Step</button>
+        </div>
+        <button class="btn ghost" id="sim-reset" style="width:100%;margin-top:8px">Reset outbreak</button>
+      </div>
+    </div>
+    <!-- canvas -->
+    <div id="sim-canvas-wrap">
+      <canvas id="sim-canvas" width="900" height="520"></canvas>
+      <div id="sim-overlay">
+        <span>Day <span class="day-val" id="sim-day">0</span> / <span id="sim-horizon">90</span></span>
+        <span>· Infected: <span class="infected-val" id="sim-inf">0</span></span>
+        <span>· Deaths: <span class="deaths-val" id="sim-d">0</span></span>
+      </div>
+      <div id="sim-banner">
+        <span>Outbreak complete — <b id="banner-deaths">0</b> deaths (<span id="banner-pct">0</span>% of population) with <b>no vaccination</b>. This is the baseline the allocation methods must beat.</span>
+      </div>
+    </div>
+    <!-- stat panel -->
+    <div id="sim-statpanel">
+      <h4>Live counts</h4>
+      <div class="stat-big infected">
+        <div class="stat-label">Active infections</div>
+        <div class="stat-value" id="stat-inf">0</div>
+      </div>
+      <div class="stat-big deaths">
+        <div class="stat-label">Cumulative deaths</div>
+        <div class="stat-value" id="stat-d">0</div>
+      </div>
+      <div class="compartment-list" id="comp-list"></div>
+      <h4 style="margin-top:16px">Trajectory</h4>
+      <canvas id="sim-chart"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SECTION 5 — METHODS ========== -->
+<section id="methods" class="section">
+  <span class="eyebrow">Part 5 · Coming soon</span>
+  <h2>Four allocation methods, head-to-head</h2>
+  <p class="lede">
+    Once the final Chapter 6 experiments settle, this section will run all four methods on the seed you configured above and report per-method deaths, runtime, and regime verdicts. Placeholder cards below describe each method.
+  </p>
+  <div class="method-grid">
+    <div class="method-card oc">
+      <div class="kind">Optimal Control · Baseline</div>
+      <h4>OC-Random</h4>
+      <p>Group-level OC rates on the ODE, then <b>random</b> intra-group assignment. Isolates the contribution of the group-level policy itself.</p>
+      <span class="pending">Results pending Ch 6</span>
+    </div>
+    <div class="method-card oc">
+      <div class="kind">Optimal Control · Enhanced</div>
+      <h4>OC-high</h4>
+      <p>Same group-level rates, but intra-group doses go to the <b>highest-degree</b> susceptibles. The main OC contender throughout the thesis.</p>
+      <span class="pending">Results pending Ch 6</span>
+    </div>
+    <div class="method-card rl">
+      <div class="kind">Reinforcement Learning · Baseline</div>
+      <h4>Naive RL</h4>
+      <p>Shared-parameter MLP scorer with an <b>independent-Bernoulli</b> head. Isolates the cost of the large-action space parametrisation.</p>
+      <span class="pending">Results pending Ch 6</span>
+    </div>
+    <div class="method-card rl">
+      <div class="kind">Reinforcement Learning · Proposed</div>
+      <h4>Node RL</h4>
+      <p>Same scorer, but uses <b>Gumbel-Top-K</b> reparameterised sampling to select exactly K nodes per day — O(K) gradient variance instead of Θ(N).</p>
+      <span class="pending">Results pending Ch 6</span>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <p>
+    Junfei Zhan · Master's Thesis · University of Pennsylvania · 2026<br>
+    <a href="https://junfei-z.github.io/">Homepage</a> · <a href="https://junfei-z.github.io/research/">Research</a>
+  </p>
+</footer>
+
+<div id="tooltip"></div>
+
+<script>
+/* ================================================================
+   Vaccine Allocation Interactive Demo
+   - Section 2: Disease model SVG (static layout, interactive)
+   - Section 3: BA network growth animation + degree histogram
+   - Section 4: Stochastic SEPAILHRVD simulator on BA network
+================================================================ */
+
+// ---------- Shared utilities ----------
+function rand() { return Math.random(); }
+function randInt(n) { return Math.floor(Math.random() * n); }
+function choice(arr) { return arr[randInt(arr.length)]; }
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+const STATE_COLOR = {
+  S:'#cbd5e1', E:'#fde68a', P:'#fdba74', A:'#fbbf24', I:'#ef4444',
+  L:'#b91c1c', H:'#8b5cf6', R:'#22c55e', V:'#3b82f6', D:'#111827'
+};
+const GROUP_COLOR = { X:'#64748b', Y:'#f59e0b', Z:'#10b981' };
+const STATES_ORDER = ['S','E','P','A','I','L','H','R','V','D'];
+
+const STATE_INFO = {
+  S:{title:'Susceptible',desc:'Has not been infected; can contract the disease. Transitions to E at node-level rate λᵢ(t) driven by infected neighbours.',infectious:false,rate:null},
+  E:{title:'Exposed',desc:'Infected but not yet infectious — the latent period. Transitions deterministically forward at rate τ_E = 1/3 (≈3 days).',infectious:false,rate:'τ_E = 1/3 /day'},
+  P:{title:'Pre-symptomatic',desc:'Already infectious before any symptoms appear. Weight w_P = 0.8 in the force of infection. Branches to I or A at rate τ_P = 1/2.',infectious:true,rate:'τ_P = 1/2 /day'},
+  A:{title:'Asymptomatic',desc:'Infectious but will recover without symptoms. Weight w_A = 0.5 (lower transmission). Recovers at τ_A = 1/5.',infectious:true,rate:'τ_A = 1/5 /day'},
+  I:{title:'Symptomatic',desc:'Fully clinical infection. Highest transmission weight w_I = 1.0. Progresses to late stage at τ_I = 1/3.',infectious:true,rate:'τ_I = 1/3 /day'},
+  L:{title:'Late-stage',desc:'Post-infectious clinical phase. May progress to hospitalisation (prob p_g) or recover directly. Rate τ_L = 1/5.',infectious:false,rate:'τ_L = 1/5 /day'},
+  H:{title:'Hospitalised',desc:'Severe case requiring medical care; assumed isolated — no onward transmission. Recovery or death at rate τ_H = 1/10.',infectious:false,rate:'τ_H = 1/10 /day'},
+  R:{title:'Recovered',desc:'Permanently immune; removed from the transmission process for the duration of the horizon (no waning modelled).',infectious:false,rate:null},
+  V:{title:'Vaccinated',desc:'Protected. Breakthrough possible at reduced hazard (1−ε)λᵢ(t) with ε = 0.5. (Not used in the no-vaccine baseline below.)',infectious:false,rate:null},
+  D:{title:'Dead',desc:'Terminal outcome — the quantity every allocation method seeks to minimise. Reached from H with group-specific probability d_g.',infectious:false,rate:null}
+};
+
+// ========================================================
+// SECTION 2 — Disease model SVG (10 compartments)
+// ========================================================
+function buildDiseaseDiagram() {
+  const svg = d3.select('#disease-diagram');
+  const W = 900, H = 460;
+  // Layout positions for the 10 states
+  const nodes = [
+    {id:'S', x:60,  y:230, label:'S'},
+    {id:'V', x:60,  y:360, label:'V'},
+    {id:'E', x:180, y:230, label:'E'},
+    {id:'P', x:310, y:230, label:'P'},
+    {id:'A', x:440, y:130, label:'A'},
+    {id:'I', x:440, y:330, label:'I'},
+    {id:'L', x:570, y:330, label:'L'},
+    {id:'H', x:700, y:330, label:'H'},
+    {id:'R', x:820, y:230, label:'R'},
+    {id:'D', x:820, y:410, label:'D'}
+  ];
+  const edges = [
+    {from:'S', to:'E', label:'λᵢ(t)'},
+    {from:'S', to:'V', label:'vaccination', dashed:true},
+    {from:'V', to:'E', label:'(1−ε)λᵢ', dashed:true},
+    {from:'E', to:'P', label:'τ_E'},
+    {from:'P', to:'A', label:'(1−s_g)τ_P'},
+    {from:'P', to:'I', label:'s_g·τ_P'},
+    {from:'A', to:'R', label:'τ_A'},
+    {from:'I', to:'L', label:'τ_I'},
+    {from:'L', to:'H', label:'p_g·τ_L'},
+    {from:'L', to:'R', label:'(1−p_g)τ_L'},
+    {from:'H', to:'R', label:'(1−d_g)τ_H'},
+    {from:'H', to:'D', label:'d_g·τ_H'}
+  ];
+  const byId = {};
+  nodes.forEach(n => byId[n.id] = n);
+
+  // arrowhead
+  const defs = svg.append('defs');
+  defs.append('marker').attr('id','arrow').attr('viewBox','0 -5 10 10')
+    .attr('refX',8).attr('refY',0).attr('markerWidth',7).attr('markerHeight',7)
+    .attr('orient','auto').append('path').attr('d','M0,-5L10,0L0,5').attr('fill','#94a3b8');
+  defs.append('marker').attr('id','arrow-hi').attr('viewBox','0 -5 10 10')
+    .attr('refX',8).attr('refY',0).attr('markerWidth',7).attr('markerHeight',7)
+    .attr('orient','auto').append('path').attr('d','M0,-5L10,0L0,5').attr('fill','#2563eb');
+
+  // edges
+  const edgeG = svg.append('g').attr('class','edges');
+  edges.forEach(e => {
+    const a = byId[e.from], b = byId[e.to];
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const L = Math.hypot(dx,dy);
+    const r = 26; // node radius
+    const x1 = a.x + dx/L*r, y1 = a.y + dy/L*r;
+    const x2 = b.x - dx/L*r, y2 = b.y - dy/L*r;
+    edgeG.append('line')
+      .attr('x1',x1).attr('y1',y1).attr('x2',x2).attr('y2',y2)
+      .attr('stroke','#94a3b8').attr('stroke-width',1.4)
+      .attr('stroke-dasharray', e.dashed?'4 3':null)
+      .attr('marker-end','url(#arrow)')
+      .attr('data-edge', `${e.from}->${e.to}`);
+    // label at midpoint, slightly offset perpendicular
+    const mx = (x1+x2)/2, my = (y1+y2)/2;
+    const nx = -dy/L*10, ny = dx/L*10;
+    edgeG.append('text')
+      .attr('x',mx+nx).attr('y',my+ny)
+      .attr('text-anchor','middle').attr('dominant-baseline','middle')
+      .attr('font-size','10.5').attr('fill','#64748b').attr('font-family','ui-monospace, monospace')
+      .text(e.label);
+  });
+
+  // nodes
+  const nodeG = svg.append('g').attr('class','nodes');
+  nodes.forEach(n => {
+    const g = nodeG.append('g').attr('class','disease-node').attr('data-id', n.id)
+      .attr('transform', `translate(${n.x},${n.y})`).style('cursor','pointer');
+    g.append('circle').attr('r',26).attr('fill',STATE_COLOR[n.id])
+      .attr('stroke', n.id==='D'?'#000':'#475569').attr('stroke-width',1.4);
+    g.append('text').attr('text-anchor','middle').attr('dominant-baseline','middle')
+      .attr('font-weight','800').attr('font-size','18').attr('fill', n.id==='D'?'#fff':(n.id==='S'?'#334155':'#0f172a'))
+      .text(n.label);
+    if (STATE_INFO[n.id].infectious) {
+      g.append('circle').attr('r',30).attr('fill','none').attr('stroke','#ef4444').attr('stroke-width',1.5).attr('stroke-dasharray','3 3');
+    }
+    g.on('click', () => showState(n.id));
+    g.on('mouseenter', () => g.select('circle').attr('stroke-width',2.4));
+    g.on('mouseleave', () => g.select('circle').attr('stroke-width',1.4));
+  });
+
+  function showState(id) {
+    const info = STATE_INFO[id];
+    const el = document.getElementById('dinfo-title');
+    el.textContent = info.title;
+    document.getElementById('dinfo-desc').textContent = info.desc;
+    const tag = document.getElementById('dinfo-tag');
+    tag.textContent = `${id} · ${info.infectious?'Infectious':'Not infectious'}`;
+    tag.style.background = STATE_COLOR[id];
+    tag.style.color = (id==='D'||id==='I'||id==='L'||id==='H')?'#fff':'#0f172a';
+    const meta = document.getElementById('dinfo-meta');
+    if (info.rate) {
+      meta.style.display = 'block';
+      meta.innerHTML = `<b>Exit rate:</b> <span class="mono">${info.rate}</span>`;
+    } else {
+      meta.style.display = 'none';
+    }
+    // highlight outgoing edges
+    svg.selectAll('.edges line').attr('stroke','#94a3b8').attr('stroke-width',1.4).attr('marker-end','url(#arrow)');
+    svg.selectAll(`.edges line[data-edge^="${id}->"]`).attr('stroke','#2563eb').attr('stroke-width',2.4).attr('marker-end','url(#arrow-hi)');
+    svg.selectAll('.disease-node circle').attr('stroke-width',1.4);
+    svg.select(`.disease-node[data-id="${id}"] circle`).attr('stroke-width',3).attr('stroke','#2563eb');
+  }
+  // preselect I to give context
+  showState('I');
+}
+
+// ========================================================
+// BA network generator (returns {nodes,edges})
+// ========================================================
+function generateBA(N, m) {
+  const nodes = [];
+  const edges = [];
+  // seed: m+1 fully connected
+  const seed = m + 1;
+  for (let i = 0; i < seed; i++) nodes.push({id:i, degree:0});
+  for (let i = 0; i < seed; i++)
+    for (let j = i+1; j < seed; j++) {
+      edges.push({source:i, target:j});
+      nodes[i].degree++; nodes[j].degree++;
+    }
+  // preferential attachment
+  // maintain a "repeated-degree" bag for O(1) sampling
+  let bag = [];
+  for (let i = 0; i < seed; i++) for (let d = 0; d < nodes[i].degree; d++) bag.push(i);
+  for (let v = seed; v < N; v++) {
+    nodes.push({id:v, degree:0});
+    const picks = new Set();
+    let attempts = 0;
+    while (picks.size < m && attempts < m*20) {
+      const u = bag[randInt(bag.length)];
+      if (u !== v) picks.add(u);
+      attempts++;
+    }
+    // fallback if bag too small
+    while (picks.size < m) {
+      const u = randInt(v);
+      if (u !== v) picks.add(u);
+    }
+    picks.forEach(u => {
+      edges.push({source:u, target:v});
+      nodes[u].degree++; nodes[v].degree++;
+      bag.push(u); bag.push(v);
+    });
+  }
+  return {nodes, edges};
+}
+
+// Assign groups based on degree threshold (Z) and Bernoulli (Y), rest X
+function assignGroups(nodes, alpha, q) {
+  const degrees = nodes.map(n => n.degree);
+  const mean = degrees.reduce((a,b)=>a+b,0)/degrees.length;
+  const variance = degrees.reduce((a,b)=>a+(b-mean)**2,0)/degrees.length;
+  const sd = Math.sqrt(variance);
+  const threshold = mean + alpha * sd;
+  nodes.forEach(n => {
+    if (n.degree >= threshold) n.group = 'Z';
+    else if (Math.random() < q) n.group = 'Y';
+    else n.group = 'X';
+  });
+}
+
+// ========================================================
+// SECTION 3 — BA growth animation
+// ========================================================
+const BA = {
+  canvas:null, ctx:null, W:0, H:0,
+  nodes:[], edges:[],
+  positions:[], // {x,y,vx,vy}
+  targetN:500, m:2, speed:6,
+  running:false, step:0,
+  bag:[], sim:null, afterGrow:false
+};
+
+function baInit() {
+  BA.canvas = document.getElementById('ba-canvas');
+  const rect = BA.canvas.getBoundingClientRect();
+  BA.canvas.width = rect.width * devicePixelRatio;
+  BA.canvas.height = rect.height * devicePixelRatio;
+  BA.ctx = BA.canvas.getContext('2d');
+  BA.ctx.scale(devicePixelRatio, devicePixelRatio);
+  BA.W = rect.width; BA.H = rect.height;
+}
+function baReset() {
+  BA.nodes = []; BA.edges = []; BA.positions = []; BA.bag = [];
+  BA.running = false; BA.afterGrow = false;
+  BA.step = 0;
+  baDrawHist([]);
+  document.getElementById('ba-n').textContent = '0';
+  document.getElementById('ba-target').textContent = BA.targetN;
+  // seed graph
+  const seed = BA.m + 1;
+  for (let i=0;i<seed;i++) baAddNode();
+  for (let i=0;i<seed;i++)
+    for (let j=i+1;j<seed;j++)
+      baAddEdge(i,j);
+  baDraw();
+}
+function baAddNode() {
+  const i = BA.nodes.length;
+  BA.nodes.push({id:i, degree:0});
+  const cx = BA.W/2, cy = BA.H/2;
+  const r = Math.min(BA.W, BA.H)*0.35;
+  const theta = Math.random()*Math.PI*2;
+  BA.positions.push({
+    x: cx + r*Math.cos(theta) + (Math.random()-.5)*20,
+    y: cy + r*Math.sin(theta) + (Math.random()-.5)*20,
+    vx:0, vy:0
+  });
+}
+function baAddEdge(a,b) {
+  BA.edges.push({source:a, target:b});
+  BA.nodes[a].degree++; BA.nodes[b].degree++;
+  BA.bag.push(a); BA.bag.push(b);
+}
+function baTickGrow() {
+  if (!BA.running) return;
+  for (let s=0; s<BA.speed; s++) {
+    if (BA.nodes.length >= BA.targetN) {
+      BA.running = false;
+      BA.afterGrow = true;
+      assignGroups(BA.nodes, 1.5, 0.17);
+      document.getElementById('ba-play').textContent = '✓ Done';
+      document.getElementById('ba-play').disabled = true;
+      // run a few force ticks for a nicer layout
+      for (let k=0;k<120;k++) baForceTick(k<60?0.25:0.08);
+      baDraw();
+      baDrawHist(BA.nodes.map(n=>n.degree));
+      return;
+    }
+    const v = BA.nodes.length;
+    baAddNode();
+    const picks = new Set();
+    let tries = 0;
+    while (picks.size < BA.m && tries < BA.m*30) {
+      const u = BA.bag[randInt(BA.bag.length)];
+      if (u !== v) picks.add(u);
+      tries++;
+    }
+    while (picks.size < BA.m) {
+      const u = randInt(v);
+      if (u !== v) picks.add(u);
+    }
+    picks.forEach(u => baAddEdge(u, v));
+  }
+  // quick force relax
+  baForceTick(0.4);
+  baDraw();
+  document.getElementById('ba-n').textContent = BA.nodes.length;
+  baDrawHist(BA.nodes.map(n=>n.degree));
+  requestAnimationFrame(baTickGrow);
+}
+function baForceTick(alpha) {
+  const N = BA.nodes.length;
+  const cx = BA.W/2, cy = BA.H/2;
+  // centering
+  for (let i=0;i<N;i++) {
+    const p = BA.positions[i];
+    p.vx += (cx - p.x) * 0.015 * alpha;
+    p.vy += (cy - p.y) * 0.015 * alpha;
+  }
+  // repulsion (grid-bucket for perf)
+  const cellSize = 24;
+  const cols = Math.ceil(BA.W/cellSize), rows = Math.ceil(BA.H/cellSize);
+  const grid = new Array(cols*rows);
+  for (let i=0;i<grid.length;i++) grid[i]=[];
+  for (let i=0;i<N;i++) {
+    const p = BA.positions[i];
+    const cxI = Math.max(0,Math.min(cols-1,Math.floor(p.x/cellSize)));
+    const cyI = Math.max(0,Math.min(rows-1,Math.floor(p.y/cellSize)));
+    grid[cyI*cols+cxI].push(i);
+  }
+  for (let i=0;i<N;i++) {
+    const p = BA.positions[i];
+    const cxI = Math.max(0,Math.min(cols-1,Math.floor(p.x/cellSize)));
+    const cyI = Math.max(0,Math.min(rows-1,Math.floor(p.y/cellSize)));
+    for (let ay=Math.max(0,cyI-1); ay<=Math.min(rows-1,cyI+1); ay++)
+      for (let ax=Math.max(0,cxI-1); ax<=Math.min(cols-1,cxI+1); ax++) {
+        const cell = grid[ay*cols+ax];
+        for (const j of cell) if (j!==i) {
+          const q = BA.positions[j];
+          let dx = p.x - q.x, dy = p.y - q.y;
+          let d2 = dx*dx + dy*dy;
+          if (d2 < 0.01) { dx=Math.random()-.5; dy=Math.random()-.5; d2 = 1; }
+          if (d2 < 900) {
+            const f = 80 * alpha / d2;
+            p.vx += dx*f; p.vy += dy*f;
+          }
+        }
+      }
+  }
+  // spring
+  for (const e of BA.edges) {
+    const a = BA.positions[e.source], b = BA.positions[e.target];
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const d = Math.sqrt(dx*dx+dy*dy) || 0.01;
+    const rest = 28;
+    const f = (d - rest) * 0.05 * alpha;
+    const fx = dx/d*f, fy = dy/d*f;
+    a.vx += fx; a.vy += fy;
+    b.vx -= fx; b.vy -= fy;
+  }
+  // integrate
+  const pad = 20;
+  for (let i=0;i<N;i++) {
+    const p = BA.positions[i];
+    p.vx *= 0.6; p.vy *= 0.6;
+    p.x += p.vx; p.y += p.vy;
+    if (p.x<pad) { p.x=pad; p.vx=0; }
+    if (p.x>BA.W-pad) { p.x=BA.W-pad; p.vx=0; }
+    if (p.y<pad) { p.y=pad; p.vy=0; }
+    if (p.y>BA.H-pad) { p.y=BA.H-pad; p.vy=0; }
+  }
+}
+function nodeRadius(deg, afterGrow) {
+  const base = afterGrow ? 2.2 : 2.0;
+  return Math.min(9, base + Math.sqrt(Math.max(deg,1))*0.55);
+}
+function baDraw() {
+  const ctx = BA.ctx;
+  ctx.clearRect(0,0,BA.W,BA.H);
+  // edges
+  ctx.lineWidth = 0.6;
+  ctx.strokeStyle = 'rgba(100,116,139,0.22)';
+  ctx.beginPath();
+  for (const e of BA.edges) {
+    const a = BA.positions[e.source], b = BA.positions[e.target];
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+  }
+  ctx.stroke();
+  // nodes
+  for (let i=0;i<BA.nodes.length;i++) {
+    const n = BA.nodes[i];
+    const p = BA.positions[i];
+    const r = nodeRadius(n.degree, BA.afterGrow);
+    let color = '#2563eb';
+    if (BA.afterGrow) {
+      color = GROUP_COLOR[n.group] || '#64748b';
+    } else {
+      // color newly added node brighter
+      color = (i === BA.nodes.length-1) ? '#e11d48' : '#2563eb';
+    }
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, r, 0, Math.PI*2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.lineWidth = 0.8;
+    ctx.strokeStyle = 'rgba(15,23,42,0.25)';
+    ctx.stroke();
+  }
+}
+function baDrawHist(degrees) {
+  const svg = d3.select('#ba-hist');
+  svg.selectAll('*').remove();
+  if (!degrees.length) return;
+  const W=260, H=200, padL=28, padB=22, padT=10, padR=10;
+  const maxD = Math.max(...degrees, 1);
+  // log bins
+  const nBins = 18;
+  const bins = new Array(nBins).fill(0);
+  const maxLog = Math.log2(maxD+1);
+  degrees.forEach(d => {
+    const bi = Math.min(nBins-1, Math.floor(Math.log2(d+1)/maxLog*nBins));
+    bins[bi]++;
+  });
+  const maxC = Math.max(...bins, 1);
+  const bw = (W - padL - padR) / nBins;
+  bins.forEach((c,i) => {
+    const h = (H - padT - padB) * c / maxC;
+    svg.append('rect')
+      .attr('x', padL + i*bw + 1)
+      .attr('y', H - padB - h)
+      .attr('width', bw - 1.5)
+      .attr('height', h)
+      .attr('fill', '#2563eb').attr('opacity', 0.82);
+  });
+  // axes
+  svg.append('line').attr('x1',padL).attr('x2',W-padR).attr('y1',H-padB).attr('y2',H-padB)
+    .attr('stroke','#94a3b8').attr('stroke-width',0.8);
+  svg.append('text').attr('x',W/2).attr('y',H-4).attr('text-anchor','middle')
+    .attr('font-size',10).attr('fill','#64748b').text('degree (log₂ bins)');
+  svg.append('text').attr('x',-(H/2)).attr('y',10).attr('text-anchor','middle').attr('transform','rotate(-90)')
+    .attr('font-size',10).attr('fill','#64748b').text('count');
+  svg.append('text').attr('x',W-padR-2).attr('y',padT+10).attr('text-anchor','end')
+    .attr('font-size',10.5).attr('fill','#334155').attr('font-weight','700')
+    .text('max k = ' + maxD);
+}
+
+function bindBA() {
+  const slN = document.getElementById('ba-slider-n');
+  const slM = document.getElementById('ba-slider-m');
+  const slSpd = document.getElementById('ba-slider-spd');
+  const valN = document.getElementById('ba-slider-n-val');
+  const valM = document.getElementById('ba-slider-m-val');
+  const valSpd = document.getElementById('ba-slider-spd-val');
+  const bindS = (el, val, onChange, fmt) => {
+    el.addEventListener('input', () => {
+      val.textContent = fmt ? fmt(el.value) : el.value;
+      onChange(+el.value);
+    });
+    val.textContent = fmt ? fmt(el.value) : el.value;
+  };
+  bindS(slN, valN, v => { BA.targetN = v; document.getElementById('ba-target').textContent = v; });
+  bindS(slM, valM, v => { BA.m = v; });
+  bindS(slSpd, valSpd, v => { BA.speed = v; }, v => v+'×');
+  BA.targetN = +slN.value; BA.m = +slM.value; BA.speed = +slSpd.value;
+
+  document.getElementById('ba-play').addEventListener('click', () => {
+    if (BA.afterGrow) { baResetAndStart(); return; }
+    if (BA.running) return;
+    BA.running = true;
+    requestAnimationFrame(baTickGrow);
+  });
+  document.getElementById('ba-reset').addEventListener('click', () => baResetAndStart(true));
+}
+function baResetAndStart(stayPaused) {
+  document.getElementById('ba-play').textContent = '▶ Grow';
+  document.getElementById('ba-play').disabled = false;
+  baReset();
+  if (!stayPaused) {
+    BA.running = true;
+    requestAnimationFrame(baTickGrow);
+  }
+}
+
+// ========================================================
+// SECTION 4 — Stochastic simulator
+// ========================================================
+const SIM = {
+  canvas:null, ctx:null, W:0, H:0,
+  chartCanvas:null, chartCtx:null,
+  net:null, positions:null,
+  N:600, m:2,
+  state:null, // array of state letters per node
+  group:null, // array of group letters per node
+  day:0, T:90,
+  counts:{S:0,E:0,P:0,A:0,I:0,L:0,H:0,R:0,V:0,D:0},
+  running:false, speed:6,
+  deathsHist:[], infHist:[],
+  seedTotal:10, seedX:50, seedY:25, seedZ:25
+};
+
+// Disease params (from Table 3.2)
+const DP = {
+  beta: 0.08,
+  wA: 0.5, wP: 0.8, wI: 1.0,
+  tauE: 1/3, tauP: 1/2, tauA: 1/5, tauI: 1/3, tauL: 1/5, tauH: 1/10,
+  s: {X:0.5, Y:0.8, Z:0.6},
+  p: {X:0.05, Y:0.20, Z:0.08},
+  d: {X:0.02, Y:0.27, Z:0.04}
+};
+
+function simInit() {
+  SIM.canvas = document.getElementById('sim-canvas');
+  const rect = SIM.canvas.getBoundingClientRect();
+  SIM.canvas.width = rect.width * devicePixelRatio;
+  SIM.canvas.height = rect.height * devicePixelRatio;
+  SIM.ctx = SIM.canvas.getContext('2d');
+  SIM.ctx.scale(devicePixelRatio, devicePixelRatio);
+  SIM.W = rect.width; SIM.H = rect.height;
+  SIM.chartCanvas = document.getElementById('sim-chart');
+  const r2 = SIM.chartCanvas.getBoundingClientRect();
+  SIM.chartCanvas.width = r2.width * devicePixelRatio;
+  SIM.chartCanvas.height = r2.height * devicePixelRatio;
+  SIM.chartCtx = SIM.chartCanvas.getContext('2d');
+  SIM.chartCtx.scale(devicePixelRatio, devicePixelRatio);
+  SIM.chartW = r2.width; SIM.chartH = r2.height;
+}
+
+function simBuildNetwork() {
+  SIM.net = generateBA(SIM.N, SIM.m);
+  assignGroups(SIM.net.nodes, 1.5, 0.17);
+  // precompute neighbour lists
+  SIM.neighbours = new Array(SIM.N);
+  for (let i=0;i<SIM.N;i++) SIM.neighbours[i] = [];
+  for (const e of SIM.net.edges) {
+    SIM.neighbours[e.source].push(e.target);
+    SIM.neighbours[e.target].push(e.source);
+  }
+  // initial positions (random, will be relaxed)
+  const cx = SIM.W/2, cy = SIM.H/2;
+  const R = Math.min(SIM.W, SIM.H)*0.42;
+  SIM.positions = SIM.net.nodes.map(()=>{
+    const th = Math.random()*Math.PI*2;
+    const r = R*Math.sqrt(Math.random());
+    return {x: cx + r*Math.cos(th), y: cy + r*Math.sin(th), vx:0, vy:0};
+  });
+  // relax via force sim (inline)
+  const N = SIM.N;
+  for (let iter=0; iter<160; iter++) {
+    const alpha = iter<80 ? 0.6 : 0.15;
+    const cellSize = 26;
+    const cols = Math.ceil(SIM.W/cellSize), rows = Math.ceil(SIM.H/cellSize);
+    const grid = new Array(cols*rows);
+    for (let i=0;i<grid.length;i++) grid[i]=[];
+    for (let i=0;i<N;i++) {
+      const p = SIM.positions[i];
+      p.vx += (cx - p.x) * 0.012 * alpha;
+      p.vy += (cy - p.y) * 0.012 * alpha;
+      const cxI = clamp(Math.floor(p.x/cellSize),0,cols-1);
+      const cyI = clamp(Math.floor(p.y/cellSize),0,rows-1);
+      grid[cyI*cols+cxI].push(i);
+    }
+    for (let i=0;i<N;i++) {
+      const p = SIM.positions[i];
+      const cxI = clamp(Math.floor(p.x/cellSize),0,cols-1);
+      const cyI = clamp(Math.floor(p.y/cellSize),0,rows-1);
+      for (let ay=Math.max(0,cyI-1); ay<=Math.min(rows-1,cyI+1); ay++)
+        for (let ax=Math.max(0,cxI-1); ax<=Math.min(cols-1,cxI+1); ax++) {
+          const cell = grid[ay*cols+ax];
+          for (const j of cell) if (j!==i) {
+            const q = SIM.positions[j];
+            let dx = p.x-q.x, dy = p.y-q.y;
+            let d2 = dx*dx+dy*dy;
+            if (d2 < 0.01) { dx=Math.random()-.5; dy=Math.random()-.5; d2 = 1; }
+            if (d2 < 900) {
+              const f = 70 * alpha / d2;
+              p.vx += dx*f; p.vy += dy*f;
+            }
+          }
+        }
+    }
+    for (const e of SIM.net.edges) {
+      const a = SIM.positions[e.source], b = SIM.positions[e.target];
+      const dx = b.x-a.x, dy = b.y-a.y;
+      const d = Math.sqrt(dx*dx+dy*dy) || 0.01;
+      const rest = 30;
+      const f = (d-rest)*0.05*alpha;
+      const fx = dx/d*f, fy = dy/d*f;
+      a.vx += fx; a.vy += fy;
+      b.vx -= fx; b.vy -= fy;
+    }
+    const pad = 18;
+    for (let i=0;i<N;i++) {
+      const p = SIM.positions[i];
+      p.vx *= 0.6; p.vy *= 0.6;
+      p.x += p.vx; p.y += p.vy;
+      if (p.x<pad) { p.x=pad; p.vx=0; }
+      if (p.x>SIM.W-pad) { p.x=SIM.W-pad; p.vx=0; }
+      if (p.y<pad) { p.y=pad; p.vy=0; }
+      if (p.y>SIM.H-pad) { p.y=SIM.H-pad; p.vy=0; }
+    }
+  }
+  simResetOutbreak();
+}
+
+function simResetOutbreak() {
+  const N = SIM.N;
+  SIM.state = new Array(N).fill('S');
+  SIM.group = SIM.net.nodes.map(n => n.group);
+  SIM.day = 0;
+  SIM.running = false;
+  SIM.deathsHist = [];
+  SIM.infHist = [];
+  document.getElementById('sim-play').textContent = '▶ Start';
+  document.getElementById('sim-banner').classList.remove('show');
+  // seed infections
+  const total = SIM.seedTotal;
+  const sum = Math.max(1, SIM.seedX + SIM.seedY + SIM.seedZ);
+  const nX = Math.round(total * SIM.seedX / sum);
+  const nY = Math.round(total * SIM.seedY / sum);
+  const nZ = Math.max(0, total - nX - nY);
+  const wanted = {X:nX, Y:nY, Z:nZ};
+  const byG = {X:[], Y:[], Z:[]};
+  for (let i=0;i<N;i++) byG[SIM.group[i]].push(i);
+  ['X','Y','Z'].forEach(g => {
+    const want = Math.min(wanted[g], byG[g].length);
+    // Fisher-Yates partial shuffle
+    const arr = byG[g];
+    for (let k=0; k<want; k++) {
+      const j = k + randInt(arr.length - k);
+      [arr[k], arr[j]] = [arr[j], arr[k]];
+      SIM.state[arr[k]] = 'I'; // start as symptomatic to drive observable dynamics
+    }
+  });
+  document.getElementById('seed-x').textContent = nX;
+  document.getElementById('seed-y').textContent = nY;
+  document.getElementById('seed-z').textContent = nZ;
+  simUpdateCounts();
+  simDraw();
+  simDrawChart();
+  simUpdateOverlay();
+}
+
+function simStep() {
+  // compute infection pressure per susceptible
+  const N = SIM.N;
+  const next = SIM.state.slice();
+  for (let i=0;i<N;i++) {
+    const s = SIM.state[i];
+    if (s === 'R' || s === 'D' || s === 'V') continue;
+    if (s === 'S') {
+      let lam = 0;
+      const neigh = SIM.neighbours[i];
+      for (const j of neigh) {
+        const sj = SIM.state[j];
+        if (sj === 'P') lam += DP.wP;
+        else if (sj === 'A') lam += DP.wA;
+        else if (sj === 'I') lam += DP.wI;
+      }
+      lam *= DP.beta;
+      const p = 1 - Math.exp(-lam);
+      if (Math.random() < p) next[i] = 'E';
+    } else if (s === 'E') {
+      if (Math.random() < 1 - Math.exp(-DP.tauE)) next[i] = 'P';
+    } else if (s === 'P') {
+      if (Math.random() < 1 - Math.exp(-DP.tauP)) {
+        const g = SIM.group[i];
+        next[i] = (Math.random() < DP.s[g]) ? 'I' : 'A';
+      }
+    } else if (s === 'A') {
+      if (Math.random() < 1 - Math.exp(-DP.tauA)) next[i] = 'R';
+    } else if (s === 'I') {
+      if (Math.random() < 1 - Math.exp(-DP.tauI)) next[i] = 'L';
+    } else if (s === 'L') {
+      if (Math.random() < 1 - Math.exp(-DP.tauL)) {
+        const g = SIM.group[i];
+        next[i] = (Math.random() < DP.p[g]) ? 'H' : 'R';
+      }
+    } else if (s === 'H') {
+      if (Math.random() < 1 - Math.exp(-DP.tauH)) {
+        const g = SIM.group[i];
+        next[i] = (Math.random() < DP.d[g]) ? 'D' : 'R';
+      }
+    }
+  }
+  SIM.state = next;
+  SIM.day++;
+  simUpdateCounts();
+  SIM.deathsHist.push(SIM.counts.D);
+  SIM.infHist.push(SIM.counts.E + SIM.counts.P + SIM.counts.A + SIM.counts.I + SIM.counts.L + SIM.counts.H);
+}
+
+function simUpdateCounts() {
+  const c = {S:0,E:0,P:0,A:0,I:0,L:0,H:0,R:0,V:0,D:0};
+  for (const s of SIM.state) c[s]++;
+  SIM.counts = c;
+  // compartment list
+  const list = document.getElementById('comp-list');
+  list.innerHTML = '';
+  STATES_ORDER.forEach(st => {
+    const row = document.createElement('div');
+    row.className = 'comp-row';
+    row.innerHTML = `<span class="comp-dot" style="background:${STATE_COLOR[st]};${st==='D'?'border:1px solid #000':''}"></span><span class="comp-name">${st}</span><span class="comp-num">${c[st]}</span>`;
+    list.appendChild(row);
+  });
+  document.getElementById('stat-inf').textContent = c.E + c.P + c.A + c.I + c.L + c.H;
+  document.getElementById('stat-d').textContent = c.D;
+}
+
+function simUpdateOverlay() {
+  document.getElementById('sim-day').textContent = SIM.day;
+  document.getElementById('sim-horizon').textContent = SIM.T;
+  document.getElementById('sim-inf').textContent = SIM.counts.E + SIM.counts.P + SIM.counts.A + SIM.counts.I + SIM.counts.L + SIM.counts.H;
+  document.getElementById('sim-d').textContent = SIM.counts.D;
+}
+
+function simDraw() {
+  const ctx = SIM.ctx;
+  ctx.clearRect(0,0,SIM.W,SIM.H);
+  // edges — faint, fainter when many states active
+  ctx.lineWidth = 0.5;
+  ctx.strokeStyle = 'rgba(100,116,139,0.15)';
+  ctx.beginPath();
+  for (const e of SIM.net.edges) {
+    const a = SIM.positions[e.source], b = SIM.positions[e.target];
+    ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+  }
+  ctx.stroke();
+  // nodes
+  for (let i=0;i<SIM.N;i++) {
+    const p = SIM.positions[i];
+    const deg = SIM.net.nodes[i].degree;
+    const r = nodeRadius(deg, true);
+    const st = SIM.state[i];
+    const color = STATE_COLOR[st];
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, r, 0, Math.PI*2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    // group ring (only for hubs to avoid noise)
+    if (SIM.group[i] === 'Z') {
+      ctx.lineWidth = 1.3;
+      ctx.strokeStyle = GROUP_COLOR.Z;
+      ctx.stroke();
+    } else if (SIM.group[i] === 'Y') {
+      ctx.lineWidth = 0.8;
+      ctx.strokeStyle = GROUP_COLOR.Y;
+      ctx.stroke();
+    } else {
+      ctx.lineWidth = 0.5;
+      ctx.strokeStyle = 'rgba(15,23,42,0.25)';
+      ctx.stroke();
+    }
+  }
+}
+
+function simDrawChart() {
+  const ctx = SIM.chartCtx;
+  const W = SIM.chartW, H = SIM.chartH;
+  ctx.clearRect(0,0,W,H);
+  const padL=28, padR=8, padT=8, padB=16;
+  const T = SIM.T;
+  // axes
+  ctx.strokeStyle = '#e3e8ef';
+  ctx.lineWidth = 0.8;
+  ctx.beginPath();
+  ctx.moveTo(padL, padT); ctx.lineTo(padL, H-padB); ctx.lineTo(W-padR, H-padB);
+  ctx.stroke();
+  ctx.fillStyle = '#9aa3af'; ctx.font = '9px ui-monospace, monospace';
+  ctx.fillText('0', padL-10, H-padB+11);
+  ctx.fillText(T+'d', W-padR-16, H-padB+11);
+  // scale
+  const maxI = Math.max(10, ...SIM.infHist, ...SIM.deathsHist);
+  const xs = SIM.infHist.length;
+  if (xs < 2) return;
+  const xScale = (W - padL - padR) / Math.max(1, T);
+  const yScale = (H - padT - padB) / maxI;
+  // infection area line
+  ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  for (let i=0;i<xs;i++) {
+    const x = padL + (i+1)*xScale;
+    const y = H-padB - SIM.infHist[i]*yScale;
+    if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+  // deaths line
+  ctx.strokeStyle = '#e11d48'; ctx.lineWidth = 1.8;
+  ctx.beginPath();
+  for (let i=0;i<xs;i++) {
+    const x = padL + (i+1)*xScale;
+    const y = H-padB - SIM.deathsHist[i]*yScale;
+    if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+  // legend
+  ctx.fillStyle = '#f59e0b'; ctx.fillRect(padL+4, padT+2, 8, 2);
+  ctx.fillStyle = '#64748b'; ctx.fillText('infected', padL+15, padT+5);
+  ctx.fillStyle = '#e11d48'; ctx.fillRect(padL+70, padT+2, 8, 2);
+  ctx.fillStyle = '#64748b'; ctx.fillText('deaths', padL+81, padT+5);
+  ctx.fillStyle = '#334155'; ctx.fillText('max '+maxI, W-padR-50, padT+5);
+}
+
+function simTick() {
+  if (!SIM.running) return;
+  for (let s=0; s<SIM.speed; s++) {
+    if (SIM.day >= SIM.T) { simFinish(); return; }
+    simStep();
+    // early termination if outbreak dies out AND nothing in pipeline
+    const active = SIM.counts.E+SIM.counts.P+SIM.counts.A+SIM.counts.I+SIM.counts.L+SIM.counts.H;
+    if (active === 0 && SIM.day > 3) { simFinish(); return; }
+  }
+  simDraw();
+  simDrawChart();
+  simUpdateOverlay();
+  requestAnimationFrame(simTick);
+}
+function simFinish() {
+  SIM.running = false;
+  document.getElementById('sim-play').textContent = '▶ Start';
+  simDraw();
+  simDrawChart();
+  simUpdateOverlay();
+  const banner = document.getElementById('sim-banner');
+  document.getElementById('banner-deaths').textContent = SIM.counts.D;
+  document.getElementById('banner-pct').textContent = (100*SIM.counts.D/SIM.N).toFixed(2);
+  banner.classList.add('show');
+}
+
+function bindSim() {
+  const bind = (id, onChange, fmt) => {
+    const el = document.getElementById(id);
+    const val = document.getElementById(id+'-val');
+    el.addEventListener('input', () => {
+      if (val) val.textContent = fmt ? fmt(el.value) : el.value;
+      onChange(+el.value);
+    });
+    if (val) val.textContent = fmt ? fmt(el.value) : el.value;
+    onChange(+el.value);
+  };
+  bind('sim-N', v => {
+    SIM.N = v;
+    // keep seed total ≤ N
+    const seedEl = document.getElementById('sim-seed');
+    seedEl.max = v;
+    if (+seedEl.value > v) {
+      seedEl.value = v;
+      document.getElementById('sim-seed-val').textContent = v;
+      SIM.seedTotal = v;
+    }
+  });
+  bind('sim-m', v => SIM.m = v);
+  bind('sim-T', v => { SIM.T = v; simUpdateOverlay(); simDrawChart(); }, v => v+'d');
+  bind('sim-spd', v => SIM.speed = v, v => v+'×');
+  bind('sim-seed', v => { SIM.seedTotal = v; simResetOutbreak(); });
+  const bindSeedPct = (id, key) => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', () => {
+      SIM[key] = +el.value;
+      simResetOutbreak();
+    });
+  };
+  bindSeedPct('seed-x-sl', 'seedX');
+  bindSeedPct('seed-y-sl', 'seedY');
+  bindSeedPct('seed-z-sl', 'seedZ');
+  SIM.seedX = 50; SIM.seedY = 25; SIM.seedZ = 25;
+
+  document.getElementById('sim-regen').addEventListener('click', () => {
+    simBuildNetwork();
+  });
+  document.getElementById('sim-reset').addEventListener('click', simResetOutbreak);
+  document.getElementById('sim-step').addEventListener('click', () => {
+    if (SIM.day >= SIM.T) return;
+    simStep(); simDraw(); simDrawChart(); simUpdateOverlay();
+  });
+  document.getElementById('sim-play').addEventListener('click', () => {
+    if (SIM.running) { SIM.running = false; document.getElementById('sim-play').textContent = '▶ Start'; return; }
+    if (SIM.day >= SIM.T) simResetOutbreak();
+    SIM.running = true;
+    document.getElementById('sim-play').textContent = '❚❚ Pause';
+    requestAnimationFrame(simTick);
+  });
+}
+
+// ---------- Boot ----------
+window.addEventListener('load', () => {
+  buildDiseaseDiagram();
+  baInit();
+  baReset();
+  bindBA();
+  simInit();
+  simBuildNetwork();
+  bindSim();
+});
+
+// resize handling (simple)
+window.addEventListener('resize', () => {
+  // lazy: only re-init canvases, layouts stay — acceptable for demo
+});
+</script>
+
+</body>
+</html>
