@@ -180,13 +180,19 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .sim-group{border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:14px}
 .sim-group:last-child{border:none;margin-bottom:0;padding-bottom:0}
 .seed-split{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
-.seed-box{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:7px 4px;text-align:center;font-size:.76rem}
-.seed-box .seed-label{font-size:.66rem;font-weight:700;color:var(--text-faint);text-transform:uppercase}
-.seed-box .seed-num{font-size:1.05rem;font-weight:800;color:var(--text);margin-top:1px}
+.seed-box{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:7px 4px 6px;text-align:center;font-size:.76rem}
+.seed-box .seed-label{font-size:.66rem;font-weight:700;color:var(--text-faint);text-transform:uppercase;letter-spacing:.04em}
+.seed-box .seed-pct{font-size:1.1rem;font-weight:800;color:var(--text);line-height:1.1;margin-top:2px;font-variant-numeric:tabular-nums}
+.seed-box .seed-count{font-size:.66rem;color:var(--text-faint);font-family:ui-monospace,monospace;margin-top:1px;line-height:1}
 .seed-box.x .seed-label{color:var(--grp-x)}
 .seed-box.y .seed-label{color:var(--grp-y)}
 .seed-box.z .seed-label{color:var(--grp-z)}
-.seed-split input[type=range]{width:100%;margin-top:4px}
+.seed-box.x .seed-pct{color:var(--grp-x)}
+.seed-box.y .seed-pct{color:var(--grp-y)}
+.seed-box.z .seed-pct{color:var(--grp-z)}
+.seed-split input[type=range]{width:100%;margin-top:5px}
+.seed-sum{margin-top:6px;font-size:.7rem;color:var(--text-faint);text-align:center;font-family:ui-monospace,monospace}
+.seed-sum b{color:var(--text);font-weight:700}
 #sim-canvas-wrap{position:relative;background:#fafbfc;border-radius:10px;border:1px solid var(--border);min-height:520px;overflow:hidden}
 #sim-canvas{width:100%;height:520px}
 #sim-overlay{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.92);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:.78rem;font-weight:600;display:flex;gap:14px}
@@ -289,6 +295,7 @@ footer a{color:var(--text-muted)}
   <h2>Three population groups</h2>
   <p class="lede">
     Every individual in the network is assigned to exactly one of three demographic groups: a hub set defined by a degree threshold, a high-risk elderly subpopulation drawn by Bernoulli sampling on the remainder, and the baseline majority. Each group has its own symptomatic, hospitalisation, and case-fatality rates.
+    <br><span style="font-size:.82rem;color:var(--text-faint);font-style:italic">(Demo profile — slightly more virulent than the paper's COVID-calibrated values to make outbreak dynamics visible at N=200–1500 scale.)</span>
   </p>
   <div class="grp-grid">
     <!-- X: baseline -->
@@ -305,11 +312,11 @@ footer a{color:var(--text-muted)}
       <p class="desc">The low-risk majority — working-age adults with typical contact patterns. Most of the population belongs here by default.</p>
       <div class="stats">
         <div class="stat"><div class="stat-label">Symptomatic</div><div class="stat-value">s<sub>X</sub> = 0.50</div></div>
-        <div class="stat"><div class="stat-label">Hosp.</div><div class="stat-value">p<sub>X</sub> = 0.05</div></div>
-        <div class="stat"><div class="stat-label">Fatality</div><div class="stat-value">d<sub>X</sub> = 0.02</div></div>
+        <div class="stat"><div class="stat-label">Hosp.</div><div class="stat-value">p<sub>X</sub> = 0.12</div></div>
+        <div class="stat"><div class="stat-label">Fatality</div><div class="stat-value">d<sub>X</sub> = 0.10</div></div>
         <div class="stat"><div class="stat-label">Prev.</div><div class="stat-value">~80%</div></div>
       </div>
-      <div class="cfr">Compound case-fatality <b>≈ 0.05%</b></div>
+      <div class="cfr">Compound case-fatality <b>≈ 0.6%</b></div>
     </div>
 
     <!-- Y: high risk elderly -->
@@ -329,12 +336,12 @@ footer a{color:var(--text-muted)}
       <h3>Elderly (65+)</h3>
       <p class="desc">Elevated disease severity across every branching probability. Moderate contact patterns but markedly worse clinical outcomes once infected.</p>
       <div class="stats">
-        <div class="stat"><div class="stat-label">Symptomatic</div><div class="stat-value">s<sub>Y</sub> = 0.80</div></div>
-        <div class="stat"><div class="stat-label">Hosp.</div><div class="stat-value">p<sub>Y</sub> = 0.20</div></div>
-        <div class="stat"><div class="stat-label">Fatality</div><div class="stat-value">d<sub>Y</sub> = 0.27</div></div>
+        <div class="stat"><div class="stat-label">Symptomatic</div><div class="stat-value">s<sub>Y</sub> = 0.85</div></div>
+        <div class="stat"><div class="stat-label">Hosp.</div><div class="stat-value">p<sub>Y</sub> = 0.50</div></div>
+        <div class="stat"><div class="stat-label">Fatality</div><div class="stat-value">d<sub>Y</sub> = 0.65</div></div>
         <div class="stat"><div class="stat-label">Prev.</div><div class="stat-value">~17%</div></div>
       </div>
-      <div class="cfr">Compound case-fatality <b>≈ 4.3%</b> — 80× Group X</div>
+      <div class="cfr">Compound case-fatality <b>≈ 27.6%</b> — 45× Group X</div>
     </div>
 
     <!-- Z: hub / high-contact -->
@@ -356,11 +363,11 @@ footer a{color:var(--text-muted)}
       <p class="desc">Delivery workers, transit drivers, frontline retail — the <i>hubs</i> of the contact graph. Few in number but wired into a disproportionate share of all transmission pathways.</p>
       <div class="stats">
         <div class="stat"><div class="stat-label">Symptomatic</div><div class="stat-value">s<sub>Z</sub> = 0.60</div></div>
-        <div class="stat"><div class="stat-label">Hosp.</div><div class="stat-value">p<sub>Z</sub> = 0.08</div></div>
-        <div class="stat"><div class="stat-label">Fatality</div><div class="stat-value">d<sub>Z</sub> = 0.04</div></div>
+        <div class="stat"><div class="stat-label">Hosp.</div><div class="stat-value">p<sub>Z</sub> = 0.22</div></div>
+        <div class="stat"><div class="stat-label">Fatality</div><div class="stat-value">d<sub>Z</sub> = 0.20</div></div>
         <div class="stat"><div class="stat-label">Degree</div><div class="stat-value">≥ µ+ασ</div></div>
       </div>
-      <div class="cfr">Structural role: drives <b>outbreak velocity</b> via rich-get-richer topology</div>
+      <div class="cfr">Structural role: drives <b>outbreak velocity</b> via rich-get-richer topology · compound CFR ≈ 2.6%</div>
     </div>
   </div>
 </section>
@@ -475,24 +482,28 @@ footer a{color:var(--text-muted)}
           <input type="range" id="sim-seed" min="1" max="1000" step="1" value="30">
           <span class="val" id="sim-seed-val">30</span>
         </div>
-        <div style="font-size:.74rem;color:var(--text-muted);margin-top:6px;margin-bottom:4px">Distribution across groups:</div>
+        <div style="font-size:.74rem;color:var(--text-muted);margin-top:6px;margin-bottom:4px">Share across groups (auto-normalised to 100%):</div>
         <div class="seed-split">
           <div class="seed-box x">
             <div class="seed-label">X</div>
-            <div class="seed-num" id="seed-x">3</div>
-            <input type="range" id="seed-x-sl" min="0" max="100" step="5" value="50">
+            <div class="seed-pct" id="seed-x-pct">50%</div>
+            <div class="seed-count" id="seed-x">—</div>
+            <input type="range" id="seed-x-sl" min="0" max="100" step="5" value="34">
           </div>
           <div class="seed-box y">
             <div class="seed-label">Y</div>
-            <div class="seed-num" id="seed-y">3</div>
-            <input type="range" id="seed-y-sl" min="0" max="100" step="5" value="25">
+            <div class="seed-pct" id="seed-y-pct">25%</div>
+            <div class="seed-count" id="seed-y">—</div>
+            <input type="range" id="seed-y-sl" min="0" max="100" step="5" value="33">
           </div>
           <div class="seed-box z">
             <div class="seed-label">Z</div>
-            <div class="seed-num" id="seed-z">4</div>
-            <input type="range" id="seed-z-sl" min="0" max="100" step="5" value="25">
+            <div class="seed-pct" id="seed-z-pct">25%</div>
+            <div class="seed-count" id="seed-z">—</div>
+            <input type="range" id="seed-z-sl" min="0" max="100" step="5" value="33">
           </div>
         </div>
+        <div class="seed-sum">sum · <b id="seed-sum-total">0</b> seeds of <b id="seed-sum-n">0</b></div>
       </div>
       <div class="sim-group">
         <h4>Simulation</h4>
@@ -1070,18 +1081,23 @@ const SIM = {
   counts:{S:0,E:0,P:0,A:0,I:0,L:0,H:0,R:0,V:0,D:0},
   running:false, speed:6,
   deathsHist:[], infHist:[],
-  seedTotal:10, seedX:50, seedY:25, seedZ:25
+  seedTotal:30, seedX:34, seedY:33, seedZ:33
 };
 
-// Disease params (from Table 3.2)
+// Disease params — demo profile: slightly more virulent than the paper's
+// COVID-calibrated values so that the no-vaccine outbreak reaches a visibly
+// painful death toll at the N=200–1500 scale used in the browser demo.
+// Paper values were β=0.08, d_Y=0.27, d_X=0.02, d_Z=0.04.
 const DP = {
-  beta: 0.08,
+  beta: 0.14,
   wA: 0.5, wP: 0.8, wI: 1.0,
   tauE: 1/3, tauP: 1/2, tauA: 1/5, tauI: 1/3, tauL: 1/5, tauH: 1/10,
-  s: {X:0.5, Y:0.8, Z:0.6},
-  p: {X:0.05, Y:0.20, Z:0.08},
-  d: {X:0.02, Y:0.27, Z:0.04}
+  s: {X:0.5,  Y:0.85, Z:0.6},
+  p: {X:0.12, Y:0.50, Z:0.22},
+  d: {X:0.10, Y:0.65, Z:0.20}
 };
+// Compound case-fatality implied by demo profile:
+//   X ≈ 0.6%, Y ≈ 27.6%, Z ≈ 2.6%.
 
 function simInit() {
   SIM.canvas = document.getElementById('sim-canvas');
@@ -1187,28 +1203,42 @@ function simResetOutbreak() {
   SIM.infHist = [];
   document.getElementById('sim-play').textContent = '▶ Start';
   document.getElementById('sim-banner').classList.remove('show');
-  // seed infections
+  // compute normalised shares and actual counts
   const total = SIM.seedTotal;
   const sum = Math.max(1, SIM.seedX + SIM.seedY + SIM.seedZ);
-  const nX = Math.round(total * SIM.seedX / sum);
-  const nY = Math.round(total * SIM.seedY / sum);
-  const nZ = Math.max(0, total - nX - nY);
-  const wanted = {X:nX, Y:nY, Z:nZ};
+  const pctX = SIM.seedX / sum;
+  const pctY = SIM.seedY / sum;
+  const pctZ = SIM.seedZ / sum;
+  // capacity per group (can't seed more than exist)
   const byG = {X:[], Y:[], Z:[]};
   for (let i=0;i<N;i++) byG[SIM.group[i]].push(i);
+  let nX = Math.round(total * pctX);
+  let nY = Math.round(total * pctY);
+  let nZ = Math.max(0, total - nX - nY);
+  // clamp to population of each group
+  nX = Math.min(nX, byG.X.length);
+  nY = Math.min(nY, byG.Y.length);
+  nZ = Math.min(nZ, byG.Z.length);
+  const wanted = {X:nX, Y:nY, Z:nZ};
   ['X','Y','Z'].forEach(g => {
-    const want = Math.min(wanted[g], byG[g].length);
-    // Fisher-Yates partial shuffle
+    const want = wanted[g];
     const arr = byG[g];
     for (let k=0; k<want; k++) {
       const j = k + randInt(arr.length - k);
       [arr[k], arr[j]] = [arr[j], arr[k]];
-      SIM.state[arr[k]] = 'I'; // start as symptomatic to drive observable dynamics
+      SIM.state[arr[k]] = 'I'; // start as symptomatic for observable dynamics
     }
   });
-  document.getElementById('seed-x').textContent = nX;
-  document.getElementById('seed-y').textContent = nY;
-  document.getElementById('seed-z').textContent = nZ;
+  // update displays
+  const setText = (id, s) => { const el = document.getElementById(id); if (el) el.textContent = s; };
+  setText('seed-x-pct', Math.round(pctX*100)+'%');
+  setText('seed-y-pct', Math.round(pctY*100)+'%');
+  setText('seed-z-pct', Math.round(pctZ*100)+'%');
+  setText('seed-x', nX+' seed'+(nX===1?'':'s'));
+  setText('seed-y', nY+' seed'+(nY===1?'':'s'));
+  setText('seed-z', nZ+' seed'+(nZ===1?'':'s'));
+  setText('seed-sum-total', nX+nY+nZ);
+  setText('seed-sum-n', N);
   simUpdateCounts();
   simDraw();
   simDrawChart();
@@ -1437,7 +1467,9 @@ function bindSim() {
   bindSeedPct('seed-x-sl', 'seedX');
   bindSeedPct('seed-y-sl', 'seedY');
   bindSeedPct('seed-z-sl', 'seedZ');
-  SIM.seedX = 50; SIM.seedY = 25; SIM.seedZ = 25;
+  SIM.seedX = +document.getElementById('seed-x-sl').value;
+  SIM.seedY = +document.getElementById('seed-y-sl').value;
+  SIM.seedZ = +document.getElementById('seed-z-sl').value;
 
   document.getElementById('sim-regen').addEventListener('click', () => {
     simBuildNetwork();
