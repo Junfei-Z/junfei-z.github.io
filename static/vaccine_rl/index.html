@@ -228,6 +228,75 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .method-card.oc{border-top:3px solid var(--accent)}
 .method-card.rl{border-top:3px solid var(--violet)}
 
+/* ── Part 5 · Results layout ── */
+.results-headline{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:22px}
+.m-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px 20px 16px;position:relative;transition:transform .2s, box-shadow .2s}
+.m-card:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(15,23,42,.08)}
+.m-card .m-rank{position:absolute;top:14px;right:16px;font-size:.68rem;font-weight:800;color:var(--text-faint);letter-spacing:.06em}
+.m-card .m-rank b{font-size:1.2rem;color:var(--text);font-weight:800;margin-left:3px}
+.m-card .m-kind{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-faint);margin-bottom:2px}
+.m-card h4{font-size:1.15rem;margin-bottom:12px}
+.m-card .m-deaths{font-size:2.2rem;font-weight:800;line-height:1;color:var(--rose);font-variant-numeric:tabular-nums}
+.m-card .m-deaths .m-std{font-size:.9rem;color:var(--text-faint);font-weight:600;margin-left:6px}
+.m-card .m-deaths-label{font-size:.66rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;margin-bottom:12px}
+.m-card .m-bar{height:6px;border-radius:3px;background:var(--bg-soft);overflow:hidden;margin-bottom:12px}
+.m-card .m-bar-fill{height:100%;border-radius:3px;transition:width .4s}
+.m-card .m-desc{font-size:.8rem;color:var(--text-muted);line-height:1.5;margin-bottom:12px;min-height:44px}
+.m-card .m-chip-row{display:flex;gap:6px;flex-wrap:wrap}
+.m-card .m-chip{font-size:.68rem;padding:4px 9px;border-radius:999px;background:var(--bg-soft);color:var(--text-muted);font-family:ui-monospace,monospace;white-space:nowrap}
+.m-card.oc-win{border-top:3px solid var(--accent)}
+.m-card.rl-win{border-top:3px solid var(--violet)}
+.m-card.oc-base{border-top:3px solid #94a3b8}
+.m-card.rl-base{border-top:3px solid #c4b5fd}
+.m-card.winner{background:linear-gradient(180deg, #fef3c7 0%, #ffffff 40%);border-color:#fbbf24}
+.m-card.winner .m-rank b{color:#b45309}
+
+.ablation-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px}
+.ab-card{background:linear-gradient(135deg, var(--accent-soft) 0%, #ffffff 100%);border:1px solid var(--border);border-radius:14px;padding:20px}
+.ab-card.arch{background:linear-gradient(135deg, #ede9fe 0%, #ffffff 100%)}
+.ab-card .ab-label{font-size:.78rem;font-weight:700;color:var(--accent);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.ab-card.arch .ab-label{color:var(--violet)}
+.ab-card .ab-value{font-size:2.4rem;font-weight:800;color:var(--text);line-height:1;font-variant-numeric:tabular-nums}
+.ab-card .ab-unit{font-size:.82rem;color:var(--text-muted);margin-left:6px;font-weight:600}
+.ab-card .ab-sub{font-size:.82rem;color:var(--text-muted);line-height:1.5;margin-top:8px}
+.ab-card .ab-sub b{color:var(--text)}
+@media (max-width:720px){.ablation-row{grid-template-columns:1fr}}
+
+.sweep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:28px}
+.sweep-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px}
+.sweep-card h4{font-size:.95rem;margin-bottom:2px}
+.sweep-card .sweep-sub{font-size:.74rem;color:var(--text-muted);margin-bottom:12px;line-height:1.45}
+.sweep-card canvas{width:100%;height:180px;display:block;background:var(--bg-soft);border-radius:8px}
+.sweep-card .sweep-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:.72rem;color:var(--text-muted)}
+.sweep-card .sweep-verdict{margin-top:10px;font-size:.78rem;padding:8px 10px;border-radius:8px;background:var(--bg-soft);line-height:1.45}
+.sweep-card .sweep-verdict.rl-wins{background:#ede9fe;color:#5b21b6}
+.sweep-card .sweep-verdict.oc-wins{background:var(--accent-soft);color:var(--accent-dark)}
+.sweep-card .sweep-verdict b{font-weight:700}
+
+.regime-map{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:28px}
+.regime-map table{width:100%;border-collapse:collapse;font-size:.84rem}
+.regime-map th, .regime-map td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.regime-map thead th{background:var(--bg-soft);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:700}
+.regime-map tbody tr:last-child td{border-bottom:none}
+.regime-map .v-oc{color:var(--accent);font-weight:700}
+.regime-map .v-rl{color:var(--violet);font-weight:700}
+.regime-map .v-other{color:var(--text-muted);font-style:italic}
+.regime-map .v-chip{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.72rem;font-weight:700}
+.regime-map .v-chip.oc{background:var(--accent-soft);color:var(--accent-dark)}
+.regime-map .v-chip.rl{background:#ede9fe;color:#5b21b6}
+.regime-map .mono{font-family:ui-monospace,monospace;font-size:.8rem;color:var(--text-muted)}
+.regime-map .gap-pos{color:var(--accent)}
+.regime-map .gap-neg{color:var(--violet);font-weight:700}
+@media (max-width:720px){.regime-map{font-size:.76rem}.regime-map th, .regime-map td{padding:9px 10px}}
+
+.takeaway-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.tk-card{background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:16px}
+.tk-card.rl{border-left-color:var(--violet)}
+.tk-card.warn{border-left-color:var(--amber)}
+.tk-card.note{border-left-color:var(--text-faint)}
+.tk-card h5{font-size:.95rem;margin-bottom:4px}
+.tk-card p{font-size:.82rem;color:var(--text-muted);line-height:1.5}
+
 footer{padding:40px 24px;text-align:center;color:var(--text-faint);font-size:.78rem}
 footer a{color:var(--text-muted)}
 
@@ -554,37 +623,199 @@ footer a{color:var(--text-muted)}
   </div>
 </section>
 
-<!-- ========== SECTION 5 — METHODS ========== -->
+<!-- ========== SECTION 5 — METHODS & RESULTS ========== -->
 <section id="methods" class="section">
-  <span class="eyebrow">Part 5 · Coming soon</span>
+  <span class="eyebrow">Part 5 · Final Results</span>
   <h2>Four allocation methods, head-to-head</h2>
   <p class="lede">
-    Once the final Chapter 6 experiments settle, this section will run all four methods on the seed you configured above and report per-method deaths, runtime, and regime verdicts. Placeholder cards below describe each method.
+    All four methods evaluated on <span class="mono">N<sub>eval</sub> = 30</span> stochastic rollouts of the paper's network-level simulator. The default configuration is <span class="mono">N = 5 000</span>, horizon <span class="mono">T = 60</span> days, daily budget <span class="mono">K = 10</span>, and 300 initial infections split 50:17:33 across X:Y:Z. RL methods train on 1 500 episodes of PPO; reported numbers are best-of-three training seeds.
   </p>
-  <div class="method-grid">
-    <div class="method-card oc">
-      <div class="kind">Optimal Control · Baseline</div>
-      <h4>OC-Random</h4>
-      <p>Group-level OC rates on the ODE, then <b>random</b> intra-group assignment. Isolates the contribution of the group-level policy itself.</p>
-      <span class="pending">Results pending Ch 6</span>
-    </div>
-    <div class="method-card oc">
-      <div class="kind">Optimal Control · Enhanced</div>
+
+  <!-- Headline: 4 method cards with real numbers -->
+  <div class="results-headline">
+    <div class="m-card oc-win winner">
+      <div class="m-rank">RANK<b>1</b></div>
+      <div class="m-kind">Optimal Control · Proposed</div>
       <h4>OC-high</h4>
-      <p>Same group-level rates, but intra-group doses go to the <b>highest-degree</b> susceptibles. The main OC contender throughout the thesis.</p>
-      <span class="pending">Results pending Ch 6</span>
+      <div class="m-deaths">22.0<span class="m-std">± 4.6</span></div>
+      <div class="m-deaths-label">Mean deaths over 30 rollouts</div>
+      <div class="m-bar"><div class="m-bar-fill" style="width:82.7%;background:var(--accent)"></div></div>
+      <div class="m-desc">Group-level OC solved on the ODE, then intra-group doses given to the <b>highest-degree</b> susceptibles. Wins the default config and most practical regimes.</div>
+      <div class="m-chip-row">
+        <span class="m-chip">9 s offline</span>
+        <span class="m-chip">153 ms / ep</span>
+      </div>
     </div>
-    <div class="method-card rl">
-      <div class="kind">Reinforcement Learning · Baseline</div>
-      <h4>Naive RL</h4>
-      <p>Shared-parameter MLP scorer with an <b>independent-Bernoulli</b> head. Isolates the cost of the large-action space parametrisation.</p>
-      <span class="pending">Results pending Ch 6</span>
-    </div>
-    <div class="method-card rl">
-      <div class="kind">Reinforcement Learning · Proposed</div>
+    <div class="m-card rl-win">
+      <div class="m-rank">RANK<b>2</b></div>
+      <div class="m-kind">Reinforcement Learning · Proposed</div>
       <h4>Node RL</h4>
-      <p>Same scorer, but uses <b>Gumbel-Top-K</b> reparameterised sampling to select exactly K nodes per day — O(K) gradient variance instead of Θ(N).</p>
-      <span class="pending">Results pending Ch 6</span>
+      <div class="m-deaths">22.4<span class="m-std">± 3.4</span></div>
+      <div class="m-deaths-label">Mean deaths over 30 rollouts</div>
+      <div class="m-bar"><div class="m-bar-fill" style="width:84.2%;background:var(--violet)"></div></div>
+      <div class="m-desc">Shared MLP scorer with <b>Gumbel-Top-K</b> action head — <span class="mono">O(K)</span> policy-gradient variance, independent of N. Beats OC-high at short horizons or hub-overloaded starts.</div>
+      <div class="m-chip-row">
+        <span class="m-chip">625 s offline</span>
+        <span class="m-chip">75 ms / ep</span>
+      </div>
+    </div>
+    <div class="m-card oc-base">
+      <div class="m-rank">RANK<b>3</b></div>
+      <div class="m-kind">Optimal Control · Baseline</div>
+      <h4>OC-Random</h4>
+      <div class="m-deaths">25.2<span class="m-std">± 4.1</span></div>
+      <div class="m-deaths-label">Mean deaths over 30 rollouts</div>
+      <div class="m-bar"><div class="m-bar-fill" style="width:94.7%;background:#94a3b8"></div></div>
+      <div class="m-desc">Same group-level OC rates as OC-high, but doses go to <b>uniformly random</b> nodes within each group. Isolates the value of the degree heuristic.</div>
+      <div class="m-chip-row">
+        <span class="m-chip">9 s offline</span>
+      </div>
+    </div>
+    <div class="m-card rl-base">
+      <div class="m-rank">RANK<b>4</b></div>
+      <div class="m-kind">Reinforcement Learning · Baseline</div>
+      <h4>Naive RL</h4>
+      <div class="m-deaths">26.6<span class="m-std">± 4.2</span></div>
+      <div class="m-deaths-label">Mean deaths over 30 rollouts</div>
+      <div class="m-bar"><div class="m-bar-fill" style="width:100%;background:#c4b5fd"></div></div>
+      <div class="m-desc">Same scorer, same PPO loop — but <b>independent Bernoulli</b> action head. <span class="mono">Θ(N)</span> gradient variance drowns out the K informative decisions per day.</div>
+      <div class="m-chip-row">
+        <span class="m-chip">792 s offline</span>
+        <span class="m-chip">75 ms / ep</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ablation highlights -->
+  <div class="ablation-row">
+    <div class="ab-card">
+      <div class="ab-label">Δ<sub>heur</sub> — intra-group heuristic</div>
+      <div class="ab-value">+1.3<span class="ab-unit">deaths (median)</span></div>
+      <div class="ab-sub">Positive in <b>11 / 12</b> regime points, ≈ <b>5–10%</b> of the OC-high reference. Reporting "OC" on a network without specifying the intra-group selection rule conflates two separable components. <i>Counter-productive only at init = 1 200 on N = 5 000 (overloaded start).</i></div>
+    </div>
+    <div class="ab-card arch">
+      <div class="ab-label">Δ<sub>arch</sub> — Top-K action space</div>
+      <div class="ab-value">+1.9<span class="ab-unit">deaths (median)</span></div>
+      <div class="ab-sub">Positive in <b>11 / 12</b> regime points. Node RL and Naive RL share <b>everything else</b> — scorer, PPO loop, hyperparameters — so the gap is entirely attributable to the action-head reparametrisation. Empirically confirms the <span class="mono">O(K)</span> vs <span class="mono">Θ(N)</span> gradient-variance bound.</div>
+    </div>
+  </div>
+
+  <!-- Three sweep charts -->
+  <h3 style="font-size:1.15rem;margin-bottom:4px">Regime analysis · three axes</h3>
+  <p style="font-size:.88rem;color:var(--text-muted);margin-bottom:14px">Sweeping population size, horizon length, and initial infection ratio. The shaded band is the gap between Node RL and OC-high in each row: when it dips below zero, Node RL wins outright.</p>
+  <div class="sweep-grid">
+    <div class="sweep-card">
+      <h4>Population size</h4>
+      <div class="sweep-sub">Ratios held fixed (K = 0.2% N, init = 6% N, T = 60)</div>
+      <canvas id="sweep-N"></canvas>
+      <div class="sweep-legend">
+        <span><span style="display:inline-block;width:10px;height:2px;background:var(--accent);vertical-align:middle;margin-right:4px"></span>OC-high</span>
+        <span><span style="display:inline-block;width:10px;height:2px;background:var(--violet);vertical-align:middle;margin-right:4px"></span>Node RL</span>
+      </div>
+      <div class="sweep-verdict oc-wins"><b>OC-high wins at every N.</b> The gap grows from +0.4 (N=5k) to +3.8 (N=20k) — as the susceptible pool grows, the ODE mean-field becomes more accurate, not less.</div>
+    </div>
+    <div class="sweep-card">
+      <h4>Horizon length</h4>
+      <div class="sweep-sub">Fixed N = 10 000, V<sub>max</sub> = 20, init = 600</div>
+      <canvas id="sweep-T"></canvas>
+      <div class="sweep-legend">
+        <span><span style="display:inline-block;width:10px;height:2px;background:var(--accent);vertical-align:middle;margin-right:4px"></span>OC-high</span>
+        <span><span style="display:inline-block;width:10px;height:2px;background:var(--violet);vertical-align:middle;margin-right:4px"></span>Node RL</span>
+      </div>
+      <div class="sweep-verdict rl-wins"><b>Node RL wins at T = 30</b> (19.0 vs 20.1, gap −1.1). Short horizons are dominated by stochastic first-wave dynamics that the pre-computed OC plan can't react to.</div>
+    </div>
+    <div class="sweep-card">
+      <h4>Initial infections</h4>
+      <div class="sweep-sub">Fixed N = 5 000, V<sub>max</sub> = 10, T = 60, 50:17:33 split</div>
+      <canvas id="sweep-init"></canvas>
+      <div class="sweep-legend">
+        <span><span style="display:inline-block;width:10px;height:2px;background:var(--accent);vertical-align:middle;margin-right:4px"></span>OC-high</span>
+        <span><span style="display:inline-block;width:10px;height:2px;background:var(--violet);vertical-align:middle;margin-right:4px"></span>Node RL</span>
+      </div>
+      <div class="sweep-verdict rl-wins"><b>Node RL wins at init = 1 200</b> (27.6 vs 28.6, gap −1.0). A large fraction of hubs is already infected at t = 0, so high-degree targeting wastes doses on nodes behind an active wavefront.</div>
+    </div>
+  </div>
+
+  <!-- Regime map table -->
+  <h3 style="font-size:1.15rem;margin-bottom:4px">Regime map · which method to use</h3>
+  <p style="font-size:.88rem;color:var(--text-muted);margin-bottom:12px">The thesis's main practical deliverable: a decision rule mapping deployment conditions to the preferable method, with the measured gap and relative preparation cost.</p>
+  <div class="regime-map">
+    <table>
+      <thead>
+        <tr>
+          <th>Regime</th>
+          <th>Representative point</th>
+          <th style="text-align:right">Gap</th>
+          <th style="text-align:right">Cost ratio</th>
+          <th>Recommended</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Default deployment</td>
+          <td class="mono">N = 5k, T = 60, init = 300</td>
+          <td class="mono" style="text-align:right"><span class="gap-pos">+0.4</span></td>
+          <td class="mono" style="text-align:right">~70×</td>
+          <td><span class="v-chip oc">OC-high</span> <span class="v-other">(tied)</span></td>
+        </tr>
+        <tr>
+          <td>Large population, ratios held</td>
+          <td class="mono">N = 10–20k, fixed %</td>
+          <td class="mono" style="text-align:right"><span class="gap-pos">+0.8 → +3.8</span></td>
+          <td class="mono" style="text-align:right">~70–120×</td>
+          <td><span class="v-chip oc">OC-high</span></td>
+        </tr>
+        <tr>
+          <td>Long horizon</td>
+          <td class="mono">T = 70–90</td>
+          <td class="mono" style="text-align:right"><span class="gap-pos">+1.0 → +1.9</span></td>
+          <td class="mono" style="text-align:right">~70×</td>
+          <td><span class="v-chip oc">OC-high</span></td>
+        </tr>
+        <tr style="background:#fef3c7">
+          <td><b>Short horizon</b></td>
+          <td class="mono">T = 30</td>
+          <td class="mono" style="text-align:right"><span class="gap-neg">−1.1</span></td>
+          <td class="mono" style="text-align:right">~180×</td>
+          <td><span class="v-chip rl">Node RL</span></td>
+        </tr>
+        <tr style="background:#fef3c7">
+          <td><b>Overloaded initial state</b></td>
+          <td class="mono">init = 1 200 on N = 5k</td>
+          <td class="mono" style="text-align:right"><span class="gap-neg">−1.0</span></td>
+          <td class="mono" style="text-align:right">~70×</td>
+          <td><span class="v-chip rl">Node RL</span></td>
+        </tr>
+        <tr>
+          <td><i>Intra-group equity priority</i></td>
+          <td class="mono">Any regime where Δ<sub>heur</sub> &lt; 0</td>
+          <td class="mono" style="text-align:right">n/a</td>
+          <td class="mono" style="text-align:right">n/a</td>
+          <td><span class="v-other">OC-Random or Node RL</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Four practical rules -->
+  <h3 style="font-size:1.15rem;margin-bottom:4px">Four practical rules</h3>
+  <p style="font-size:.88rem;color:var(--text-muted);margin-bottom:14px">The takeaway that comes out of the regime map, ablations, and runtime analysis together.</p>
+  <div class="takeaway-grid">
+    <div class="tk-card">
+      <h5>OC-high is the default</h5>
+      <p>On moderate horizons and realistic initial-infection ratios, OC-high matches or beats Node RL at ~70× less preparation cost. If you had to pick one method without regime information, it's this.</p>
+    </div>
+    <div class="tk-card rl">
+      <h5>Node RL earns its compute when the ODE breaks down</h5>
+      <p>Short horizons (<span class="mono">T ≲ 30</span>) where stochastic first-wave dynamics dominate, or overloaded starts where too many hubs are already infected at t = 0 for the degree heuristic to bite.</p>
+    </div>
+    <div class="tk-card warn">
+      <h5>The intra-group heuristic is not a free add-on</h5>
+      <p>High-degree-first contributes median +1.3 deaths — the same order as the group-level OC itself. Reports that say "OC on a network" without disclosing the post-hoc rule are conflating two separable contributions.</p>
+    </div>
+    <div class="tk-card note">
+      <h5>Action-space design decides trainability</h5>
+      <p>Node RL's Top-K head beats Naive RL's Bernoulli head by +1.9 deaths with every other component held identical. Without the <span class="mono">O(K)</span> reparametrisation, individual-level RL doesn't scale to this problem at all.</p>
     </div>
   </div>
 </section>
@@ -1826,6 +2057,132 @@ function bindTopnavScroll() {
   onScroll();
 }
 
+// ========================================================
+// SECTION 5 — Sweep charts (Ch 6 final results)
+// ========================================================
+function drawSweepChart(canvasId, xs, ocVals, rlVals, xLabel, opts) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const parent = canvas.parentElement;
+  const rect = parent.getBoundingClientRect();
+  const W = rect.width - 36; // account for padding
+  const H = 180;
+  canvas.width = W * devicePixelRatio;
+  canvas.height = H * devicePixelRatio;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+
+  const padL = 36, padR = 14, padT = 14, padB = 28;
+  const all = [...ocVals, ...rlVals];
+  const yMin = Math.min(...all);
+  const yMax = Math.max(...all);
+  const yPad = Math.max(2, (yMax - yMin) * 0.18);
+  const y0 = Math.max(0, yMin - yPad);
+  const y1 = yMax + yPad;
+  const xScale = (W - padL - padR) / Math.max(1, xs.length - 1);
+  const yScale = (H - padT - padB) / (y1 - y0);
+  const yToPix = v => H - padB - (v - y0) * yScale;
+  const xToPix = i => padL + i * xScale;
+
+  // bg grid
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = '#e5e7eb'; ctx.lineWidth = 0.8;
+  for (let g=0; g<=3; g++) {
+    const y = padT + (H - padT - padB) * g / 3;
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+  }
+  // y ticks
+  ctx.fillStyle = '#9ca3af'; ctx.font = '10px ui-monospace, monospace'; ctx.textAlign = 'right';
+  for (let g=0; g<=3; g++) {
+    const yVal = y1 - (y1 - y0) * g / 3;
+    const y = padT + (H - padT - padB) * g / 3;
+    ctx.fillText(yVal.toFixed(0), padL - 6, y + 3);
+  }
+
+  // shaded gap
+  ctx.fillStyle = 'rgba(139,92,246,0.10)';
+  ctx.beginPath();
+  for (let i=0; i<xs.length; i++) ctx.lineTo(xToPix(i), yToPix(ocVals[i]));
+  for (let i=xs.length-1; i>=0; i--) ctx.lineTo(xToPix(i), yToPix(rlVals[i]));
+  ctx.closePath();
+  ctx.fill();
+
+  // OC-high line
+  ctx.strokeStyle = '#2563eb'; ctx.lineWidth = 2.2;
+  ctx.beginPath();
+  for (let i=0; i<xs.length; i++) {
+    const x = xToPix(i), y = yToPix(ocVals[i]);
+    if (i===0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  // OC dots
+  for (let i=0; i<xs.length; i++) {
+    ctx.fillStyle = '#2563eb';
+    ctx.beginPath(); ctx.arc(xToPix(i), yToPix(ocVals[i]), 3.2, 0, Math.PI*2); ctx.fill();
+  }
+
+  // Node RL line
+  ctx.strokeStyle = '#8b5cf6'; ctx.lineWidth = 2.2;
+  ctx.beginPath();
+  for (let i=0; i<xs.length; i++) {
+    const x = xToPix(i), y = yToPix(rlVals[i]);
+    if (i===0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  for (let i=0; i<xs.length; i++) {
+    ctx.fillStyle = '#8b5cf6';
+    ctx.beginPath(); ctx.arc(xToPix(i), yToPix(rlVals[i]), 3.2, 0, Math.PI*2); ctx.fill();
+    // highlight the row where RL wins
+    if (rlVals[i] < ocVals[i]) {
+      ctx.strokeStyle = '#8b5cf6'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(xToPix(i), yToPix(rlVals[i]), 7, 0, Math.PI*2); ctx.stroke();
+    }
+  }
+
+  // x labels
+  ctx.fillStyle = '#64748b'; ctx.font = '10px ui-monospace, monospace'; ctx.textAlign = 'center';
+  for (let i=0; i<xs.length; i++) {
+    const x = xToPix(i);
+    ctx.fillText(xs[i], x, H - padB + 14);
+  }
+  // x axis label
+  ctx.fillStyle = '#94a3b8'; ctx.font = '10px -apple-system, sans-serif'; ctx.textAlign = 'right';
+  ctx.fillText(xLabel, W - padR, H - 4);
+  // y axis label
+  ctx.fillStyle = '#94a3b8';
+  ctx.save();
+  ctx.translate(10, H/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.textAlign = 'center';
+  ctx.fillText('deaths', 0, 0);
+  ctx.restore();
+}
+
+function drawAllSweeps() {
+  // Data from Chapter 6 tables
+  // Table 6.3 — Population size
+  drawSweepChart('sweep-N',
+    ['5k','10k','15k','20k'],
+    [22.0, 44.8, 66.2, 89.4],
+    [22.4, 45.6, 68.9, 93.2],
+    'N');
+  // Table 6.4 — Horizon
+  drawSweepChart('sweep-T',
+    ['30','50','70','90'],
+    [20.1, 40.6, 47.3, 48.6],
+    [19.0, 42.3, 49.2, 49.6],
+    'T (days)');
+  // Table 6.5 — Initial infections
+  drawSweepChart('sweep-init',
+    ['300','500','800','1200'],
+    [22.0, 24.4, 25.4, 28.6],
+    [22.4, 24.5, 26.8, 27.6],
+    'initial infections');
+}
+
 // ---------- Boot ----------
 window.addEventListener('load', () => {
   heroInit();
@@ -1837,6 +2194,11 @@ window.addEventListener('load', () => {
   simInit();
   simBuildNetwork();
   bindSim();
+  drawAllSweeps();
+});
+window.addEventListener('resize', () => {
+  // redraw sweeps on resize so they fit new width
+  setTimeout(drawAllSweeps, 150);
 });
 window.addEventListener('resize', () => {
   if (HERO.canvas) {
