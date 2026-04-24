@@ -52,14 +52,24 @@ code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font
 canvas{display:block}
 
 /* ── Top navigation ── */
-#topnav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-#topnav .brand{font-size:.82rem;font-weight:700;color:var(--text)}
-#topnav .brand span{color:var(--accent)}
+#topnav{position:fixed;top:0;left:0;right:0;z-index:50;background:transparent;border-bottom:1px solid transparent;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;transition:background .3s, border-color .3s, color .3s, padding .3s}
+#topnav.on-hero{color:rgba(255,255,255,.92)}
+#topnav.on-hero .brand{color:rgba(255,255,255,.92)}
+#topnav.on-hero .brand span{color:#fbbf24}
+#topnav.on-hero nav a{color:rgba(226,232,240,.7)}
+#topnav.on-hero nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+#topnav.on-hero .home-link{color:rgba(226,232,240,.7)}
+#topnav.scrolled{background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom-color:var(--border);padding:10px 24px}
+#topnav.scrolled .brand{color:var(--text)}
+#topnav.scrolled .brand span{color:var(--accent)}
+#topnav.scrolled nav a{color:var(--text-muted)}
+#topnav.scrolled nav a:hover{background:var(--bg-soft);color:var(--text)}
+#topnav.scrolled .home-link{color:var(--text-muted)}
+#topnav .brand{font-size:.82rem;font-weight:700;transition:color .3s}
 #topnav nav{display:flex;gap:4px;flex-wrap:wrap}
-#topnav nav a{font-size:.78rem;color:var(--text-muted);padding:5px 10px;border-radius:6px;transition:all .15s}
-#topnav nav a:hover{background:var(--bg-soft);color:var(--text);text-decoration:none}
+#topnav nav a{font-size:.78rem;padding:5px 10px;border-radius:6px;transition:all .15s;text-decoration:none}
 #topnav .spacer{flex:1}
-#topnav .home-link{font-size:.76rem;color:var(--text-muted)}
+#topnav .home-link{font-size:.76rem;text-decoration:none}
 
 /* ── Layout ── */
 .container{max-width:1200px;margin:0 auto;padding:0 24px}
@@ -69,13 +79,30 @@ canvas{display:block}
 .section h2{font-size:1.9rem;margin-bottom:10px}
 .section .lede{font-size:1.02rem;color:var(--text-muted);max-width:760px;margin-bottom:28px}
 
-/* ── Hero ── */
-#hero{padding:64px 0 40px}
-#hero h1{font-size:2.4rem;line-height:1.15;letter-spacing:-.01em;margin-bottom:14px}
-#hero h1 em{font-style:normal;color:var(--accent)}
-#hero .subtitle{font-size:1.08rem;color:var(--text-muted);max-width:760px;margin-bottom:18px}
-#hero .meta{display:flex;gap:16px;flex-wrap:wrap;font-size:.82rem;color:var(--text-faint)}
-#hero .meta b{color:var(--text);font-weight:600}
+/* ── Cinematic hero scene (full-viewport dark) ── */
+#hero-scene{position:relative;width:100%;height:100vh;min-height:620px;background:radial-gradient(ellipse at 50% 40%, #10192e 0%, #060912 70%, #030509 100%);overflow:hidden;cursor:pointer}
+#hero-canvas{position:absolute;top:0;left:0;width:100%;height:100%;display:block}
+#hero-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center, transparent 40%, rgba(3,5,9,.55) 100%)}
+#hero-overlay{position:absolute;left:0;right:0;bottom:10%;text-align:center;color:#e2e8f0;pointer-events:none;z-index:5;padding:0 24px}
+#hero-badge{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#fbbf24;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.3);padding:5px 14px;border-radius:999px;margin-bottom:20px;opacity:0;animation:heroFadeUp 1.2s .2s forwards;backdrop-filter:blur(4px)}
+#hero-title{font-size:clamp(2.2rem, 5.6vw, 4.4rem);font-weight:800;letter-spacing:-.02em;color:#fff;text-shadow:0 0 40px rgba(96,165,250,.35), 0 0 80px rgba(96,165,250,.15);line-height:1.1;margin-bottom:16px;opacity:0;animation:heroFadeUp 1.6s .6s forwards}
+#hero-title em{font-style:normal;color:#fbbf24;text-shadow:0 0 30px rgba(251,191,36,.4)}
+#hero-sub{font-size:clamp(.95rem, 1.5vw, 1.15rem);color:rgba(226,232,240,.72);max-width:680px;margin:0 auto 22px;line-height:1.55;opacity:0;animation:heroFadeUp 1.6s 1.0s forwards}
+#hero-meta{font-size:.78rem;color:rgba(203,213,225,.55);margin-bottom:26px;opacity:0;animation:heroFadeUp 1.6s 1.3s forwards}
+#hero-cta{pointer-events:auto;display:inline-flex;align-items:center;gap:10px;padding:12px 26px;border-radius:999px;border:1px solid rgba(251,191,36,.5);background:rgba(251,191,36,.08);color:#fbbf24;font-size:.88rem;font-weight:700;letter-spacing:.03em;cursor:pointer;backdrop-filter:blur(6px);transition:all .25s;opacity:0;animation:heroFadeUp 1.6s 1.6s forwards, heroCtaPulse 2.4s 3s infinite;font-family:inherit}
+#hero-cta:hover{background:rgba(251,191,36,.18);border-color:#fbbf24;color:#fff;transform:translateY(-2px)}
+#hero-cta .arrow{display:inline-block;transition:transform .25s}
+#hero-cta:hover .arrow{transform:translateY(3px)}
+#hero-phase-label{position:absolute;top:80px;left:50%;transform:translateX(-50%);font-size:.7rem;color:rgba(226,232,240,.55);font-family:ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;z-index:4;opacity:0;transition:opacity .4s}
+#hero-phase-label.show{opacity:1}
+#hero-tooltip{position:fixed;z-index:200;pointer-events:none;background:rgba(15,23,42,.95);color:#fff;border:1px solid rgba(96,165,250,.35);border-radius:8px;padding:7px 11px;font-size:.74rem;display:none;font-family:ui-monospace,monospace;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+#hero-tooltip .tt-k{color:#fbbf24}
+#hero-tooltip .tt-v{color:#fff;font-weight:700}
+@keyframes heroFadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes heroCtaPulse{0%,100%{box-shadow:0 0 0 0 rgba(251,191,36,.5)}50%{box-shadow:0 0 0 14px rgba(251,191,36,0)}}
+
+/* hide the old legacy hero section if any */
+#hero{display:none}
 
 /* ── Group cards ── */
 .grp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px}
@@ -207,7 +234,7 @@ footer a{color:var(--text-muted)}
 </head>
 <body>
 
-<div id="topnav">
+<div id="topnav" class="on-hero">
   <span class="brand">Vaccine <span>RL</span> · Interactive Demo</span>
   <nav>
     <a href="#groups">1&nbsp;Groups</a>
@@ -217,8 +244,23 @@ footer a{color:var(--text-muted)}
     <a href="#methods">5&nbsp;Methods</a>
   </nav>
   <span class="spacer"></span>
-  <a class="home-link" href="https://junfei-z.github.io/">← Back to homepage</a>
+  <a class="home-link" href="https://junfei-z.github.io/">← Homepage</a>
 </div>
+
+<!-- ========== CINEMATIC HERO ========== -->
+<section id="hero-scene">
+  <canvas id="hero-canvas"></canvas>
+  <div id="hero-vignette"></div>
+  <div id="hero-phase-label"><span id="hero-phase-text">growing network</span></div>
+  <div id="hero-overlay">
+    <div id="hero-badge">Master's Thesis · University of Pennsylvania · 2026</div>
+    <h1 id="hero-title">Who gets the <em>vaccine</em> today?</h1>
+    <p id="hero-sub">A node-level reinforcement-learning approach to vaccine allocation on heterogeneous contact networks — bridging optimal control and deep RL under a hard daily dose budget.</p>
+    <div id="hero-meta">Junfei Zhan · Advisor Prof. Saswati Sarkar</div>
+    <button id="hero-cta" onclick="enterThesis()">Explore the model <span class="arrow">↓</span></button>
+  </div>
+  <div id="hero-tooltip"></div>
+</section>
 
 <div class="container">
 
@@ -1414,8 +1456,348 @@ function bindSim() {
   });
 }
 
+// ========================================================
+// HERO SCENE — cinematic dark opener
+// ========================================================
+const HERO = {
+  canvas:null, ctx:null, W:0, H:0,
+  nodes:[], edges:[], positions:[], neigh:[],
+  bag:[], m:3, targetN:280,
+  phase:'growing', // growing | settling | coloring | sparking | idle
+  phaseStart:0,
+  growSpeed:3, // nodes per frame
+  hoveredId:-1,
+  infectedSet:new Set(),
+  infectPulses:[], // {nodeId, t0}
+  lastFrame:0,
+  started:false
+};
+function heroInit() {
+  HERO.canvas = document.getElementById('hero-canvas');
+  heroResize();
+  HERO.ctx = HERO.canvas.getContext('2d');
+  HERO.ctx.scale(devicePixelRatio, devicePixelRatio);
+  // seed graph (m+1 connected)
+  const seed = HERO.m + 1;
+  for (let i=0;i<seed;i++) heroAddNode();
+  for (let i=0;i<seed;i++) for (let j=i+1;j<seed;j++) heroAddEdge(i,j);
+  // event listeners
+  HERO.canvas.addEventListener('mousemove', heroMouseMove);
+  HERO.canvas.addEventListener('mouseleave', () => { HERO.hoveredId = -1; document.getElementById('hero-tooltip').style.display='none'; });
+  document.getElementById('hero-scene').addEventListener('click', (e) => {
+    // clicks on the CTA are handled separately, others scroll
+    if (e.target.id === 'hero-cta' || e.target.closest('#hero-cta')) return;
+    enterThesis();
+  });
+  HERO.phaseStart = performance.now();
+  requestAnimationFrame(heroTick);
+  setTimeout(()=>{ document.getElementById('hero-phase-label').classList.add('show'); }, 600);
+}
+function heroResize() {
+  const rect = HERO.canvas.parentElement.getBoundingClientRect();
+  HERO.canvas.width = rect.width * devicePixelRatio;
+  HERO.canvas.height = rect.height * devicePixelRatio;
+  HERO.canvas.style.width = rect.width+'px';
+  HERO.canvas.style.height = rect.height+'px';
+  HERO.W = rect.width; HERO.H = rect.height;
+}
+function heroAddNode() {
+  const i = HERO.nodes.length;
+  HERO.nodes.push({id:i, degree:0, born: performance.now()});
+  const cx = HERO.W/2, cy = HERO.H/2;
+  const r = Math.min(HERO.W, HERO.H)*0.4;
+  const theta = Math.random()*Math.PI*2;
+  HERO.positions.push({
+    x: cx + r*Math.cos(theta) + (Math.random()-.5)*12,
+    y: cy + r*Math.sin(theta) + (Math.random()-.5)*12,
+    vx:0, vy:0
+  });
+  HERO.neigh.push([]);
+}
+function heroAddEdge(a,b) {
+  HERO.edges.push({source:a, target:b, born: performance.now()});
+  HERO.nodes[a].degree++; HERO.nodes[b].degree++;
+  HERO.neigh[a].push(b); HERO.neigh[b].push(a);
+  HERO.bag.push(a); HERO.bag.push(b);
+}
+function heroGrowOne() {
+  const v = HERO.nodes.length;
+  heroAddNode();
+  const picks = new Set();
+  let tries = 0;
+  while (picks.size < HERO.m && tries < HERO.m*30) {
+    const u = HERO.bag[randInt(HERO.bag.length)];
+    if (u !== v) picks.add(u);
+    tries++;
+  }
+  while (picks.size < HERO.m) {
+    const u = randInt(v);
+    if (u !== v) picks.add(u);
+  }
+  picks.forEach(u => heroAddEdge(u, v));
+}
+function heroForceTick(alpha) {
+  const N = HERO.nodes.length;
+  const cx = HERO.W/2, cy = HERO.H/2;
+  for (let i=0;i<N;i++) {
+    const p = HERO.positions[i];
+    p.vx += (cx - p.x) * 0.011 * alpha;
+    p.vy += (cy - p.y) * 0.011 * alpha;
+  }
+  // repulsion (grid bucket)
+  const cellSize = 26;
+  const cols = Math.ceil(HERO.W/cellSize), rows = Math.ceil(HERO.H/cellSize);
+  const grid = new Array(cols*rows);
+  for (let i=0;i<grid.length;i++) grid[i]=[];
+  for (let i=0;i<N;i++) {
+    const p = HERO.positions[i];
+    const cxI = clamp(Math.floor(p.x/cellSize),0,cols-1);
+    const cyI = clamp(Math.floor(p.y/cellSize),0,rows-1);
+    grid[cyI*cols+cxI].push(i);
+  }
+  for (let i=0;i<N;i++) {
+    const p = HERO.positions[i];
+    const cxI = clamp(Math.floor(p.x/cellSize),0,cols-1);
+    const cyI = clamp(Math.floor(p.y/cellSize),0,rows-1);
+    for (let ay=Math.max(0,cyI-1); ay<=Math.min(rows-1,cyI+1); ay++)
+      for (let ax=Math.max(0,cxI-1); ax<=Math.min(cols-1,cxI+1); ax++) {
+        const cell = grid[ay*cols+ax];
+        for (const j of cell) if (j!==i) {
+          const q = HERO.positions[j];
+          let dx = p.x-q.x, dy = p.y-q.y;
+          let d2 = dx*dx+dy*dy;
+          if (d2 < 0.01) { dx=Math.random()-.5; dy=Math.random()-.5; d2=1; }
+          if (d2 < 1400) {
+            const f = 90 * alpha / d2;
+            p.vx += dx*f; p.vy += dy*f;
+          }
+        }
+      }
+  }
+  for (const e of HERO.edges) {
+    const a = HERO.positions[e.source], b = HERO.positions[e.target];
+    const dx = b.x-a.x, dy = b.y-a.y;
+    const d = Math.sqrt(dx*dx+dy*dy) || 0.01;
+    const rest = 34;
+    const f = (d-rest)*0.055*alpha;
+    const fx = dx/d*f, fy = dy/d*f;
+    a.vx += fx; a.vy += fy;
+    b.vx -= fx; b.vy -= fy;
+  }
+  const pad = 30;
+  for (let i=0;i<N;i++) {
+    const p = HERO.positions[i];
+    p.vx *= 0.6; p.vy *= 0.6;
+    p.x += p.vx; p.y += p.vy;
+    if (p.x<pad) { p.x=pad; p.vx=0; }
+    if (p.x>HERO.W-pad) { p.x=HERO.W-pad; p.vx=0; }
+    if (p.y<pad) { p.y=pad; p.vy=0; }
+    if (p.y>HERO.H-pad) { p.y=HERO.H-pad; p.vy=0; }
+  }
+}
+function heroMouseMove(ev) {
+  const rect = HERO.canvas.getBoundingClientRect();
+  const mx = ev.clientX - rect.left;
+  const my = ev.clientY - rect.top;
+  let best = -1, bd = 16*16;
+  for (let i=0;i<HERO.nodes.length;i++) {
+    const p = HERO.positions[i];
+    const d = (p.x-mx)*(p.x-mx)+(p.y-my)*(p.y-my);
+    if (d < bd) { bd = d; best = i; }
+  }
+  HERO.hoveredId = best;
+  const tt = document.getElementById('hero-tooltip');
+  if (best >= 0 && HERO.phase !== 'growing' && HERO.nodes[best].group) {
+    const n = HERO.nodes[best];
+    const g = n.group || '—';
+    const isInf = HERO.infectedSet.has(best);
+    tt.innerHTML = `<span class="tt-k">node</span> <span class="tt-v">#${n.id}</span> · <span class="tt-k">group</span> <span class="tt-v" style="color:${GROUP_COLOR[g]}">${g}</span> · <span class="tt-k">deg</span> <span class="tt-v">${n.degree}</span>${isInf?' · <span class="tt-v" style="color:#ef4444">infected</span>':''}`;
+    tt.style.display = 'block';
+    tt.style.left = (ev.clientX + 14) + 'px';
+    tt.style.top = (ev.clientY + 14) + 'px';
+  } else {
+    tt.style.display = 'none';
+  }
+}
+function heroStartSparking() {
+  // pick a hub (highest-degree node) and ignite
+  let best = 0, bd = -1;
+  for (let i=0;i<HERO.nodes.length;i++) if (HERO.nodes[i].degree > bd) { bd = HERO.nodes[i].degree; best = i; }
+  HERO.infectedSet.add(best);
+  HERO.infectPulses.push({nodeId:best, t0: performance.now()});
+  // schedule spreads
+  let t = 450;
+  for (const nb of HERO.neigh[best].slice(0, 6)) {
+    setTimeout(()=>{ HERO.infectedSet.add(nb); HERO.infectPulses.push({nodeId:nb, t0: performance.now()}); spreadAround(nb, 2); }, t);
+    t += 260;
+  }
+}
+function spreadAround(nid, depth) {
+  if (depth <= 0) return;
+  let t = 300;
+  for (const nb of HERO.neigh[nid]) {
+    if (HERO.infectedSet.has(nb)) continue;
+    if (Math.random() < 0.35) {
+      setTimeout(()=>{
+        HERO.infectedSet.add(nb);
+        HERO.infectPulses.push({nodeId:nb, t0: performance.now()});
+        spreadAround(nb, depth-1);
+      }, t);
+      t += 280 + randInt(240);
+    }
+  }
+}
+function heroTick(now) {
+  if (!HERO.ctx) return;
+  const ctx = HERO.ctx;
+  const dt = now - HERO.lastFrame;
+  HERO.lastFrame = now;
+
+  if (HERO.phase === 'growing') {
+    if (HERO.nodes.length < HERO.targetN) {
+      // grow several per frame, ramp up speed
+      const progress = HERO.nodes.length / HERO.targetN;
+      const growRate = Math.max(1, Math.floor(1 + progress*6));
+      for (let s=0;s<growRate;s++) if (HERO.nodes.length < HERO.targetN) heroGrowOne();
+      heroForceTick(0.55);
+    } else {
+      HERO.phase = 'settling';
+      HERO.phaseStart = now;
+      document.getElementById('hero-phase-text').textContent = 'settling layout';
+    }
+  } else if (HERO.phase === 'settling') {
+    heroForceTick(0.35);
+    if (now - HERO.phaseStart > 900) {
+      // assign groups
+      assignGroups(HERO.nodes, 1.5, 0.17);
+      HERO.phase = 'coloring';
+      HERO.phaseStart = now;
+      document.getElementById('hero-phase-text').textContent = 'assigning groups · X baseline · Y high-risk · Z hubs';
+    }
+  } else if (HERO.phase === 'coloring') {
+    heroForceTick(0.15);
+    if (now - HERO.phaseStart > 1400) {
+      HERO.phase = 'sparking';
+      HERO.phaseStart = now;
+      document.getElementById('hero-phase-text').textContent = 'a hub ignites → infection spreads along the graph';
+      heroStartSparking();
+    }
+  } else if (HERO.phase === 'sparking') {
+    heroForceTick(0.08);
+    if (now - HERO.phaseStart > 8000) {
+      HERO.phase = 'idle';
+      document.getElementById('hero-phase-text').textContent = 'click anywhere to explore the full thesis';
+    }
+  } else {
+    heroForceTick(0.04);
+  }
+
+  heroDraw(now);
+  requestAnimationFrame(heroTick);
+}
+function heroDraw(now) {
+  const ctx = HERO.ctx;
+  // soft trail by painting with a semi-transparent bg once per frame (subtle motion blur)
+  ctx.fillStyle = 'rgba(6,9,18,0.35)';
+  ctx.fillRect(0,0,HERO.W,HERO.H);
+
+  // edges
+  ctx.lineWidth = 0.6;
+  for (const e of HERO.edges) {
+    const a = HERO.positions[e.source], b = HERO.positions[e.target];
+    const aInf = HERO.infectedSet.has(e.source);
+    const bInf = HERO.infectedSet.has(e.target);
+    if (aInf && bInf) ctx.strokeStyle = 'rgba(239,68,68,0.35)';
+    else if (HERO.phase === 'growing' || HERO.phase === 'settling') ctx.strokeStyle = 'rgba(147,197,253,0.17)';
+    else ctx.strokeStyle = 'rgba(148,163,184,0.13)';
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+    ctx.stroke();
+  }
+
+  // nodes
+  const hid = HERO.hoveredId;
+  for (let i=0;i<HERO.nodes.length;i++) {
+    const n = HERO.nodes[i];
+    const p = HERO.positions[i];
+    const age = now - n.born;
+    const r = Math.min(10, 2 + Math.sqrt(Math.max(n.degree,1))*0.7);
+    let color = 'rgba(226,232,240,0.95)';
+    let glow = 'rgba(96,165,250,0.4)';
+    if (HERO.infectedSet.has(i)) {
+      color = '#ef4444';
+      glow = 'rgba(239,68,68,0.7)';
+    } else if (HERO.phase !== 'growing' && HERO.phase !== 'settling' && n.group) {
+      color = GROUP_COLOR[n.group];
+      if (n.group === 'Z') glow = 'rgba(16,185,129,0.55)';
+      else if (n.group === 'Y') glow = 'rgba(245,158,11,0.5)';
+      else glow = 'rgba(148,163,184,0.3)';
+    }
+    // newborn pop
+    let popScale = 1;
+    if (age < 450) {
+      popScale = 1 + (1 - age/450)*0.9;
+    }
+    // glow
+    ctx.shadowBlur = (n.degree > 10 ? 18 : 10);
+    ctx.shadowColor = glow;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, r*popScale, 0, Math.PI*2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    if (i === hid) {
+      ctx.shadowBlur = 0;
+      ctx.lineWidth = 1.8;
+      ctx.strokeStyle = '#fff';
+      ctx.stroke();
+    }
+  }
+  ctx.shadowBlur = 0;
+
+  // infection pulses — expanding rings
+  const keep = [];
+  for (const pulse of HERO.infectPulses) {
+    const age = now - pulse.t0;
+    if (age > 1600) continue;
+    keep.push(pulse);
+    const p = HERO.positions[pulse.nodeId];
+    const rr = 4 + age*0.06;
+    const alpha = Math.max(0, 0.55 - age/1600*0.55);
+    ctx.strokeStyle = `rgba(239,68,68,${alpha})`;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, rr, 0, Math.PI*2);
+    ctx.stroke();
+  }
+  HERO.infectPulses = keep;
+}
+function enterThesis() {
+  const target = document.getElementById('groups');
+  if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function bindTopnavScroll() {
+  const nav = document.getElementById('topnav');
+  const hero = document.getElementById('hero-scene');
+  const onScroll = () => {
+    const y = window.scrollY;
+    const heroBottom = hero.offsetHeight - 80;
+    if (y < heroBottom) {
+      nav.classList.add('on-hero');
+      nav.classList.remove('scrolled');
+    } else {
+      nav.classList.remove('on-hero');
+      nav.classList.add('scrolled');
+    }
+  };
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+}
+
 // ---------- Boot ----------
 window.addEventListener('load', () => {
+  heroInit();
+  bindTopnavScroll();
   buildDiseaseDiagram();
   baInit();
   baReset();
@@ -1423,6 +1805,12 @@ window.addEventListener('load', () => {
   simInit();
   simBuildNetwork();
   bindSim();
+});
+window.addEventListener('resize', () => {
+  if (HERO.canvas) {
+    heroResize();
+    HERO.ctx.scale(devicePixelRatio, devicePixelRatio);
+  }
 });
 
 // resize handling (simple)
