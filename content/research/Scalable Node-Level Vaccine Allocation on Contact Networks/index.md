@@ -1,5 +1,5 @@
 ---
-title: "Scalable Node-Level Vaccine Allocation on Contact Networks: Bridging Optimal Control and Reinforcement Learning"
+title: "Bridging Optimal Control And Reinforcement Learning For Node-Level Vaccine Allocation: A Regime-Based Comparative Analysis"
 summary: "Master's thesis. A scalable framework for per-individual vaccine allocation on heterogeneous contact networks, comparing group-level optimal control with hub-aware heuristics against end-to-end reinforcement learning on a stochastic SEPAILHRVD simulator."
 date: 2026-04-23
 type: docs
