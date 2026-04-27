@@ -65,6 +65,22 @@ sections:
             </div>
           </li>
 
+          <li class="news-item itm-journal">
+            <div class="news-date">
+              <span class="news-mo">Feb</span>
+              <span class="news-day">13</span>
+              <span class="news-yr">2026</span>
+            </div>
+            <div class="news-body">
+              <div class="news-tags">
+                <span class="news-tag t-journal">Journal accepted</span>
+                <span class="news-venue">IEEE Internet of Things Journal</span>
+              </div>
+              <p class="news-title">"Joint Function Configuration and Multislot Offloading in Solar-Powered Serverless Edge Computing" was accepted by the <em>IEEE Internet of Things Journal</em>.</p>
+              <p class="news-meta">With <b>Prof. Tengjiao He</b>. Sincere thanks to Prof. He and <b>Benyu</b> for their close guidance throughout.</p>
+            </div>
+          </li>
+
           <li class="news-item itm-oral">
             <div class="news-date">
               <span class="news-mo">Jan</span>
@@ -78,22 +94,6 @@ sections:
               </div>
               <p class="news-title">"SpikeBP: Efficient Spike-Driven Transformer for Blood Pressure Waveform Generation with Frequency Knowledge Distillation" was selected for <b>oral presentation</b> at IEEE ICASSP 2026.</p>
               <p class="news-meta">Many thanks to <b>Zixuan</b> for leading this work.</p>
-            </div>
-          </li>
-
-          <li class="news-item itm-journal">
-            <div class="news-date">
-              <span class="news-mo">Jan</span>
-              <span class="news-day">07</span>
-              <span class="news-yr">2026</span>
-            </div>
-            <div class="news-body">
-              <div class="news-tags">
-                <span class="news-tag t-journal">Journal</span>
-                <span class="news-venue">IEEE Internet of Things Journal</span>
-              </div>
-              <p class="news-title">"Orchestrating Data Collection and Computation in Green IoT Networks" entered review at the <em>IEEE Internet of Things Journal</em> (IoT-59139-2025).</p>
-              <p class="news-meta">With Prof. Fei Song, <b>Tengjiao He</b>, Kwan-Wu Chin, and Benyu Chen. Sincere thanks to Prof. He for the close guidance throughout.</p>
             </div>
           </li>
 

@@ -65,6 +65,22 @@ sections:
             </div>
           </li>
 
+          <li class="news-item itm-journal">
+            <div class="news-date">
+              <span class="news-mo">Feb</span>
+              <span class="news-day">13</span>
+              <span class="news-yr">2026</span>
+            </div>
+            <div class="news-body">
+              <div class="news-tags">
+                <span class="news-tag t-journal">期刊录用</span>
+                <span class="news-venue">IEEE Internet of Things Journal</span>
+              </div>
+              <p class="news-title">合作论文「Joint Function Configuration and Multislot Offloading in Solar-Powered Serverless Edge Computing」被 <em>IEEE Internet of Things Journal</em> 录用。</p>
+              <p class="news-meta">合作者：<b>Prof. Tengjiao He</b>。诚挚感谢 He 老师和 <b>Benyu</b> 一直以来的细致指导。</p>
+            </div>
+          </li>
+
           <li class="news-item itm-oral">
             <div class="news-date">
               <span class="news-mo">Jan</span>
@@ -78,22 +94,6 @@ sections:
               </div>
               <p class="news-title">合作论文「SpikeBP: Efficient Spike-Driven Transformer for Blood Pressure Waveform Generation with Frequency Knowledge Distillation」被 IEEE ICASSP 2026 选为 <b>口头报告（Oral）</b>。</p>
               <p class="news-meta">特别感谢 <b>Zixuan</b> 牵头主导这项工作。</p>
-            </div>
-          </li>
-
-          <li class="news-item itm-journal">
-            <div class="news-date">
-              <span class="news-mo">Jan</span>
-              <span class="news-day">07</span>
-              <span class="news-yr">2026</span>
-            </div>
-            <div class="news-body">
-              <div class="news-tags">
-                <span class="news-tag t-journal">期刊</span>
-                <span class="news-venue">IEEE Internet of Things Journal</span>
-              </div>
-              <p class="news-title">合作论文「Orchestrating Data Collection and Computation in Green IoT Networks」进入 <em>IEEE Internet of Things Journal</em> 评审环节（稿件号 IoT-59139-2025）。</p>
-              <p class="news-meta">合作者：宋飞 教授、<b>Tengjiao He</b>、Kwan-Wu Chin、Benyu Chen。诚挚感谢 何老师 一直以来的细致指导。</p>
             </div>
           </li>
 
