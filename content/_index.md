@@ -77,7 +77,7 @@ sections:
                 <span class="news-venue">IEEE Internet of Things Journal</span>
               </div>
               <p class="news-title">"Joint Function Configuration and Multislot Offloading in Solar-Powered Serverless Edge Computing" was accepted by the <em>IEEE Internet of Things Journal</em>.</p>
-              <p class="news-meta">With <b>Prof. Tengjiao He</b>. Sincere thanks to Prof. He and <b>Benyu</b> for their close guidance throughout.</p>
+              <p class="news-meta">With <b>Prof. Tengjiao He</b>. Sincere thanks to Prof. He for his close guidance throughout, and <b>Benyu</b> for all the support.</p>
             </div>
           </li>
 
