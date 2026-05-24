@@ -34,6 +34,22 @@ sections:
         <div class="news-block">
         <ul class="news-list">
 
+          <li class="news-item itm-journal">
+            <div class="news-date">
+              <span class="news-mo">May</span>
+              <span class="news-day">10</span>
+              <span class="news-yr">2026</span>
+            </div>
+            <div class="news-body">
+              <div class="news-tags">
+                <span class="news-tag t-journal">期刊录用</span>
+                <span class="news-venue">IEEE Internet of Things Journal</span>
+              </div>
+              <p class="news-title">论文「Orchestrating Data Collection and Computation in Green IoT Networks」被 <em>IEEE Internet of Things Journal</em> 录用。</p>
+              <p class="news-meta">合作者：<b>Prof. Fei Song</b>、<b>Prof. Tengjiao He</b>、<b>Prof. Kwan-Wu Chin</b>、<b>Benyu Chen</b>。诚挚感谢何老师与 Chin 老师的悉心指导。</p>
+            </div>
+          </li>
+
           <li class="news-item itm-paper">
             <div class="news-date">
               <span class="news-mo">Apr</span>
