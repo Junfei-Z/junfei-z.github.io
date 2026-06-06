@@ -41,5 +41,14 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "chore: update daily arXiv papers [skip ci]"
-            git push
+            # Retry push in case the remote moved (another commit landed) between
+            # checkout and now — rebase our commit on top and try again.
+            for attempt in 1 2 3; do
+              if git push; then
+                echo "Pushed successfully"
+                break
+              fi
+              echo "Push rejected, rebasing on origin/main (attempt $attempt)..."
+              git pull --rebase origin main
+            done
           fi

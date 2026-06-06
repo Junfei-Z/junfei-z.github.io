@@ -5,6 +5,9 @@ Track 2: Agent Memory (computational efficiency of LLM agent memory systems)
 """
 import urllib.request
 import urllib.parse
+import urllib.error
+import http.client
+import socket
 import xml.etree.ElementTree as ET
 import json
 import os
@@ -252,17 +255,30 @@ def fetch_arxiv(categories, keywords, max_results=50):
     url = f"http://export.arxiv.org/api/query?{params}"
     req = urllib.request.Request(url, headers={"User-Agent": "DailyArxivBot/1.0"})
 
-    # Retry with backoff on 429/5xx
+    # Retry with backoff on transient HTTP errors and network timeouts.
+    # arXiv frequently returns 403/406/429/5xx or simply times out under load,
+    # so we treat all of these as retryable rather than crashing the whole run.
+    RETRYABLE_CODES = (403, 406, 408, 429, 500, 502, 503, 504)
+    MAX_ATTEMPTS = 5
     data = None
-    for attempt in range(4):
+    for attempt in range(MAX_ATTEMPTS):
         try:
-            with urllib.request.urlopen(req, timeout=30) as resp:
+            with urllib.request.urlopen(req, timeout=60) as resp:
                 data = resp.read().decode("utf-8")
             break
         except urllib.error.HTTPError as e:
-            if e.code in (429, 500, 503) and attempt < 3:
-                wait = 10 * (2 ** attempt)  # 10s, 20s, 40s
-                print(f"arXiv returned {e.code}, retrying in {wait}s (attempt {attempt+1}/3)...")
+            if e.code in RETRYABLE_CODES and attempt < MAX_ATTEMPTS - 1:
+                wait = 10 * (2 ** attempt)  # 10s, 20s, 40s, 80s
+                print(f"arXiv returned {e.code}, retrying in {wait}s (attempt {attempt+1}/{MAX_ATTEMPTS})...")
+                time.sleep(wait)
+            else:
+                raise
+        except (urllib.error.URLError, http.client.HTTPException,
+                TimeoutError, socket.timeout, ConnectionError) as e:
+            if attempt < MAX_ATTEMPTS - 1:
+                wait = 10 * (2 ** attempt)  # 10s, 20s, 40s, 80s
+                print(f"arXiv request failed ({type(e).__name__}: {e}), "
+                      f"retrying in {wait}s (attempt {attempt+1}/{MAX_ATTEMPTS})...")
                 time.sleep(wait)
             else:
                 raise
@@ -452,9 +468,19 @@ def main():
 
     provider_idx = 0
     all_tracks = {}
+    failed_tracks = []
     user_prefs = load_user_prefs()
     seen_ids = load_seen_ids()
     today = datetime.utcnow().strftime("%Y-%m-%d")
+
+    # Load the previous run's output so we can carry forward any track that
+    # fails to fetch today, instead of dropping its papers from the site.
+    prev_tracks = {}
+    try:
+        with open(OUTPUT_PATH, encoding="utf-8") as f:
+            prev_tracks = json.load(f).get("tracks", {})
+    except (FileNotFoundError, json.JSONDecodeError):
+        pass
 
     for ti, (track_key, track_info) in enumerate(TRACKS.items()):
         if ti > 0:
@@ -462,7 +488,14 @@ def main():
         print(f"\n--- Track: {track_info['name_en']} ---")
         print(f"  Categories: {track_info['categories']}")
 
-        papers = fetch_arxiv(track_info["categories"], track_info["keywords"], max_results=40)
+        try:
+            papers = fetch_arxiv(track_info["categories"], track_info["keywords"], max_results=40)
+        except Exception as e:
+            # Don't let one track's network failure abort the whole run —
+            # keep this track's previous results (if any) and move on.
+            print(f"  ⚠️  Failed to fetch track '{track_key}': {type(e).__name__}: {e}")
+            failed_tracks.append(track_key)
+            continue
         print(f"  Fetched {len(papers)} candidate papers")
 
         # Deduplicate: skip papers already seen in the last {SEEN_HISTORY_DAYS} days
@@ -491,6 +524,20 @@ def main():
             "papers": filtered
         }
         time.sleep(3)  # respect arXiv rate limit
+
+    # Carry forward previous papers for any track that failed to fetch today.
+    for track_key in failed_tracks:
+        if track_key in prev_tracks:
+            print(f"  Carrying forward previous papers for failed track '{track_key}'")
+            all_tracks[track_key] = prev_tracks[track_key]
+
+    # If every track failed and we have no prior data either, abort without
+    # writing so we don't overwrite good output with an empty file.
+    if not all_tracks:
+        raise RuntimeError("All tracks failed to fetch and no previous data to keep")
+
+    # Restore the original track ordering (failed tracks were appended last).
+    all_tracks = {k: all_tracks[k] for k in TRACKS if k in all_tracks}
 
     # Persist seen IDs for future dedup
     save_seen_ids(seen_ids)
