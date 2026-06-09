@@ -91,22 +91,28 @@ TRACKS = {
         "name_zh": "Edge Intelligence",
         "name_en": "Edge Intelligence",
         "categories": ["cs.NI", "cs.DC", "cs.LG", "cs.AI", "cs.SY", "eess.SP", "cs.MA"],
+        # NOTE: only the first 15 keywords are used in the arXiv query
+        # (see keywords[:15] in fetch_arxiv), so satellite-edge terms are
+        # front-loaded to make sure those papers actually get fetched.
         "keywords": [
-            "edge intelligence", "edge computing", "IoT intelligence",
-            "task offloading", "computation offloading", "resource scheduling",
-            "mobile edge computing", "MEC", "fog computing",
-            "federated learning edge", "split inference",
-            "edge-cloud collaboration", "cooperative inference",
-            "communication-efficient", "over-the-air computation",
-            "semantic communication", "joint communication and computation",
-            "device-edge co-inference", "IoT scheduling",
-            "heterogeneous edge", "multi-access edge",
+            "satellite edge computing", "LEO satellite", "non-terrestrial network",
+            "satellite-terrestrial", "space-air-ground", "satellite inference",
+            "edge intelligence", "edge computing", "task offloading",
+            "computation offloading", "mobile edge computing", "MEC",
+            "split inference", "edge-cloud collaboration", "cooperative inference",
+            "IoT intelligence", "resource scheduling", "fog computing",
+            "federated learning edge", "communication-efficient",
+            "over-the-air computation", "semantic communication",
+            "joint communication and computation", "device-edge co-inference",
+            "IoT scheduling", "heterogeneous edge", "multi-access edge",
             "latency optimization edge", "energy harvesting IoT",
             "age of information", "digital twin edge",
             "LLM edge deployment", "on-device AI",
-            "intelligent scheduling", "network slicing edge"
+            "intelligent scheduling", "network slicing edge",
+            "satellite VLM", "satellite collaborative inference"
         ],
         "filter_prompt": """你是一个Edge Intelligence方向的论文筛选助手。用户研究方向：
+- 卫星边缘网络与星地协同智能（最高优先级）
 - 边缘智能系统中的任务调度与资源优化
 - IoT场景下的计算卸载与通信-计算联合优化
 - 边缘设备上的AI模型部署、推理优化与协同
@@ -114,14 +120,20 @@ TRACKS = {
 - 联邦学习、分布式推理在边缘网络中的应用
 - LLM/SLM在边缘智能场景的部署与优化
 
+★最高优先级（命中则强烈推荐，并尽量排在最前）：
+卫星边缘网络 / 星地协同 / LEO卫星 / 非地面网络(NTN) / 空天地一体化 相关，
+尤其是 (satellite/LEO/NTN/space-air-ground) + (edge/inference/VLM/LLM/foundation model/collaborative/offloading)，
+如"卫星协作VLM"、星上推理、星地协同推理、卫星边缘计算卸载等。
+
 筛选规则（满足任一即推荐）：
+0. 卫星边缘类（优先）：(satellite/LEO/non-terrestrial/space-air-ground) + (edge/inference/VLM/LLM/offloading/collaborative/scheduling)
 1. 边缘计算调度类：(task offloading/computation offloading/resource allocation/scheduling) + (edge/MEC/IoT/fog)
 2. 通信计算联合优化类：(communication/bandwidth/spectrum) + (computation/inference/edge) + (joint/co-design/trade-off)
 3. 边缘AI部署类：(model deployment/split inference/cooperative inference/federated) + (edge/IoT/heterogeneous devices)
 4. 语义通信类：(semantic communication/over-the-air/AirComp) + (edge/IoT/inference)
 5. 边缘LLM类：(LLM/language model/foundation model) + (edge/IoT/on-device/mobile) + (scheduling/deployment/serving)
 6. 加分：digital twin + edge, age of information + scheduling, multi-agent + edge network, reinforcement learning + offloading
-排除：纯理论无实验、纯数据中心/云端优化（无边缘）、纯无线通信物理层（无计算/AI）、纯综述（除非核心方向最新综述）"""
+排序：先卫星边缘相关，再其余命中项。排除：纯理论无实验、纯数据中心/云端优化（无边缘）、纯无线通信物理层（无计算/AI）、纯综述（除非核心方向最新综述）"""
     }
 }
 

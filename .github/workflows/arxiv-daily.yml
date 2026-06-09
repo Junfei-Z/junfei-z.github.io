@@ -2,8 +2,10 @@ name: Daily arXiv Paper Fetch
 
 on:
   schedule:
-    # Run at 11:00 UTC Mon-Fri (07:00 US Eastern / EDT), arXiv has no weekend updates
-    - cron: '0 11 * * 1-5'
+    # Run at 00:07 UTC Mon-Fri = 08:07 Beijing time (CST, UTC+8).
+    # arXiv has no weekend updates, so skip Sat/Sun. The :07 offset avoids the
+    # top-of-hour GitHub Actions cron rush (which can delay scheduled runs).
+    - cron: '7 0 * * 1-5'
   workflow_dispatch: # Allow manual trigger
 
 permissions:
