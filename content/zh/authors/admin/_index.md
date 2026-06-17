@@ -183,6 +183,20 @@ awards:
 
 ## 关于我
 
+我是占俊飞，来自中国，即将于2026年10月加入帝国理工学院计算系攻读博士学位，师从 <a href="https://wp.doc.ic.ac.uk/gcasale/">Giuliano Casale</a> 教授。我近期于宾夕法尼亚大学获得电气工程专业硕士学位，硕士期间的研究由 <a href="https://directory.seas.upenn.edu/saswati-sarkar/">Saswati Sarkar</a> 教授指导。本科期间的研究分别由 <a href="https://ieeexplore.ieee.org/author/37086460251">Tengjiao He</a> 教授和 <a href="https://scholars.uow.edu.au/kwan-wu-chin">Kwan-Wu Chin</a> 教授指导。
+
+我的研究兴趣主要集中在 optimization、Large Language Models (LLMs) 和数据驱动决策，特别是在能量受限的计算环境中。我主导和参与了多个关于 task scheduling、LLMs 和 green IoT networks 的研究项目。我热衷于将数学建模、机器学习和控制理论相结合，以解决现实世界的系统挑战。
+
+在学术之外，和朋友聚餐、社交是我最喜欢的活动之一。运动也是我生活中重要的一部分，我曾在短跑、攀岩、赛艇和乒乓球方面获得过奖项。
+
+📄 你可以在[这里](https://junfei-z.github.io/CV_junfei_11_8.pdf)下载我的完整简历。
+
+<p> 📧 欢迎通过邮件联系我：<span id="email"></span></p>
+<script>
+  document.getElementById("email").innerHTML =
+    '<a href="mailto:' + 'zjf2024' + '@' + 'seas.upenn.edu">zjf2024@seas.upenn.edu</a>';
+</script>
+
 <div class="typed-tagline">
   <svg class="tg-icon" viewBox="0 0 28 30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <g class="tg-antenna">
@@ -223,18 +237,4 @@ awards:
   }
   tick();
 })();
-</script>
-
-我是占俊飞，来自中国，即将于2026年10月加入帝国理工学院计算系攻读博士学位，师从 <a href="https://wp.doc.ic.ac.uk/gcasale/">Giuliano Casale</a> 教授。我近期于宾夕法尼亚大学获得电气工程专业硕士学位，硕士期间的研究由 <a href="https://directory.seas.upenn.edu/saswati-sarkar/">Saswati Sarkar</a> 教授指导。本科期间的研究分别由 <a href="https://ieeexplore.ieee.org/author/37086460251">Tengjiao He</a> 教授和 <a href="https://scholars.uow.edu.au/kwan-wu-chin">Kwan-Wu Chin</a> 教授指导。
-
-我的研究兴趣主要集中在 optimization、Large Language Models (LLMs) 和数据驱动决策，特别是在能量受限的计算环境中。我主导和参与了多个关于 task scheduling、LLMs 和 green IoT networks 的研究项目。我热衷于将数学建模、机器学习和控制理论相结合，以解决现实世界的系统挑战。
-
-在学术之外，和朋友聚餐、社交是我最喜欢的活动之一。运动也是我生活中重要的一部分，我曾在短跑、攀岩、赛艇和乒乓球方面获得过奖项。
-
-📄 你可以在[这里](https://junfei-z.github.io/CV_junfei_11_8.pdf)下载我的完整简历。
-
-<p> 📧 欢迎通过邮件联系我：<span id="email"></span></p>
-<script>
-  document.getElementById("email").innerHTML =
-    '<a href="mailto:' + 'zjf2024' + '@' + 'seas.upenn.edu">zjf2024@seas.upenn.edu</a>';
 </script>
