@@ -96,10 +96,10 @@
 /* ─── Faint sticker background (math + network + chip motif) ─── */
 /* Light mode: soft tinted canvas with scattered research stickers. */
 body {
-  background-color: #f6f7fb;
+  background-color: #fafbfd;
   background-image: url('/media/bg-stickers.svg');
   background-repeat: repeat;
-  background-size: 460px auto;
+  background-size: 760px auto;
   background-attachment: fixed;
 }
 /* Keep cards / panels readable on top of the pattern */
@@ -112,22 +112,69 @@ html.dark body {
   background-image: none;
 }
 
-/* ─── Typed tagline under the name ("> ___") ─── */
+/* ─── Typed tagline: a terminal-console card with type/erase loop ─── */
 .typed-tagline {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7em;
+  max-width: 680px;
+  margin: 0.4rem 0 1.7rem 0;
+  padding: 0.95em 1.15em;
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   font-size: 1.02rem;
-  font-weight: 500;
-  color: #475569;
-  margin: 0 0 1.4rem 0;
-  letter-spacing: -0.01em;
-  min-height: 1.5em;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1.45;
+  border: 1.5px solid #d4dae6;
+  border-radius: 12px;
+  background-color: #fbfcfe;
+  /* faint engineering-paper grid inside the console */
+  background-image:
+    linear-gradient(rgba(100, 116, 139, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100, 116, 139, 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+  box-shadow: 0 2px 12px rgba(2, 6, 23, 0.05);
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
-.typed-tagline .typed-prompt { color: #10b981; margin-right: 0.4em; font-weight: 700; }
+.typed-tagline .tg-icon { flex: 0 0 auto; width: 24px; height: 24px; margin-top: 1px; color: #10b981; }
+.typed-tagline .typed-prompt { flex: 0 0 auto; color: #94a3b8; }
+.typed-tagline .typed-line { flex: 1 1 auto; min-height: 2.7em; }
+.typed-tagline .tg-lead   { color: #334155; }
+.typed-tagline .tg-accent { color: #0ea271; }
 .typed-tagline .typed-cursor {
   display: inline-block;
   color: #10b981;
   font-weight: 400;
+  font-style: normal;
+  margin-left: 1px;
   animation: typed-blink 1s steps(1) infinite;
 }
 @keyframes typed-blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
-.dark .typed-tagline { color: #cbd5e1; }
+
+/* Dark mode: neon emerald terminal glow */
+.dark .typed-tagline {
+  border-color: #10b981;
+  background-color: #070b0a;
+  background-image:
+    linear-gradient(rgba(16, 185, 129, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.07) 1px, transparent 1px);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.35), inset 0 0 26px rgba(16, 185, 129, 0.06);
+}
+.dark .typed-tagline .tg-icon  { color: #34d399; filter: drop-shadow(0 0 5px rgba(52, 211, 153, 0.6)); }
+.dark .typed-tagline .tg-lead  { color: #e2e8f0; }
+.dark .typed-tagline .tg-accent { color: #34d399; text-shadow: 0 0 9px rgba(52, 211, 153, 0.55); }
+.dark .typed-tagline .typed-cursor { color: #34d399; text-shadow: 0 0 8px rgba(52, 211, 153, 0.7); }
+
+/* Gently swaying antenna on the bot mascot */
+.typed-tagline .tg-antenna {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: tg-antenna-sway 2.6s ease-in-out infinite;
+}
+@keyframes tg-antenna-sway {
+  0%, 100% { transform: rotate(-11deg); }
+  50%      { transform: rotate(11deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .typed-tagline .tg-antenna { animation: none; }
+}

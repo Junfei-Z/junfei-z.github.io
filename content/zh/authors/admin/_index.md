@@ -20,12 +20,12 @@ superuser: true
 highlight_name: true
 
 # Role/position/tagline
-role: 硕士研究生
+role: 博士研究生
 
 # Organizations/Affiliations to display in Biography blox
 organizations:
-  - name: 宾夕法尼亚大学 (UPenn)
-    url: https://www.upenn.edu/
+  - name: 帝国理工学院 (IC)
+    url: https://www.imperial.ac.uk/
 
 # Social network links
 # Need to use another icon? Simply download the SVG icon to your `assets/media/icons/` folder.
@@ -46,6 +46,12 @@ interests:
   - Network Science
 
 education:
+  - area: 计算机科学博士
+    institution: 帝国理工学院，英国
+    date_start: 2026-10-01
+    summary: |
+      计算系（Department of Computing）博士研究生，师从 Giuliano Casale 教授。
+
   - area: 电气工程硕士
     institution: 宾夕法尼亚大学，美国
     date_start: 2024-09-01
@@ -177,21 +183,45 @@ awards:
 
 ## 关于我
 
-<p class="typed-tagline"><span class="typed-prompt">&gt;</span><span id="typed-tagline-text"></span><span class="typed-cursor">_</span></p>
+<div class="typed-tagline">
+  <svg class="tg-icon" viewBox="0 0 28 30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <g class="tg-antenna">
+      <line x1="14" y1="10" x2="14" y2="5"/>
+      <circle cx="14" cy="3.5" r="1.7" fill="currentColor" stroke="none"/>
+    </g>
+    <rect x="5" y="10" width="18" height="14" rx="4.5"/>
+    <circle cx="10.5" cy="17" r="1.5" fill="currentColor" stroke="none"/>
+    <circle cx="17.5" cy="17" r="1.5" fill="currentColor" stroke="none"/>
+    <line x1="11" y1="20.5" x2="17" y2="20.5"/>
+    <path d="M5 15 H2.5 M5 19 H2.5 M23 15 h2.5 M23 19 h2.5"/>
+  </svg>
+  <span class="typed-prompt">&gt;</span>
+  <span class="typed-line"><span id="typed-tagline-text"></span><span class="typed-cursor">_</span></span>
+</div>
 <script>
 (function () {
-  var full = "I make computation efficient, intelligent, and grounded for the real world.";
+  var full = "I seek to make computation efficient, intelligent, and grounded in the real world.";
+  var leadLen = 15; // "I seek to make "
   var el = document.getElementById("typed-tagline-text");
   if (!el) return;
-  var i = 0;
-  function step() {
-    if (i <= full.length) {
-      el.textContent = full.slice(0, i);
-      i++;
-      setTimeout(step, i < 3 ? 90 : 38 + Math.random() * 40);
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function render(n) {
+    var lead = full.slice(0, Math.min(n, leadLen));
+    var acc = n > leadLen ? full.slice(leadLen, n) : "";
+    el.innerHTML = '<span class="tg-lead">' + esc(lead) + '</span><span class="tg-accent">' + esc(acc) + '</span>';
+  }
+  var i = 0, dir = 1;
+  function tick() {
+    render(i);
+    if (dir > 0) {
+      if (i < full.length) { i++; setTimeout(tick, 42 + Math.random() * 35); }
+      else { dir = -1; setTimeout(tick, 1900); }
+    } else {
+      if (i > 0) { i--; setTimeout(tick, 22); }
+      else { dir = 1; setTimeout(tick, 650); }
     }
   }
-  step();
+  tick();
 })();
 </script>
 
