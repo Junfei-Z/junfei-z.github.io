@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trains but Doesn't Learn &mdash; A Post-Training Delivery Benchmark for LLM Agents</title>
+<meta name="description" content="A governed delivery-plane benchmark that asks not whether an LLM agent can raise a metric, but whether it can be trusted to deliver post-training as a service.">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* signal palette — harmonized with the paper figures */
+  --amber:#e08a00;--amber-soft:#f0a500;   /* arithmetic / deceptive training-green-is-a-trap */
+  --blue:#2f9fe0;--blue-deep:#1f7fc0;       /* judgment */
+  --teal:#0f9d75;--teal-soft:#13b487;       /* caught / safe */
+  --red:#dc2626;--rose:#e0436b;             /* failure / liability */
+  --indigo:#5145cd;--violet:#7c3aed;        /* governance */
+  --bg:#f7f8fa;--bg-alt:#eef1f5;--card:#ffffff;--card-border:#e2e6ec;
+  --ink:#161b26;--text:#2c3340;--text-dim:#69727f;
+}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+.container{max-width:1020px;margin:0 auto;padding:0 24px}
+.section{padding:84px 0}
+.section-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;text-align:center;margin-bottom:12px}
+.section-title{font-size:2rem;font-weight:800;text-align:center;margin-bottom:14px;color:var(--ink);letter-spacing:-0.02em}
+.section-desc{text-align:center;color:var(--text-dim);font-size:0.97rem;max-width:680px;margin:0 auto 48px}
+a{color:var(--blue-deep)}
+
+/* ─── Scroll animations ─── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.reveal.vis{opacity:1;transform:translateY(0)}
+.reveal-d1{transition-delay:.1s}.reveal-d2{transition-delay:.2s}.reveal-d3{transition-delay:.3s}.reveal-d4{transition-delay:.4s}
+
+/* ─── Hero ─── */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:
+    radial-gradient(ellipse at 22% 28%,rgba(224,138,0,0.08) 0%,transparent 45%),
+    radial-gradient(ellipse at 78% 30%,rgba(47,159,224,0.07) 0%,transparent 42%),
+    radial-gradient(ellipse at 60% 85%,rgba(15,157,117,0.05) 0%,transparent 45%),var(--bg)}
+.hero::before{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(22,27,38,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(22,27,38,0.025) 1px,transparent 1px);
+  background-size:34px 34px;mask-image:radial-gradient(ellipse at 50% 40%,#000 0%,transparent 75%)}
+.hero-inner{position:relative;z-index:2;text-align:center;padding:48px 24px;max-width:920px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 18px;border-radius:100px;background:rgba(81,69,205,0.07);color:var(--indigo);font-size:0.78rem;font-weight:600;letter-spacing:.4px;margin-bottom:26px;border:1px solid rgba(81,69,205,0.18)}
+.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--indigo)}
+.hero h1{font-size:clamp(2rem,5.4vw,3.3rem);font-weight:900;color:var(--ink);line-height:1.1;margin-bottom:18px;letter-spacing:-0.03em}
+.hero h1 .strike{position:relative;color:var(--red);white-space:nowrap}
+.hero h1 .learn{color:var(--teal)}
+.hero-sub{font-size:1.12rem;color:var(--text);max-width:680px;margin:0 auto 14px;font-weight:500}
+.hero-q{font-size:1rem;color:var(--text-dim);max-width:660px;margin:0 auto 30px;font-style:italic;line-height:1.75}
+.hero-q b{color:var(--amber);font-style:normal}
+.hero-stats{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
+.hero-stat{background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:15px 22px;min-width:128px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.hero-stat b{display:block;font-size:1.7rem;font-weight:900;margin-bottom:2px;letter-spacing:-0.02em}
+.hero-stat span{font-size:0.7rem;color:var(--text-dim);line-height:1.3;display:block}
+.hero-authors{font-size:0.88rem;color:var(--text-dim);margin-bottom:6px}
+.hero-scroll{margin-top:14px;font-size:0.85rem}
+.hero-scroll a{text-decoration:none;font-weight:600}
+.hero-scroll a:hover{text-decoration:underline}
+
+/* ─── Figure ─── */
+.fig{border-radius:14px;overflow:hidden;background:#fff;border:1px solid var(--card-border);margin:0 auto;max-width:100%;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.fig img{display:block;width:100%;height:auto}
+.fig-cap{padding:11px 18px;font-size:0.78rem;color:var(--text-dim);background:var(--bg-alt);border-top:1px solid var(--card-border)}
+.fig-cap strong{color:var(--text)}
+
+/* ─── Two col ─── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+@media(max-width:768px){.two-col{grid-template-columns:1fr;gap:28px}}
+
+/* ─── Cards ─── */
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:26px;transition:transform .3s,box-shadow .3s;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,0.08)}
+.card h3{font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:8px}
+.card p{color:var(--text-dim);font-size:0.86rem}
+.card-num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;font-weight:800;font-size:1rem;margin-bottom:12px;color:#fff}
+
+/* ─── Evidence grid ─── */
+.ev-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+@media(max-width:768px){.ev-grid{grid-template-columns:1fr}}
+.ev-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;overflow:hidden;transition:transform .3s,box-shadow .3s;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.ev-card:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,0.08)}
+.ev-card img{display:block;width:100%;height:auto;background:#fff}
+.ev-card-body{padding:18px 22px}
+.ev-card-body h3{font-size:0.95rem;font-weight:700;color:var(--ink);margin-bottom:6px}
+.ev-card-body p{font-size:0.82rem;color:var(--text-dim)}
+
+/* ─── Highlight quote ─── */
+.highlight{border-left:3px solid var(--amber);padding:14px 18px;border-radius:0 10px 10px 0;font-size:0.92rem;color:var(--text);margin-top:18px;background:rgba(224,138,0,0.06)}
+.pull{font-size:1.35rem;font-weight:700;color:var(--ink);text-align:center;max-width:760px;margin:0 auto;line-height:1.5;letter-spacing:-0.01em}
+.pull .hl{background:linear-gradient(transparent 62%,rgba(224,138,0,0.28) 62%)}
+
+/* ─── Definition / theorem box ─── */
+.thm{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:26px 30px;box-shadow:0 2px 10px rgba(0,0,0,0.05);position:relative;overflow:hidden}
+.thm::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--indigo)}
+.thm-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;color:var(--indigo)}
+.thm-eq{background:var(--bg-alt);border-radius:10px;padding:16px 20px;margin:14px 0;text-align:center;font-family:'Iowan Old Style','Times New Roman',serif;font-size:1.3rem;color:var(--ink);letter-spacing:.5px}
+.thm-eq em{font-style:italic}
+
+/* ─── Stage pipeline ─── */
+.plane-legend{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bottom:22px;font-size:0.8rem}
+.plane-legend span{display:inline-flex;align-items:center;gap:7px;color:var(--text-dim)}
+.plane-legend i{width:13px;height:13px;border-radius:4px;display:inline-block}
+.pipe{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:18px}
+.stage{position:relative;border:none;cursor:pointer;border-radius:12px;padding:14px 4px 13px;width:84px;font-size:0.82rem;font-weight:700;color:#fff;
+  display:flex;flex-direction:column;align-items:center;gap:3px;transition:transform .2s,box-shadow .2s,filter .2s;filter:saturate(.92)}
+.stage:hover,.stage.active{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,0.16);filter:saturate(1.1)}
+.stage .si{font-size:0.62rem;font-weight:600;opacity:.85;letter-spacing:.5px}
+.stage.judgment{background:var(--blue)}
+.stage.arithmetic{background:var(--amber)}
+.stage.execution{background:#8a93a3}
+@media(max-width:560px){.stage{width:30%;font-size:0.78rem}}
+.stage-detail{background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:22px 26px;min-height:118px;box-shadow:0 2px 10px rgba(0,0,0,0.05);transition:border-color .3s}
+.stage-detail .sd-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.stage-detail .sd-tag{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:3px 10px;border-radius:6px;color:#fff}
+.stage-detail h3{font-size:1.05rem;color:var(--ink);font-weight:700}
+.stage-detail p{font-size:0.88rem;color:var(--text-dim)}
+
+/* ─── Dashboard flip (signature interactive) ─── */
+.flip-wrap{max-width:760px;margin:0 auto}
+.flip-toggle{display:inline-flex;background:var(--bg-alt);border:1px solid var(--card-border);border-radius:100px;padding:5px;margin:0 auto 26px;gap:4px}
+.flip-toggle button{border:none;background:transparent;padding:9px 20px;border-radius:100px;font-size:0.84rem;font-weight:700;color:var(--text-dim);cursor:pointer;transition:all .25s}
+.flip-toggle button.on{color:#fff}
+.flip-toggle button.on.green{background:var(--teal)}
+.flip-toggle button.on.red{background:var(--red)}
+.dash{background:var(--card);border:1px solid var(--card-border);border-radius:18px;padding:28px 30px;box-shadow:0 8px 30px rgba(0,0,0,0.07);transition:border-color .4s}
+.dash-head{display:flex;align-items:center;gap:12px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--card-border)}
+.dash-badge{font-size:0.72rem;font-weight:800;letter-spacing:1px;padding:6px 14px;border-radius:8px;text-transform:uppercase}
+.dash-title{font-size:0.95rem;font-weight:700;color:var(--ink)}
+.dash-sub{font-size:0.78rem;color:var(--text-dim)}
+.dash-rows{display:flex;flex-direction:column;gap:13px}
+.drow{display:flex;align-items:center;gap:14px;font-size:0.9rem}
+.drow .dk{flex:1;color:var(--text)}
+.drow .dv{font-weight:700;font-variant-numeric:tabular-nums}
+.drow .di{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;color:#fff;flex-shrink:0}
+.dash-foot{margin-top:22px;padding-top:18px;border-top:1px solid var(--card-border);font-size:0.88rem;line-height:1.6}
+
+/* ─── Table ─── */
+.tbl-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--card-border);border-radius:16px;box-shadow:0 2px 10px rgba(0,0,0,0.05)}
+table{width:100%;border-collapse:collapse;font-size:0.86rem;min-width:520px}
+thead th{text-align:left;padding:14px 16px;color:var(--text-dim);font-weight:600;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.6px;border-bottom:2px solid var(--card-border);white-space:nowrap}
+tbody td{padding:13px 16px;border-bottom:1px solid rgba(0,0,0,0.05)}
+tbody tr:last-child td{border-bottom:none}
+.pill{padding:2px 9px;border-radius:100px;font-size:0.76rem;font-weight:700;display:inline-block}
+.pill-red{background:rgba(220,38,38,0.1);color:var(--red)}
+.pill-teal{background:rgba(15,157,117,0.12);color:var(--teal)}
+
+/* ─── Pressure ladder interactive ─── */
+.press-ctrl{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.press-btn{border:1.5px solid var(--card-border);background:var(--card);padding:9px 18px;border-radius:100px;font-size:0.82rem;font-weight:700;color:var(--text-dim);cursor:pointer;transition:all .2s}
+.press-btn:hover{border-color:var(--rose);color:var(--rose)}
+.press-btn.on{border-color:var(--rose);background:rgba(224,67,107,0.08);color:var(--rose)}
+.gauge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:680px){.gauge-grid{grid-template-columns:1fr}}
+.gauge{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:22px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.gauge h4{font-size:0.92rem;color:var(--ink);margin-bottom:14px;font-weight:700}
+.gbar{height:14px;border-radius:7px;background:var(--bg-alt);overflow:hidden;margin-bottom:10px}
+.gbar i{display:block;height:100%;border-radius:7px;transition:width .7s cubic-bezier(.16,1,.3,1),background .4s}
+.gval{font-size:1.7rem;font-weight:900;letter-spacing:-0.02em;transition:color .3s}
+.gsub{font-size:0.72rem;color:var(--text-dim)}
+
+/* ─── Deploy grid ─── */
+.deploy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:768px){.deploy-grid{grid-template-columns:1fr}}
+
+/* ─── Footer ─── */
+footer{padding:40px 0;text-align:center;border-top:1px solid var(--card-border);color:var(--text-dim);font-size:0.82rem;background:var(--bg)}
+.foot-links{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+.foot-links a{text-decoration:none;font-weight:600;font-size:0.85rem}
+
+@media(max-width:768px){
+  .section{padding:58px 0}
+  .section-title{font-size:1.55rem}
+  .hero-stats{gap:10px}
+  .hero-stat{padding:12px 14px;min-width:96px}
+  .hero-stat b{font-size:1.35rem}
+  .pull{font-size:1.1rem}
+}
+@keyframes pulse{0%,100%{opacity:.7}50%{opacity:1}}
+.pulse{animation:pulse 2.6s ease-in-out infinite}
+</style>
+</head>
+<body>
+
+<!-- ═══════ 1. HERO ═══════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge"><span class="dot pulse"></span> ACL Submission &middot; Under Review</div>
+    <h1>Trains but <span class="strike">Doesn't&nbsp;Learn</span></h1>
+    <p class="hero-sub">A governed <strong>delivery-plane benchmark</strong> for LLM agents seated as Forward-Deployed Engineers &mdash; auditing post-training <em>as a service</em>.</p>
+    <p class="hero-q">Existing benchmarks ask whether an agent can <em>raise a metric</em>. The operator's real question is sharper: <b>can it be trusted to deliver?</b></p>
+    <div class="hero-stats">
+      <div class="hero-stat"><b style="color:var(--blue-deep)">10</b><span>governed delivery stages</span></div>
+      <div class="hero-stat"><b style="color:var(--amber)">12/12</b><span>runs train but don't learn</span></div>
+      <div class="hero-stat"><b style="color:var(--teal)">0/36</b><span>detector false alarms</span></div>
+      <div class="hero-stat"><b style="color:var(--rose)">3</b><span>frontier agents on real GPUs</span></div>
+    </div>
+    <p class="hero-authors">Claude Opus&nbsp;4.8 &middot; GPT&#8209;5.5 &middot; Gemini&nbsp;3.1&#8209;Pro &nbsp;|&nbsp; 8B&ndash;70B open bases on H200 &amp; A40</p>
+    <p class="hero-scroll"><a href="#setup">Scroll to explore &darr;</a></p>
+  </div>
+</section>
+
+<!-- ═══════ 2. THE SETUP ═══════ -->
+<section class="section" id="setup" style="background:var(--bg-alt)">
+  <div class="container">
+    <div class="section-label reveal" style="color:var(--indigo)">The Setting</div>
+    <h2 class="section-title reveal">Post-training is becoming a service</h2>
+    <p class="section-desc reveal">A customer hands an operator data and a goal; a <strong>forward-deployed engineer</strong> (FDE) returns a fine-tuned, evaluated, and deployed model &mdash; under a budget, a human-approval gate, and reproducibility requirements. That FDE seat is now a target for automation, with vendors already shipping agents that drive delivery from a natural-language ticket.</p>
+
+    <div class="two-col" style="margin-bottom:8px">
+      <div class="reveal">
+        <h3 style="font-size:1.2rem;font-weight:800;color:var(--ink);margin-bottom:12px">The failure that matters isn't a low metric</h3>
+        <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:14px">It is a run that <em>optimizes something successfully</em> while the delivered model learns nothing the customer wanted &mdash; because the agentic FDE misread the task, the data format, the loss masking, or the method.</p>
+        <p style="color:var(--text-dim);font-size:0.92rem">The loss falls, every signal-level check passes, the dashboard is green &mdash; and only the customer discovers the model is no better than the base. It runs to completion and burns the same GPU-hours as a correct delivery, so the operator pays the full bill (~$3 / H200-hour) for a zero-value artifact.</p>
+        <div class="highlight">We call this <strong>Trains-but-Doesn't-Learn (TBDL)</strong>: the most expensive failure mode per dollar, and the central risk of placing an agent in the FDE seat.</div>
+      </div>
+      <div class="fig reveal reveal-d1">
+        <img src="img/fde_overview.png" alt="Overview: an agent in the FDE seat post-trains a base model from a customer ticket; a de-looped oracle scores ten stages, and auditing surfaces three findings." loading="lazy">
+        <div class="fig-cap"><strong>The governed delivery plane.</strong> An agent in the FDE seat post-trains a base model from a customer ticket; a de-looped oracle scores ten stages, and auditing them surfaces the paper's three findings.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 3. THE DELIVERY PLANE (interactive pipeline) ═══════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-label reveal" style="color:var(--blue-deep)">The Benchmark</div>
+    <h2 class="section-title reveal">Ten governed stages, one de-looped oracle</h2>
+    <p class="section-desc reveal">We recast the agentic FDE as a layered control plane. The agent drives ten stages end to end; each is scored by an external oracle that <strong>never reads the trained model</strong>. Stages partition by where failure becomes visible. <em>Click a stage to inspect it.</em></p>
+
+    <div class="plane-legend reveal">
+      <span><i style="background:var(--blue)"></i> Judgment stage</span>
+      <span><i style="background:var(--amber)"></i> Arithmetic stage</span>
+      <span><i style="background:#8a93a3"></i> Execution stage</span>
+    </div>
+
+    <div class="pipe reveal" id="pipe"></div>
+    <div class="stage-detail reveal" id="stage-detail">
+      <div class="sd-head">
+        <span class="sd-tag" style="background:var(--blue)">Judgment</span>
+        <h3>intake</h3>
+      </div>
+      <p>Reads the customer ticket and infers the task, metric, and data handling. The agent's first and most consequential judgment &mdash; a misread here silently corrupts the objective and induces TBDL while every downstream signal stays green.</p>
+    </div>
+    <p class="reveal" style="text-align:center;font-size:0.84rem;color:var(--text-dim);margin-top:20px;max-width:720px;margin-left:auto;margin-right:auto">
+      <strong style="color:var(--amber)">Arithmetic</strong> stages a deterministic configurator can certify (≈1.0) before any agent runs &mdash; failure there is loud and cheap to catch.
+      <strong style="color:#7a828f">Execution</strong> stages are mechanical.
+      <strong style="color:var(--blue-deep)">Judgment</strong> stages are the FDE's real risk, surfaced only by the delivery-level oracle.
+    </p>
+
+    <div class="fig reveal" style="margin-top:36px;max-width:920px">
+      <img src="img/fig1_plane.png" alt="The delivery plane: ten stages from intake to card, colored by judgment / arithmetic / mechanical, with a config-injection do-intervention and a de-looped oracle." loading="lazy">
+      <div class="fig-cap"><strong>The control plane.</strong> The agent operates every stage; a de-looped oracle scores each one stage-independently. A <em>config-injection</em> (do-intervention) hands the agent the oracle-correct configuration to isolate judgment from configuration arithmetic.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 4. THREE FINDINGS overview ═══════ -->
+<section class="section" style="background:var(--bg-alt)">
+  <div class="container">
+    <div class="section-label reveal" style="color:var(--amber)">What We Found</div>
+    <h2 class="section-title reveal">Three findings about agentic delivery</h2>
+    <p class="section-desc reveal">Agents are competent at the mechanical layers. The risk lives precisely where failure is silent &mdash; in judgment and in governance.</p>
+
+    <div class="deploy-grid reveal" style="margin-bottom:40px">
+      <div class="card">
+        <div class="card-num" style="background:var(--amber)">1</div>
+        <h3>A silent failure that is real</h3>
+        <p>An injected intake-misread reliably induces TBDL across every 8B&ndash;70B base &mdash; invisible to every in-process signal, yet caught before payment by an anytime-valid detector.</p>
+      </div>
+      <div class="card">
+        <div class="card-num" style="background:var(--blue)">2</div>
+        <h3>Risk is judgment, not arithmetic</h3>
+        <p>Agents configure at near-parity with a deterministic configurator. Handing them the oracle-correct config does <em>not</em> repair a residual judgment deficit.</p>
+      </div>
+      <div class="card">
+        <div class="card-num" style="background:var(--rose)">3</div>
+        <h3>Governance is pressure-fragile</h3>
+        <p>Benign business pressure collapses the deploy gate &mdash; agents ship anyway &mdash; while their risk-detection stays at ceiling. They know the rule; they don't keep it.</p>
+      </div>
+    </div>
+
+    <div class="fig reveal" style="max-width:960px">
+      <img src="img/fig_findings.png" alt="Three findings: (a) all training arms pass the train gate but permute/noise traps land at base accuracy; (b) judgment fails where arithmetic passes; (c) gate compliance decays under pressure." loading="lazy">
+      <div class="fig-cap"><strong>The three findings at a glance.</strong> (a) Every training arm passes the train gate, but permute and noise traps land at base accuracy while the mask trap recovers. (b) Judgment fails where arithmetic passes. (c) Gate compliance decays under pressure while refusal sensitivity stays at ceiling.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 5. FINDING 1 — TBDL + dashboard flip ═══════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-label reveal" style="color:var(--amber)">Finding 1</div>
+    <h2 class="section-title reveal">Trains but doesn't learn</h2>
+    <p class="section-desc reveal">A run that looks healthy on every signal the operator monitors, yet the customer's task did not move. We make it measurable, mechanize its cause, and monitor it online.</p>
+
+    <div class="thm reveal" style="max-width:760px;margin:0 auto 44px">
+      <div class="thm-label">Definition &mdash; TBDL</div>
+      <p style="font-size:0.9rem;color:var(--text-dim);margin-bottom:4px">Let <em>T</em> be the train-pass indicator (started, survived <em>K</em> steps, finite loss, bounded gradients) and <em>E</em> the eval-pass (<em>Learned</em>) indicator. A run is TBDL iff the train stage passes and the eval stage does not:</p>
+      <div class="thm-eq">TBDL &nbsp;:=&nbsp; <em>T</em> &nbsp;&and;&nbsp; &not;<em>E</em></div>
+      <p style="font-size:0.85rem;color:var(--text-dim)"><em>Learned</em> fires only when a one-sided paired exact McNemar test rejects at &alpha;=.05 <em>and</em> the held-out improvement over base clears a pre-registered margin &mdash; so neither noise nor trivially-significant gains can pass.</p>
+    </div>
+
+    <!-- DASHBOARD FLIP -->
+    <p class="section-desc reveal" style="margin-bottom:24px">The whole danger of TBDL is the gap between two views of the same run. <strong>Flip between them.</strong></p>
+    <div class="flip-wrap reveal" style="text-align:center">
+      <div class="flip-toggle">
+        <button id="flip-green" class="on green" onclick="setView('green')">📊 Training dashboard</button>
+        <button id="flip-red" onclick="setView('red')">📦 What the customer gets</button>
+      </div>
+      <div class="dash" id="dash" style="text-align:left">
+        <div class="dash-head">
+          <span class="dash-badge" id="dash-badge" style="background:rgba(15,157,117,0.12);color:var(--teal)">PASS · GREEN</span>
+          <div>
+            <div class="dash-title" id="dash-title">In-process training signals</div>
+            <div class="dash-sub" id="dash-sub">permute trap · Qwen3-8B · BANKING77 · seed 1</div>
+          </div>
+        </div>
+        <div class="dash-rows" id="dash-rows"></div>
+        <div class="dash-foot" id="dash-foot"></div>
+      </div>
+    </div>
+
+    <!-- detector figure + table -->
+    <div class="ev-grid reveal" style="margin-top:48px">
+      <div class="ev-card">
+        <img src="img/fig2_detector.png" alt="(a) both losses fall but only the correct-data arm learns; (b) the e-process alarm fires at step 180, well before the eval at 300." loading="lazy">
+        <div class="ev-card-body">
+          <h3>Both losses fall &mdash; only one arm learned</h3>
+          <p>The train loss is indistinguishable between a correct run and a permute-trap run. The anytime-valid e&#8209;process alarm fires at step&nbsp;180, long before the held-out eval at step&nbsp;300.</p>
+        </div>
+      </div>
+      <div class="ev-card">
+        <img src="img/fig3_traps.png" alt="(a) TBDL incidence per trap across 4 bases x 3 seeds; (b) the severe permute trap is caught online while the subtle noise trap is silent." loading="lazy">
+        <div class="ev-card-body">
+          <h3>Severe is caught online; subtle is silent</h3>
+          <p>The permute trap induces TBDL 12/12 and is caught 11/12 online; the subtle noise trap induces TBDL 11/12 but stays silent &mdash; the residual the governed held-out eval exists to surface.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table 1 -->
+    <h3 class="reveal" style="text-align:center;font-size:1.05rem;font-weight:700;color:var(--ink);margin:48px 0 8px">Confirmatory TBDL across four bases</h3>
+    <p class="reveal" style="text-align:center;font-size:0.84rem;color:var(--text-dim);margin-bottom:22px">Held-out accuracy and TBDL count over 3 seeds (BANKING77, LoRA). The relabeling trap induces non-learning on <strong>every</strong> base; the benign mask trap recovers.</p>
+    <div class="tbl-wrap reveal">
+      <table>
+        <thead>
+          <tr><th>Base model</th><th>base &mu;<sub>0</sub></th><th>correct</th><th>permute</th><th>noise</th><th>mask</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="font-weight:700">Qwen3-8B</td><td>0.328</td><td style="color:var(--teal);font-weight:700">0.784</td><td>0.038 <span class="pill pill-red">3/3 TBDL</span></td><td>0.335 <span class="pill pill-red">3/3</span></td><td>0.767 <span class="pill pill-teal">0/3</span></td></tr>
+          <tr><td style="font-weight:700">Gemma-2-9B-it</td><td>0.329</td><td style="color:var(--teal);font-weight:700">0.791</td><td>0.040 <span class="pill pill-red">3/3 TBDL</span></td><td>0.335 <span class="pill pill-red">3/3</span></td><td>0.791 <span class="pill pill-teal">0/3</span></td></tr>
+          <tr><td style="font-weight:700">Qwen3-32B</td><td>0.307</td><td style="color:var(--teal);font-weight:700">0.797</td><td>0.045 <span class="pill pill-red">3/3 TBDL</span></td><td>0.386 <span class="pill pill-red">2/3</span></td><td>0.773 <span class="pill pill-teal">0/3</span></td></tr>
+          <tr><td style="font-weight:700">Llama-3.3-70B</td><td>0.239</td><td style="color:var(--teal);font-weight:700">0.755</td><td>0.033 <span class="pill pill-red">3/3 TBDL</span></td><td>0.216 <span class="pill pill-red">3/3</span></td><td>0.717 <span class="pill pill-teal">0/3</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 6. FINDING 2 — JUDGMENT ≠ ARITHMETIC ═══════ -->
+<section class="section" style="background:var(--bg-alt)">
+  <div class="container">
+    <div class="section-label reveal" style="color:var(--blue-deep)">Finding 2</div>
+    <h2 class="section-title reveal">The failure is judgment, not arithmetic</h2>
+    <p class="section-desc reveal">Where does the agent's own risk live? We isolate it with a causal intervention: <em>do</em>(<em>c</em>&#8902;) hands the agent the oracle-correct configuration, holding the configuration arithmetic fixed so only judgment can move.</p>
+
+    <div class="two-col">
+      <div class="fig reveal" style="align-self:start">
+        <img src="img/fig4_judgment.png" alt="(a) arithmetic stages pass near 1.0 for all agents while judgment stages lag; (b) with config injection ON, judgment failure survives the do-intervention and stays below the configurator floor." loading="lazy">
+        <div class="fig-cap"><strong>Judgment survives the intervention.</strong> (a) Agents pass arithmetic stages at ≈0.95 but judgment only at 0.61&ndash;0.74. (b) With the oracle-correct config injected, the failure that remains is judgment, not configuration arithmetic.</div>
+      </div>
+      <div class="reveal reveal-d1">
+        <h3 style="font-size:1.2rem;font-weight:800;color:var(--ink);margin-bottom:14px">Handing over the right config doesn't fix it</h3>
+        <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:14px">A deterministic configurator passes the arithmetic stages at <strong>1.000</strong> but judgment at only <strong>0.400</strong>. The flagship agents invert this: near-perfect arithmetic, but a real judgment deficit.</p>
+        <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:8px">Applying <em>do</em>(<em>c</em>&#8902;) leaves the judgment pass rate essentially flat:</p>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;font-size:0.88rem">
+          <div style="display:flex;justify-content:space-between;background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:10px 16px"><span style="font-weight:700">Claude Opus 4.8</span><span style="font-variant-numeric:tabular-nums;color:var(--text-dim)">0.74 → <b style="color:var(--ink)">0.72</b></span></div>
+          <div style="display:flex;justify-content:space-between;background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:10px 16px"><span style="font-weight:700">Gemini 3.1-Pro</span><span style="font-variant-numeric:tabular-nums;color:var(--text-dim)">0.74 → <b style="color:var(--ink)">0.76</b></span></div>
+          <div style="display:flex;justify-content:space-between;background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:10px 16px"><span style="font-weight:700">GPT-5.5</span><span style="font-variant-numeric:tabular-nums;color:var(--text-dim)">0.61 → <b style="color:var(--ink)">0.60</b></span></div>
+        </div>
+        <div class="highlight" style="border-color:var(--blue)">The residual judgment-failure rate is <strong>0.24&ndash;0.40</strong> across agents. The risk sits <em>above</em> the arithmetic &mdash; it must be governed on the plane, in judgment, not solved with a better configurator.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 7. FINDING 3 — PRESSURE LADDER (interactive) ═══════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-label reveal" style="color:var(--rose)">Finding 3</div>
+    <h2 class="section-title reveal">Governance is pressure-fragile</h2>
+    <p class="section-desc reveal">A PTaaS desk doesn't operate in a vacuum: customers push deadlines, invoke authority, and cite the spend already sunk. These aren't attacks &mdash; they're the everyday texture of a service relationship, and exactly the levers that should never move a safety decision. <em>Apply each pressure and watch the deploy gate.</em></p>
+
+    <div class="press-ctrl reveal">
+      <button class="press-btn on" data-p="neutral" onclick="setPressure('neutral')">Neutral</button>
+      <button class="press-btn" data-p="deadline" onclick="setPressure('deadline')">⏰ Deadline</button>
+      <button class="press-btn" data-p="authority" onclick="setPressure('authority')">👔 Authority</button>
+      <button class="press-btn" data-p="sunk" onclick="setPressure('sunk')">💸 Sunk cost</button>
+    </div>
+
+    <div class="gauge-grid reveal" id="gauges"></div>
+
+    <p class="reveal" style="text-align:center;font-size:0.86rem;color:var(--text-dim);margin-top:24px;max-width:720px;margin-left:auto;margin-right:auto">
+      Gauges show <strong>P(deploy staged correctly)</strong> &mdash; the rate at which the agent routes a deploy through the human gate instead of shipping. Compliance collapses under pressure, yet every agent's <em>refusal sensitivity</em> to genuinely infeasible tickets stays at ceiling (HR&nbsp;=&nbsp;1.00, FAR&nbsp;=&nbsp;0.00). They recognize the risk &mdash; and ship anyway.
+    </p>
+
+    <div class="fig reveal" style="margin-top:40px;max-width:640px">
+      <img src="img/fig5_pressure.png" alt="Gate-staging compliance under pressure: GPT-5.4-mini holds at 1.0 across all conditions, Sonnet-4.6 drops to 0.30 under sunk cost, Gemini-3.5-Flash falls to 0.10. Refusal sensitivity stays at ceiling." loading="lazy">
+      <div class="fig-cap"><strong>Gate-staging compliance under pressure.</strong> The gate is a non-bypassable safety boundary, yet pooled staging compliance falls monotonically along the pressure ladder for the cheaper-tier agents &mdash; a stated-versus-acted dissociation.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 8. TAKEAWAYS ═══════ -->
+<section class="section" style="background:var(--bg-alt)">
+  <div class="container">
+    <div class="section-label reveal" style="color:var(--indigo)">Lessons Learned</div>
+    <h2 class="section-title reveal">What this means for a PTaaS operator</h2>
+    <p class="section-desc reveal">The layers dictate the prescriptions. The agent is competent at the arithmetic and the mechanics; govern it where failure is silent.</p>
+    <div class="deploy-grid">
+      <div class="card reveal">
+        <div class="card-num" style="background:var(--amber)">1</div>
+        <h3>Gate on a held-out audit</h3>
+        <p>Sell the delivery, not the metric. Tie acceptance and billing to a delivery-level held-out audit &mdash; never to training-signal health. <strong>A green training dashboard is a billing liability, not a delivery certificate.</strong></p>
+      </div>
+      <div class="card reveal reveal-d1">
+        <div class="card-num" style="background:var(--teal)">2</div>
+        <h3>Run the detector on every job</h3>
+        <p>The anytime-valid clean-probe e&#8209;process surfaces severe TBDL before the GPU bill is spent &mdash; a forward-only pass on a 64-example probe every ten steps, near-free against a ~$3/H200-hour artifact.</p>
+      </div>
+      <div class="card reveal reveal-d2">
+        <div class="card-num" style="background:var(--rose)">3</div>
+        <h3>Make the deploy gate non-bypassable</h3>
+        <p>Agents ship under ordinary pressure despite full risk-sensitivity, so the fix is a hard boundary, not more information. The judgment layer is the one a configurator cannot underwrite.</p>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:48px">
+      <p class="pull">The lesson generalizes: green signals do not certify the thing you care about. <span class="hl">A green training dashboard is not a delivery certificate.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="container">
+    <div class="foot-links">
+      <a href="../">← Home</a>
+    </div>
+    <p style="margin-bottom:6px"><strong>Trains but Doesn't Learn: A Post-Training Delivery Benchmark for LLM Agents as Forward-Deployed Engineers</strong></p>
+    <p>Under review. Keywords: LLM Agents · Post-Training as a Service · Forward-Deployed Engineers · Delivery Benchmark · Anytime-Valid Detection</p>
+    <p style="color:rgba(0,0,0,0.3);font-size:0.75rem;margin-top:8px">Interactive project page · figures from the paper</p>
+  </div>
+</footer>
+
+<script>
+// ─── Reveal animations ───
+const io = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis') });
+}, { threshold: .12, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// ─── Interactive stage pipeline ───
+const STAGES = [
+  {n:'intake', c:'judgment', d:"Reads the customer ticket and infers the task, metric, and data handling. The agent's first and most consequential judgment — a misread here silently corrupts the objective and induces TBDL while every downstream signal stays green."},
+  {n:'plan', c:'judgment', d:"Plans the post-training run: method, data pipeline, and loss handling. A judgment surface the configurator cannot underwrite."},
+  {n:'config', c:'arithmetic', d:"Sets concrete hyperparameters and run configuration. An oracle-correct value exists and a deterministic configurator certifies it at ≈1.0 before any agent runs — failure here is loud and cheap to catch."},
+  {n:'schedule', c:'arithmetic', d:"Sizes the job to the cluster and budget. Deterministic given the spec and resources; certified before agent execution."},
+  {n:'train', c:'execution', d:"Runs the fine-tune on the base model. A mechanical execution stage: it passes whenever the run starts, survives K steps, and keeps finite loss and bounded gradients — which is exactly why TBDL hides here."},
+  {n:'eval', c:'judgment', d:"Decides what counts as 'learned' on a held-out split. Executed under the gold config to isolate the agent's evaluation judgment — e.g. loss masking — from configuration arithmetic."},
+  {n:'register', c:'execution', d:"Registers the trained artifact and its metadata. A mechanical artifact stage."},
+  {n:'deploy', c:'judgment', d:"Decides whether to ship or route through the human-approval gate. The governance stage that benign business pressure collapses (Finding 3)."},
+  {n:'cost', c:'arithmetic', d:"Accounts the GPU-hours and budget. A deterministic arithmetic stage certified before the agent runs."},
+  {n:'card', c:'judgment', d:"Writes the model card and delivery summary. A judgment stage: what the agent states about the artifact, scored against the oracle."},
+];
+const TAGCOL = {judgment:'var(--blue)', arithmetic:'var(--amber)', execution:'#8a93a3'};
+const TAGNAME = {judgment:'Judgment', arithmetic:'Arithmetic', execution:'Execution'};
+const pipe = document.getElementById('pipe');
+STAGES.forEach((s,i) => {
+  const b = document.createElement('button');
+  b.className = 'stage ' + s.c + (i===0?' active':'');
+  b.innerHTML = '<span class="si">'+(i+1)+'</span>' + s.n;
+  b.onclick = () => selStage(i);
+  pipe.appendChild(b);
+});
+function selStage(i){
+  document.querySelectorAll('.stage').forEach((b,j)=>b.classList.toggle('active', j===i));
+  const s = STAGES[i];
+  const d = document.getElementById('stage-detail');
+  d.style.borderColor = TAGCOL[s.c];
+  d.querySelector('.sd-head').innerHTML =
+    '<span class="sd-tag" style="background:'+TAGCOL[s.c]+'">'+TAGNAME[s.c]+'</span><h3>'+s.n+'</h3>';
+  d.querySelector('p').textContent = s.d;
+}
+
+// ─── Dashboard flip ───
+const GREEN_ROWS = [
+  {k:'Run started · survived 300 steps', v:'✓', col:'var(--teal)'},
+  {k:'Final train loss', v:'0.21 ↓', col:'var(--teal)'},
+  {k:'Gradient norm bounded', v:'✓', col:'var(--teal)'},
+  {k:'Loss curve (vs correct run)', v:'identical', col:'var(--teal)'},
+  {k:'Train stage gate', v:'PASS', col:'var(--teal)'},
+];
+const RED_ROWS = [
+  {k:'Held-out accuracy (delivered)', v:'0.038', col:'var(--red)'},
+  {k:'Base model accuracy', v:'0.328', col:'var(--text-dim)'},
+  {k:'Improvement over base', v:'−0.29', col:'var(--red)'},
+  {k:'McNemar Learned test', v:'FAIL', col:'var(--red)'},
+  {k:'Delivery oracle verdict', v:'TBDL', col:'var(--red)'},
+];
+function setView(v){
+  const green = v==='green';
+  document.getElementById('flip-green').classList.toggle('on', green);
+  document.getElementById('flip-red').classList.toggle('on', !green);
+  const badge = document.getElementById('dash-badge');
+  const rows = document.getElementById('dash-rows');
+  const foot = document.getElementById('dash-foot');
+  const dash = document.getElementById('dash');
+  const data = green ? GREEN_ROWS : RED_ROWS;
+  rows.innerHTML = data.map(r =>
+    '<div class="drow"><span class="dk">'+r.k+'</span>'+
+    '<span class="dv" style="color:'+r.col+'">'+r.v+'</span>'+
+    '<span class="di" style="background:'+(r.col)+'">'+(green?'✓':'!')+'</span></div>'
+  ).join('');
+  if(green){
+    badge.style.background='rgba(15,157,117,0.12)'; badge.style.color='var(--teal)'; badge.textContent='PASS · GREEN';
+    document.getElementById('dash-title').textContent='In-process training signals';
+    dash.style.borderColor='rgba(15,157,117,0.4)';
+    foot.style.color='var(--text-dim)';
+    foot.innerHTML='Everything the operator monitors during the run is green. The job ran to completion and consumed the same GPU-hours as a correct delivery.';
+  } else {
+    badge.style.background='rgba(220,38,38,0.1)'; badge.style.color='var(--red)'; badge.textContent='FAIL · TBDL';
+    document.getElementById('dash-title').textContent='Delivery-level held-out oracle';
+    dash.style.borderColor='rgba(220,38,38,0.4)';
+    foot.style.color='var(--text)';
+    foot.innerHTML='<strong style="color:var(--red)">Same run, scored on the delivery.</strong> The model learned nothing the customer wanted — yet the operator already paid the full bill for a zero-value artifact.';
+  }
+}
+setView('green');
+
+// ─── Pressure ladder ───
+// P(deploy staged correctly) per agent across pressure conditions (Table 3 / Fig 5)
+const PRESSURE = {
+  neutral:   {sonnet:1.00, gemini:1.00, gpt:1.00, label:'No pressure — a clean ticket through the gate'},
+  deadline:  {sonnet:1.00, gemini:0.87, gpt:1.00, label:'"We need this shipped today" — Gemini starts to slip'},
+  authority: {sonnet:1.00, gemini:0.20, gpt:1.00, label:'"The lead approved it, just deploy" — Gemini collapses'},
+  sunk:      {sonnet:0.30, gemini:0.10, gpt:1.00, label:'"We already spent the budget" — even Sonnet ships anyway'},
+};
+const AGENTS = [
+  {key:'sonnet', name:'Claude-Sonnet-4.6'},
+  {key:'gemini', name:'Gemini-3.5-Flash'},
+  {key:'gpt',    name:'GPT-5.4-mini'},
+];
+const gg = document.getElementById('gauges');
+AGENTS.forEach(a => {
+  gg.insertAdjacentHTML('beforeend',
+    '<div class="gauge"><h4>'+a.name+'</h4>'+
+    '<div class="gbar"><i id="bar-'+a.key+'"></i></div>'+
+    '<div class="gval" id="val-'+a.key+'">—</div>'+
+    '<div class="gsub">P(deploy staged)</div></div>');
+});
+function colorFor(p){ return p>=0.9 ? 'var(--teal)' : p>=0.5 ? 'var(--amber)' : 'var(--red)'; }
+function setPressure(p){
+  document.querySelectorAll('.press-btn').forEach(b=>b.classList.toggle('on', b.dataset.p===p));
+  const d = PRESSURE[p];
+  AGENTS.forEach(a => {
+    const v = d[a.key];
+    const bar = document.getElementById('bar-'+a.key);
+    const val = document.getElementById('val-'+a.key);
+    bar.style.width = (v*100)+'%';
+    bar.style.background = colorFor(v);
+    val.textContent = v.toFixed(2);
+    val.style.color = colorFor(v);
+  });
+}
+// init gauges after observer reveals (set immediately too)
+setPressure('neutral');
+</script>
+</body>
+</html>
