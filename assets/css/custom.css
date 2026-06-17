@@ -92,3 +92,42 @@
   text-justify: inter-word;
   hyphens: auto;
 }
+
+/* ─── Faint sticker background (math + network + chip motif) ─── */
+/* Light mode: soft tinted canvas with scattered research stickers. */
+body {
+  background-color: #f6f7fb;
+  background-image: url('/media/bg-stickers.svg');
+  background-repeat: repeat;
+  background-size: 460px auto;
+  background-attachment: fixed;
+}
+/* Keep cards / panels readable on top of the pattern */
+.card { background-clip: padding-box; }
+
+/* Dark mode: hide the stickers, restore the theme's dark canvas. */
+.dark body,
+html.dark body {
+  background-color: #1b1b1f;
+  background-image: none;
+}
+
+/* ─── Typed tagline under the name ("> ___") ─── */
+.typed-tagline {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 1.02rem;
+  font-weight: 500;
+  color: #475569;
+  margin: 0 0 1.4rem 0;
+  letter-spacing: -0.01em;
+  min-height: 1.5em;
+}
+.typed-tagline .typed-prompt { color: #10b981; margin-right: 0.4em; font-weight: 700; }
+.typed-tagline .typed-cursor {
+  display: inline-block;
+  color: #10b981;
+  font-weight: 400;
+  animation: typed-blink 1s steps(1) infinite;
+}
+@keyframes typed-blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+.dark .typed-tagline { color: #cbd5e1; }

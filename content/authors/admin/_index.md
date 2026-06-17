@@ -221,9 +221,28 @@ awards:
 ---
 
 ## About Me
+
+<p class="typed-tagline"><span class="typed-prompt">&gt;</span><span id="typed-tagline-text"></span><span class="typed-cursor">_</span></p>
+<script>
+(function () {
+  var full = "I make computation efficient, intelligent, and grounded for the real world.";
+  var el = document.getElementById("typed-tagline-text");
+  if (!el) return;
+  var i = 0;
+  function step() {
+    if (i <= full.length) {
+      el.textContent = full.slice(0, i);
+      i++;
+      setTimeout(step, i < 3 ? 90 : 38 + Math.random() * 40);
+    }
+  }
+  step();
+})();
+</script>
+
 I'm Junfei Zhan, originally from China, and an incoming PhD student in the Department of Computing at Imperial College London, joining in October 2026 under the supervision of Professor <a href="https://wp.doc.ic.ac.uk/gcasale/">Giuliano Casale</a>. I recently earned my master's degree in Electrical Engineering at the University of Pennsylvania, where my research was supervised by Professor <a href="https://directory.seas.upenn.edu/saswati-sarkar/">Saswati Sarkar</a>. My previous research in undergrad was supervised by Professor <a href="https://ieeexplore.ieee.org/author/37086460251">Tengjiao He</a> and Professor <a href="https://scholars.uow.edu.au/kwan-wu-chin">Kwan-Wu Chin</a>.
 
-My research interests center on optimization, Large Language Models (LLMs), and data-driven decision-making, particularly within energy-constrained computing environments. I've led and co-authored multiple research projects and publications focused on task scheduling, LLMs, and green IoT networks. I have published research in IEEE Networking Letters, the 2025 IEEE International Conference on Systems, Man, and Cybernetics (SMC), the 2026 AAAI Conference on Artificial Intelligence, the IEEE Internet of Things Journal (IEEE IoTJ) and the 2026 ICASSP Conference. I’m passionate about combining mathematical modeling, machine learning, and control theory to tackle real-world system challenges.
+My research interests center on optimization, Large Language Models (LLMs), and data-driven decision-making, particularly within energy-constrained computing environments. I've led and co-authored multiple research projects focused on task scheduling, LLMs, and green IoT networks. I’m passionate about combining mathematical modeling, machine learning, and control theory to tackle real-world system challenges.
 
 Outside of academics, grabbing meals with friends and socializing are among my favorite activities. Sports have also been a significant part of my life, with awards earned in sprinting, rock climbing, rowing, and table tennis.
 
