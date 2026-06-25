@@ -1,6 +1,6 @@
 {
-  "date": "2026-06-24",
-  "updated_at": "2026-06-24T04:19:14.582438Z",
+  "date": "2026-06-25",
+  "updated_at": "2026-06-25T04:19:11.516977Z",
   "tracks": {
     "edge_ai": {
       "name_zh": "Edge AI",
@@ -8,161 +8,131 @@
       "count": 10,
       "papers": [
         {
-          "id": "2606.24467v1",
-          "title": "CompressKV: Semantic-Retrieval-Guided KV-Cache Compression for Resource-Efficient Long-Context LLM Inference",
-          "abstract": "Long-context large language model (LLM) inference is increasingly constrained by the memory footprint and decoding cost of key-value (KV) caches, limiting sustainable deployment on resource-constrained hardware. Existing KV cache eviction methods typically apply heuristic token scoring over all heads in GQA-based LLMs. These methods ignore the different functionalities of attention heads, leading to the eviction of critical tokens and thus degrading the performance of LLMs. To address this issue, we propose CompressKV, a resource-efficient KV-cache compression framework for GQA-based LLMs. Ins",
+          "id": "2606.25091v1",
+          "title": "Speculation at a Distance: Where Edge-Cloud Speculative Decoding Actually Pays Off",
+          "abstract": "Speculative decoding (SD) accelerates LLM inference by $1.5$-$3$ times when the draft and target models are co-located. This has motivated a distributed variant (DSD) that places the draft model on an edge device while the target stays in the cloud. We show with closed-form inequalities that DSD's per-request latency benefit is limited under WAN edge-cloud communication. If the server can host both models, co-located SD has lower latency and communication than synchronous DSD, with the same per-output FLOPs and model-weight memory. Pipelining can make DSD competitive with co-located SD only in",
           "authors": [
-            "Xiaolin Lin",
-            "Jingcun Wang",
-            "Olga Kondrateva",
-            "Yiyu Shi",
-            "Bing Li"
+            "Yuan Lyu",
+            "Bharath Irukulapati",
+            "Jaya Prakash Champati"
           ],
           "published": "2026-06-23",
           "categories": [
+            "cs.DC"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2606.25091v1",
+          "pdf": "https://arxiv.org/pdf/2606.25091v1",
+          "priority": "高",
+          "problem_zh": "这篇论文探讨了边缘设备与云端协同的推理加速问题，尤其是如何通过分布式推理提高效率。",
+          "method_zh": "提出了一种分布式推理变体，利用边缘设备上的草稿模型和云端的目标模型进行推理，加速了LLM的推理速度，提升了1.5到3倍的效率。",
+          "relevance_zh": "该论文与边缘LLM推理优化密切相关，创新性地将推理分布到边缘和云端，适应了用户对边缘设备推理的关注。",
+          "summary_zh": "问题：这篇论文探讨了边缘设备与云端协同的推理加速问题，尤其是如何通过分布式推理提高效率。\n方法：提出了一种分布式推理变体，利用边缘设备上的草稿模型和云端的目标模型进行推理，加速了LLM的推理速度，提升了1.5到3倍的效率。\n相关性：该论文与边缘LLM推理优化密切相关，创新性地将推理分布到边缘和云端，适应了用户对边缘设备推理的关注。"
+        },
+        {
+          "id": "2606.24506v1",
+          "title": "CrossPool: Efficient Multi-LLM Serving for Cold MoE Models through KV-Cache and Weight Disaggregation",
+          "abstract": "Emerging LLM services increasingly host many sparse MoE models, yet most models receive sparse requests and remain cold. This creates a GPU memory problem: model weights are stable and model-determined, while KV-cache is transient and demand-determined. Because cold models rarely reach peak KV-cache demand at the same time, reserving worst-case KV capacity per model wastes memory; a shared KV-cache pool can instead provision aggregate active demand. However, KV-cache sharing is not sufficient when weights and KV-cache remain in a monolithic GPU memory pool. Static weights compete with dynamic ",
+          "authors": [
+            "Zhuoren Ye",
+            "Tianyu Wo",
+            "Dinghao Xue",
+            "Mingming Zhang",
+            "Yuchen Teng"
+          ],
+          "published": "2026-06-23",
+          "categories": [
+            "cs.DC",
+            "cs.AI",
+            "cs.LG",
+            "cs.PF"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2606.24506v1",
+          "pdf": "https://arxiv.org/pdf/2606.24506v1",
+          "priority": "高",
+          "problem_zh": "这篇论文解决了冷启动MoE模型在多LLM服务中的效率问题，尤其是在GPU内存管理方面。",
+          "method_zh": "提出了CrossPool框架，通过KV缓存和权重分解技术，优化了冷MoE模型的服务效率，显著提高了GPU内存的使用率。",
+          "relevance_zh": "该研究与LLM服务和推理优化技术相关，创新性地解决了多LLM服务中的资源调度问题，符合用户的研究兴趣。",
+          "summary_zh": "问题：这篇论文解决了冷启动MoE模型在多LLM服务中的效率问题，尤其是在GPU内存管理方面。\n方法：提出了CrossPool框架，通过KV缓存和权重分解技术，优化了冷MoE模型的服务效率，显著提高了GPU内存的使用率。\n相关性：该研究与LLM服务和推理优化技术相关，创新性地解决了多LLM服务中的资源调度问题，符合用户的研究兴趣。"
+        },
+        {
+          "id": "2606.25097v1",
+          "title": "Speculative Decoding at Temperature Zero: A Scoped Safety-Invariance Screen with a 48,072-Sample Expansion",
+          "abstract": "Speculative decoding accelerates inference by letting a draft model propose tokens for a target model to verify, raising a concrete safety question: at temperature zero, can draft-side behavior leak into safety-scored outputs? We answer with Typical-Acceptance Invariance Screen (TAIS), a behavioral-equivalence screen that pairs target-only and speculative outputs on the same safety battery and requires byte-identity evidence, TOST equivalence at +/-3pp, and per-task Cohen's h below a calibrated null cutoff of |h| < 0.1. Applied to a 16,783-sample confirmatory core plus 44,066 matched expansion",
+          "authors": [
+            "Sahil Kadadekar"
+          ],
+          "published": "2026-06-23",
+          "categories": [
+            "cs.LG",
+            "cs.CR"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2606.25097v1",
+          "pdf": "https://arxiv.org/pdf/2606.25097v1",
+          "priority": "高",
+          "problem_zh": "这篇论文关注于推理加速中的安全性问题，探讨了草稿模型在推理过程中的潜在风险。",
+          "method_zh": "提出了一种典型接受不变性屏幕（TAIS），用于在温度为零的情况下确保草稿模型的行为不会泄露到安全评分的输出中，从而加速推理过程。",
+          "relevance_zh": "该论文与推理优化技术相关，创新性地结合了安全性与推理效率，适合用户对推理优化的关注。",
+          "summary_zh": "问题：这篇论文关注于推理加速中的安全性问题，探讨了草稿模型在推理过程中的潜在风险。\n方法：提出了一种典型接受不变性屏幕（TAIS），用于在温度为零的情况下确保草稿模型的行为不会泄露到安全评分的输出中，从而加速推理过程。\n相关性：该论文与推理优化技术相关，创新性地结合了安全性与推理效率，适合用户对推理优化的关注。"
+        },
+        {
+          "id": "2606.23406v1",
+          "title": "HyperQuant: A Rate-Distortion-Optimal Quantization Pipeline for Large Language and Diffusion Models",
+          "abstract": "We present HyperQuant (Hadamard, optimallY Packing, Entropy Rice-coding), a unified post-training quantization pipeline for the weights and the KV cache of large language and diffusion transformers. Across a suite of self-contained experiments (Table 1), HyperQuant outperforms the recent HIGGS scheme at every operating point from 3 to 5 bits per scalar (bps) on weights, and beats both TurboQuant and OCTOPUS on KV quantization down to 1.7 bps. Beyond the LLM setting, HyperQuant quantizes the 19B-parameter LTX-2 DiT video model with no observable per-frame artifacts. End-to-end on an H100 at 4 b",
+          "authors": [
+            "Yuval Domb",
+            "Hadar Sackstein",
+            "Tomer Solberg"
+          ],
+          "published": "2026-06-22",
+          "categories": [
+            "cs.LG",
             "cs.AI"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2606.24467v1",
-          "pdf": "https://arxiv.org/pdf/2606.24467v1",
+          "link": "https://arxiv.org/abs/2606.23406v1",
+          "pdf": "https://arxiv.org/pdf/2606.23406v1",
           "priority": "高",
-          "problem_zh": "这篇论文旨在解决长上下文大语言模型在资源受限硬件上的内存占用和解码成本问题。",
-          "method_zh": "提出了一种基于语义检索的KV缓存压缩方法，通过优化缓存管理策略，显著降低了内存占用和解码时间，提升了推理效率。",
-          "relevance_zh": "该论文与边缘设备上的LLM推理优化密切相关，创新性地结合了语义检索与KV缓存管理，适用于资源受限的边缘计算环境。",
-          "summary_zh": "问题：这篇论文旨在解决长上下文大语言模型在资源受限硬件上的内存占用和解码成本问题。\n方法：提出了一种基于语义检索的KV缓存压缩方法，通过优化缓存管理策略，显著降低了内存占用和解码时间，提升了推理效率。\n相关性：该论文与边缘设备上的LLM推理优化密切相关，创新性地结合了语义检索与KV缓存管理，适用于资源受限的边缘计算环境。"
+          "problem_zh": "这篇论文探讨了大语言模型的量化问题，旨在提高推理效率和降低能耗。",
+          "method_zh": "提出了HyperQuant量化管道，优化了大语言模型和扩散模型的权重和KV缓存的量化，实验结果显示其在多个指标上优于现有方法。",
+          "relevance_zh": "该研究与推理优化和能耗建模密切相关，创新性地提出了量化技术以提高LLM的推理效率，符合用户的研究方向。",
+          "summary_zh": "问题：这篇论文探讨了大语言模型的量化问题，旨在提高推理效率和降低能耗。\n方法：提出了HyperQuant量化管道，优化了大语言模型和扩散模型的权重和KV缓存的量化，实验结果显示其在多个指标上优于现有方法。\n相关性：该研究与推理优化和能耗建模密切相关，创新性地提出了量化技术以提高LLM的推理效率，符合用户的研究方向。"
         },
         {
-          "id": "2606.22840v1",
-          "title": "RLM-Cascade: Response-Level Speculative Decoding for Cost-Efficient LLM API Serving",
-          "abstract": "We present RLM-Cascade, a proxy-layer system that applies speculative decoding at the response level to reduce LLM API costs without requiring model architecture access or a shared vocabulary. A fast, inexpensive draft model generates a candidate response; a capable verify model accepts, enhances, or is bypassed entirely depending on a lightweight complexity router. On a real-world agentic coding workload (Claude Code), RLM-Cascade achieves a draft-use rate of 88.8% across 125 production requests, reducing API cost by 45.8% relative to a direct Opus baseline. Counter-intuitively, the proxy als",
+          "id": "2606.22496v1",
+          "title": "Enabling Cloud-Level Accuracy in Edge AI through IoT Data Preprocessing",
+          "abstract": "Large language models (LLMs) offer a natural-language interface for interpreting Internet of Things (IoT) sensor data in smart environments; however, cloud deployment introduces latency, privacy, and connectivity concerns. Local LLMs can reduce these limitations, but compact edge-deployable models often show weaker numerical reasoning when raw sensor readings are provided directly. This paper investigates whether prompt-side preprocessing can improve the accuracy-latency trade-off of local LLMs for environmental monitoring. We propose a structured prompt construction framework that transforms ",
           "authors": [
-            "Haifeng Wu",
-            "Srinivasan Manoharan",
-            "Fangbo Tu",
-            "Junhua Zhao",
-            "Jian Wan"
+            "Aygün Varol",
+            "Katarzyna Kołodziej",
+            "Łukasz Sobczak",
+            "Michał Romaszewski",
+            "Przemysław Głomb"
           ],
-          "published": "2026-06-22",
+          "published": "2026-06-21",
           "categories": [
-            "cs.LG"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2606.22840v1",
-          "pdf": "https://arxiv.org/pdf/2606.22840v1",
-          "priority": "高",
-          "problem_zh": "这篇论文解决了在LLM API服务中如何降低成本的问题，尤其是在不改变模型架构的情况下。",
-          "method_zh": "提出了一种响应级别的推测解码系统RLM-Cascade，通过快速生成候选响应并进行验证，降低了API调用的成本。",
-          "relevance_zh": "该研究与推理优化技术相关，尤其是在边缘设备上进行高效LLM服务的背景下，具有重要的应用价值。",
-          "summary_zh": "问题：这篇论文解决了在LLM API服务中如何降低成本的问题，尤其是在不改变模型架构的情况下。\n方法：提出了一种响应级别的推测解码系统RLM-Cascade，通过快速生成候选响应并进行验证，降低了API调用的成本。\n相关性：该研究与推理优化技术相关，尤其是在边缘设备上进行高效LLM服务的背景下，具有重要的应用价值。"
-        },
-        {
-          "id": "2606.23370v1",
-          "title": "FlexServe: A Fast and Secure LLM Serving System for Mobile Devices with Flexible Resource Isolation",
-          "abstract": "Device-side Large Language Models (LLMs) have grown explosively, offering stronger privacy and higher availability than their cloud-side counterparts. During LLM inference, both the model weights and the user data are valuable, and attackers may compromise the OS kernel to steal them. ARM TrustZone is the de facto hardware-based isolation technology on mobile devices, used to protect sensitive applications from a compromised OS. However, protecting LLM inference with TrustZone incurs significant overhead to both the secure inference and the normal aplications, due to two challenges: the inflex",
-          "authors": [
-            "Yinpeng Wu",
-            "Yitong Chen",
-            "Lixiang Wang",
-            "Jinyu Gu",
-            "Zhichao Hua"
-          ],
-          "published": "2026-06-22",
-          "categories": [
-            "cs.CR",
-            "cs.LG",
-            "cs.OS"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2606.23370v1",
-          "pdf": "https://arxiv.org/pdf/2606.23370v1",
-          "priority": "高",
-          "problem_zh": "这篇论文探讨了如何在移动设备上实现安全且高效的LLM服务，解决了隐私和可用性问题。",
-          "method_zh": "提出了FlexServe系统，通过灵活的资源隔离机制，确保了在移动设备上进行LLM推理的安全性和效率。",
-          "relevance_zh": "该论文与边缘设备上的LLM服务密切相关，强调了在移动环境中进行高效推理的必要性，符合用户对个性化和适应性服务的需求。",
-          "summary_zh": "问题：这篇论文探讨了如何在移动设备上实现安全且高效的LLM服务，解决了隐私和可用性问题。\n方法：提出了FlexServe系统，通过灵活的资源隔离机制，确保了在移动设备上进行LLM推理的安全性和效率。\n相关性：该论文与边缘设备上的LLM服务密切相关，强调了在移动环境中进行高效推理的必要性，符合用户对个性化和适应性服务的需求。"
-        },
-        {
-          "id": "2606.21238v1",
-          "title": "Recency/Frequency Adaptive KV Caching for Large Language Model Serving",
-          "abstract": "Key-value (KV) caching is a powerful technique for accelerating large language model inference and generation. Inference workloads are large and diverse, which makes them difficult to cache effectively. Existing cache management strategies adopt the least-recently-used policy for evicting cache blocks. However, LRU leads to multiple unrelated workloads flushing each other's caches. To address this, we integrate adaptive caching that dynamically allocates cache space between recently and frequently occurring KV blocks. Evaluations show that it improves the KV cache hit rate by up to 10.8% and r",
-          "authors": [
-            "Yang Shen",
-            "Meghana Madhyastha",
-            "Robert Underwood",
-            "Bogdan Nicolae",
-            "Randal Burns"
-          ],
-          "published": "2026-06-19",
-          "categories": [
-            "cs.DC",
+            "cs.PF",
             "cs.AI",
             "cs.LG"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2606.21238v1",
-          "pdf": "https://arxiv.org/pdf/2606.21238v1",
+          "link": "https://arxiv.org/abs/2606.22496v1",
+          "pdf": "https://arxiv.org/pdf/2606.22496v1",
           "priority": "中",
-          "problem_zh": "这篇论文研究了如何有效管理大语言模型的KV缓存，以加速推理和生成过程。",
-          "method_zh": "提出了一种基于最近性和频率的自适应KV缓存管理策略，显著提高了缓存的命中率和推理效率。",
-          "relevance_zh": "该研究与LLM推理优化和资源调度相关，提供了新的缓存管理思路，适用于边缘计算环境。",
-          "summary_zh": "问题：这篇论文研究了如何有效管理大语言模型的KV缓存，以加速推理和生成过程。\n方法：提出了一种基于最近性和频率的自适应KV缓存管理策略，显著提高了缓存的命中率和推理效率。\n相关性：该研究与LLM推理优化和资源调度相关，提供了新的缓存管理思路，适用于边缘计算环境。"
+          "problem_zh": "这篇论文解决了边缘AI在IoT数据处理中的延迟和隐私问题，探讨了本地LLM的应用。",
+          "method_zh": "提出了一种本地可部署的紧凑型LLM，旨在减少云端部署带来的延迟和隐私问题，提高IoT环境中的数据处理效率。",
+          "relevance_zh": "该论文与边缘设备上的LLM应用相关，创新性地结合了IoT和边缘计算，适合用户对边缘推理的关注。",
+          "summary_zh": "问题：这篇论文解决了边缘AI在IoT数据处理中的延迟和隐私问题，探讨了本地LLM的应用。\n方法：提出了一种本地可部署的紧凑型LLM，旨在减少云端部署带来的延迟和隐私问题，提高IoT环境中的数据处理效率。\n相关性：该论文与边缘设备上的LLM应用相关，创新性地结合了IoT和边缘计算，适合用户对边缘推理的关注。"
         },
         {
-          "id": "2606.23969v1",
-          "title": "The Serialized Bridge: Understanding and Recovering LLM Serving Performance under Blackwell GPU Confidential Computing",
-          "abstract": "GPU Confidential Computing (GPU-CC) now preserves GPU-local performance: on NVIDIA B300, BF16 matmul runs at 0.998x of non-confidential performance. Yet LLM serving under Intel TDX plus GPU-CC still loses 13-27% of throughput, and KV-cache restore latency can more than double. This paper studies that gap on two Blackwell platforms, RTX Pro 6000 and B300 HGX, and identifies its dominant cause: the confidential VM-GPU bridge, not GPU compute.   We find that GPU-CC turns host/device movement into a serialized, high-setup-cost channel. Secure copies do not gain CUDA-stream concurrency within a con",
-          "authors": [
-            "Hang Yin",
-            "Kevin Wang"
-          ],
-          "published": "2026-06-22",
-          "categories": [
-            "cs.DC",
-            "cs.CR",
-            "cs.PF"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2606.23969v1",
-          "pdf": "https://arxiv.org/pdf/2606.23969v1",
-          "priority": "中",
-          "problem_zh": "这篇论文分析了在GPU保密计算环境下，LLM服务性能的影响因素及其恢复机制。",
-          "method_zh": "通过对LLM服务在GPU保密计算下的性能进行深入研究，提出了性能恢复的策略，减少了服务中断带来的损失。",
-          "relevance_zh": "该论文与边缘计算中LLM服务的性能优化相关，提供了对系统调度与建模的见解，适合关注边缘AI的研究者。",
-          "summary_zh": "问题：这篇论文分析了在GPU保密计算环境下，LLM服务性能的影响因素及其恢复机制。\n方法：通过对LLM服务在GPU保密计算下的性能进行深入研究，提出了性能恢复的策略，减少了服务中断带来的损失。\n相关性：该论文与边缘计算中LLM服务的性能优化相关，提供了对系统调度与建模的见解，适合关注边缘AI的研究者。"
-        },
-        {
-          "id": "2606.21428v2",
-          "title": "Does Mixture-of-Experts Actually Help Inference on Consumer and Edge Hardware? An Empirical Study",
-          "abstract": "Mixture-of-Experts (MoE) language models are often described as ideal for resource-constrained inference. Each token activates only a small subset of experts, so the per-token compute cost, in floating-point operations (FLOPs), resembles that of a much smaller dense model. Whether that FLOP advantage survives in practice is far less clear. We ask whether MoE models actually run faster and cheaper than comparable dense models on consumer-grade and edge hardware. We benchmark OLMoE-1B-7B (1.3 B active of 6.9 B total) against three dense baselines on an Apple M2 Pro and an NVIDIA Jetson Orin Nano",
-          "authors": [
-            "Alfarizy Alfarizy",
-            "Hung Truong Thanh Nguyen",
-            "René Richard",
-            "Roozbeh Razavi-Far",
-            "Hung Cao"
-          ],
-          "published": "2026-06-19",
-          "categories": [
-            "cs.PF",
-            "cs.AI"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2606.21428v2",
-          "pdf": "https://arxiv.org/pdf/2606.21428v2",
-          "priority": "中",
-          "problem_zh": "这篇论文探讨了Mixture-of-Experts模型在消费者和边缘硬件上的推理效果，验证了其优势。",
-          "method_zh": "通过实证研究，分析了MoE模型在边缘设备上的推理性能，揭示了其在资源受限环境中的实际表现。",
-          "relevance_zh": "该研究与边缘设备上LLM的推理优化相关，提供了对MoE模型在实际应用中的重要见解。",
-          "summary_zh": "问题：这篇论文探讨了Mixture-of-Experts模型在消费者和边缘硬件上的推理效果，验证了其优势。\n方法：通过实证研究，分析了MoE模型在边缘设备上的推理性能，揭示了其在资源受限环境中的实际表现。\n相关性：该研究与边缘设备上LLM的推理优化相关，提供了对MoE模型在实际应用中的重要见解。"
-        },
-        {
-          "id": "2606.22327v1",
+          "id": "2606.22327v2",
           "title": "Geometry-Aware Online Scheduling for LLM Serving: From Theoretical Bound to System Practice",
           "abstract": "The explosive demand for interactive Large Language Model serving has highlighted the management of the Key-Value cache's dynamic memory footprint as a critical area for performance optimization in inference engines. Modern inference systems overwhelmingly rely on time-centric scheduling heuristics, such as Shortest Job First. However, their theoretical optimality is rooted in traditional schedule modeling, failing to capture the highly dynamic, 2D spatio-temporal geometric growth specific to LLM inference mechanisms. To resolve this, we propose the geometry-aware online scheduling by introduc",
           "authors": [
@@ -177,88 +147,117 @@
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2606.22327v1",
-          "pdf": "https://arxiv.org/pdf/2606.22327v1",
+          "link": "https://arxiv.org/abs/2606.22327v2",
+          "pdf": "https://arxiv.org/pdf/2606.22327v2",
           "priority": "中",
-          "problem_zh": "这篇论文研究了LLM服务中KV缓存的动态内存管理，以优化推理性能。",
-          "method_zh": "提出了一种几何感知的在线调度策略，从理论到实践优化了LLM服务的性能，提升了响应速度。",
-          "relevance_zh": "该论文与系统调度与建模相关，适合关注LLM服务性能优化的研究者。",
-          "summary_zh": "问题：这篇论文研究了LLM服务中KV缓存的动态内存管理，以优化推理性能。\n方法：提出了一种几何感知的在线调度策略，从理论到实践优化了LLM服务的性能，提升了响应速度。\n相关性：该论文与系统调度与建模相关，适合关注LLM服务性能优化的研究者。"
+          "problem_zh": "这篇论文关注于LLM服务中的动态内存管理，旨在优化推理引擎的性能。",
+          "method_zh": "提出了一种几何感知在线调度方法，优化了Key-Value缓存的动态内存占用，提升了LLM推理的性能。",
+          "relevance_zh": "该研究与系统调度和建模相关，创新性地解决了LLM服务中的内存管理问题，符合用户的研究方向。",
+          "summary_zh": "问题：这篇论文关注于LLM服务中的动态内存管理，旨在优化推理引擎的性能。\n方法：提出了一种几何感知在线调度方法，优化了Key-Value缓存的动态内存占用，提升了LLM推理的性能。\n相关性：该研究与系统调度和建模相关，创新性地解决了LLM服务中的内存管理问题，符合用户的研究方向。"
         },
         {
-          "id": "2606.20911v1",
-          "title": "Latent Personal Memory: Represent personal memory as dynamic soft prompts",
-          "abstract": "Personalizing large language models (LLMs) requires encoding long-term, user-specific behavioral patterns in a way that is computationally efficient, scalable, and compatible with a frozen base model. We present Latent Personal Memory (LPM), a scalable framework that represents user-specific history as a compact, persistent matrix of N latent slots, that are interpretable. A shared cross-attention projection network maps these slots into dynamic, input-conditioned soft prompts that are prepended to the input of a frozen LLM. We evaluate LPM on PersonaMem v1 and LoCOMO benchmarks across Qwen3-1",
+          "id": "2606.25115v1",
+          "title": "Forget to Improve: On-Device LLM-Agent Continual Learning via Budget-Curated Memory",
+          "abstract": "On-device language-model agents improve by accumulating experience in retrieved memory rather than by updating weights. This memory is hard-bounded and exposed: it consumes RAM and energy, reaches peers through a thin uplink, and becomes an attack surface because it is writable by what the agent reads. Existing systems each cover one part of this problem: agentic memories grow without a budget, on-device methods keep entries by success alone, and poisoning is studied mainly as an attack rather than as a memory-governance problem. We propose \\sys{}, a single net-value-per-byte score that govern",
           "authors": [
-            "Debrup Das",
-            "Avinash Amballa",
-            "Yashas Malur Saidutta",
-            "Vijay Srinivasan",
-            "Vivek Kulkarni"
-          ],
-          "published": "2026-06-18",
-          "categories": [
-            "cs.CL",
-            "cs.AI"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2606.20911v1",
-          "pdf": "https://arxiv.org/pdf/2606.20911v1",
-          "priority": "中",
-          "problem_zh": "这篇论文提出了一种动态软提示的方法，以实现个性化的LLM记忆表示。",
-          "method_zh": "通过动态软提示框架，编码用户特定的行为模式，实现了高效的个性化LLM推理，兼容冻结的基础模型。",
-          "relevance_zh": "该研究与个性化LLM相关，适合关注用户特定需求的研究者，具有实际应用潜力。",
-          "summary_zh": "问题：这篇论文提出了一种动态软提示的方法，以实现个性化的LLM记忆表示。\n方法：通过动态软提示框架，编码用户特定的行为模式，实现了高效的个性化LLM推理，兼容冻结的基础模型。\n相关性：该研究与个性化LLM相关，适合关注用户特定需求的研究者，具有实际应用潜力。"
-        },
-        {
-          "id": "2606.24033v1",
-          "title": "RoPE-Aware Bit Allocation for KV-Cache Quantization",
-          "abstract": "Existing low-bit KV-cache quantizers often treat each cached key as a flat vector. Under RoPE, however, a key's contribution to a future attention logit decomposes into a position-dependent sum over two-dimensional frequency blocks. This makes key-cache quantization a block-wise bit-allocation problem: high-energy RoPE blocks are more sensitive to quantization error and should receive more bits. We introduce Block-GTQ, a RoPE-aware bit allocator for key-cache quantization built on TurboQuant-MSE(TQ-MSE). For each layer and KV head, Block-GTQ computes a label-free energy score for each RoPE blo",
-          "authors": [
-            "Fengfeng Liang",
-            "Yuechen Zhang",
-            "Jiaya Jia"
+            "Beining Wu",
+            "Zihao Ding",
+            "Jun Huang",
+            "Yanxiao Zhao"
           ],
           "published": "2026-06-23",
           "categories": [
             "cs.LG",
-            "cs.CL"
+            "cs.NI"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2606.24033v1",
-          "pdf": "https://arxiv.org/pdf/2606.24033v1",
+          "link": "https://arxiv.org/abs/2606.25115v1",
+          "pdf": "https://arxiv.org/pdf/2606.25115v1",
           "priority": "中",
-          "problem_zh": "这篇论文解决了KV缓存量化中的位分配问题，以提高推理效率。",
-          "method_zh": "提出了一种RoPE感知的KV缓存量化方法，通过块级位分配优化，提升了缓存的存储效率和访问速度。",
-          "relevance_zh": "该研究与推理优化技术相关，适合关注LLM在边缘设备上性能提升的研究者。",
-          "summary_zh": "问题：这篇论文解决了KV缓存量化中的位分配问题，以提高推理效率。\n方法：提出了一种RoPE感知的KV缓存量化方法，通过块级位分配优化，提升了缓存的存储效率和访问速度。\n相关性：该研究与推理优化技术相关，适合关注LLM在边缘设备上性能提升的研究者。"
+          "problem_zh": "这篇论文探讨了在设备上进行LLM代理的持续学习问题，关注内存和能耗的管理。",
+          "method_zh": "提出了一种基于预算的记忆管理方法，使得LLM代理通过检索记忆而非更新权重来持续学习，从而降低了内存和能耗。",
+          "relevance_zh": "该论文与边缘设备上的LLM能耗建模相关，创新性地提出了记忆管理方法，适合用户的研究兴趣。",
+          "summary_zh": "问题：这篇论文探讨了在设备上进行LLM代理的持续学习问题，关注内存和能耗的管理。\n方法：提出了一种基于预算的记忆管理方法，使得LLM代理通过检索记忆而非更新权重来持续学习，从而降低了内存和能耗。\n相关性：该论文与边缘设备上的LLM能耗建模相关，创新性地提出了记忆管理方法，适合用户的研究兴趣。"
         },
         {
-          "id": "2606.23961v1",
-          "title": "Forget Without Compromise: Nexus Sampling for Streaming KV-Cache Eviction Under Fixed Budgets",
-          "abstract": "Long-context and agentic LLM workloads push the KV cache past any fixed memory budget, forcing the inference stack to permanently evict tokens at every step of a continuous-inference stream. Existing methods all share the same template, a per-step direct-attention score followed by deterministic top-$K$ selection, which converts a single below-cutoff step into an irreversible verdict and permanently erases any subtly important token that direct attention cannot single out from noise. To address this challenge, we propose Nexus Sampling, a training-free eviction method that pairs Nexus scoring,",
+          "id": "2606.24957v1",
+          "title": "Dustin: Draft-Augmented Sparse Verification for Efficient Long-Context Generation with Speculative Decoding",
+          "abstract": "While speculative decoding improves inference throughput for multi-batch long-context Large Language Models (LLMs), its efficiency is often limited by a verification bottleneck where Key-Value (KV) cache loading dominates latency. Existing compression methods fail in this regime: static eviction incurs accuracy loss due to saliency shift, while dynamic selection introduces prohibitive computational overhead during the verification path. We propose Dustin, a sparse verification framework designed for long-context speculative decoding. Dustin integrates lookahead signals from the draft model wit",
           "authors": [
-            "Duc Duong",
-            "Hoang Anh Duy Le",
-            "Jianwen Xie",
-            "Anshumali Shrivastava",
-            "Zhaozhuo Xu"
+            "WenHung Lee",
+            "Jian-Jia Chen",
+            "Xiaolin Lin",
+            "Pei-Shuo Wang",
+            "Chi-Chih Chang"
           ],
-          "published": "2026-06-22",
+          "published": "2026-06-23",
           "categories": [
+            "cs.CL",
             "cs.LG"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2606.23961v1",
-          "pdf": "https://arxiv.org/pdf/2606.23961v1",
+          "link": "https://arxiv.org/abs/2606.24957v1",
+          "pdf": "https://arxiv.org/pdf/2606.24957v1",
           "priority": "中",
-          "problem_zh": "这篇论文探讨了在固定预算下，如何高效地进行KV缓存的流式采样和驱逐。",
-          "method_zh": "提出了一种Nexus采样方法，通过优化缓存驱逐策略，实现了在固定内存预算下的高效推理。",
-          "relevance_zh": "该研究与LLM推理优化相关，提供了新的缓存管理思路，适合关注边缘计算的研究者。",
-          "summary_zh": "问题：这篇论文探讨了在固定预算下，如何高效地进行KV缓存的流式采样和驱逐。\n方法：提出了一种Nexus采样方法，通过优化缓存驱逐策略，实现了在固定内存预算下的高效推理。\n相关性：该研究与LLM推理优化相关，提供了新的缓存管理思路，适合关注边缘计算的研究者。"
+          "problem_zh": "这篇论文关注于长上下文生成中的推理效率问题，探讨了现有方法的瓶颈。",
+          "method_zh": "提出了一种草稿增强稀疏验证的方法，通过优化KV缓存加载，提升了多批次长上下文LLM的推理吞吐量。",
+          "relevance_zh": "该研究与推理优化技术相关，创新性地解决了长上下文生成中的效率瓶颈，符合用户的研究方向。",
+          "summary_zh": "问题：这篇论文关注于长上下文生成中的推理效率问题，探讨了现有方法的瓶颈。\n方法：提出了一种草稿增强稀疏验证的方法，通过优化KV缓存加载，提升了多批次长上下文LLM的推理吞吐量。\n相关性：该研究与推理优化技术相关，创新性地解决了长上下文生成中的效率瓶颈，符合用户的研究方向。"
+        },
+        {
+          "id": "2606.20474v2",
+          "title": "UltraQuant: 4-bit KV Caching for Context-Heavy Agents",
+          "abstract": "Context-heavy agents place unusual pressure on the key-value (KV) cache: long prefixes are reused across many short turns, while concurrency determines whether the serving system can keep GPUs utilized. We study 4-bit KV-cache compression for this setting, using TurboQuant-style rotation and codebook quantization as a quality anchor and vLLM FP8 KV caching as the deployment anchor. We report three contributions. First, we frame 4-bit KV caching around multi-round agent workloads where task quality, cache residency, and serving throughput must be measured jointly. Second, we describe the practi",
+          "authors": [
+            "Inesh Chakrabarti",
+            "David Limpus",
+            "Aditi Ghai Rana",
+            "Bowen Bao",
+            "Spandan Tiwari"
+          ],
+          "published": "2026-06-18",
+          "categories": [
+            "cs.LG",
+            "cs.AI",
+            "cs.PF"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2606.20474v2",
+          "pdf": "https://arxiv.org/pdf/2606.20474v2",
+          "priority": "中",
+          "problem_zh": "这篇论文研究了上下文重度代理的KV缓存压力问题，旨在提高推理效率。",
+          "method_zh": "提出了4位KV缓存压缩技术，使用TurboQuant风格的旋转和代码本方法，显著提高了上下文重度代理的推理效率。",
+          "relevance_zh": "该论文与推理优化和能耗管理相关，创新性地提出了KV缓存压缩技术，适合用户的研究兴趣。",
+          "summary_zh": "问题：这篇论文研究了上下文重度代理的KV缓存压力问题，旨在提高推理效率。\n方法：提出了4位KV缓存压缩技术，使用TurboQuant风格的旋转和代码本方法，显著提高了上下文重度代理的推理效率。\n相关性：该论文与推理优化和能耗管理相关，创新性地提出了KV缓存压缩技术，适合用户的研究兴趣。"
+        },
+        {
+          "id": "2606.21222v1",
+          "title": "FleetAgent: Teleoperation Assistant for Autonomous Fleets via Vectorized V2N Messages",
+          "abstract": "Large-scale autonomous fleets rely on teleoperation to resolve rare failures, yet streaming raw sensor data from many vehicles is costly, and remote operators can only monitor a limited number of vehicles at a time. We introduce FleetAgent, a cloud-hosted multimodal large language model (MLLM) assistant that consumes compact vectorized vehicle-to-network (V2N) messages, such as map elements, detected objects, and the ego planned path. It provides a structured natural-language response (including narration, explanation, and evaluation of the plan and scene), along with an intervention urgency s",
+          "authors": [
+            "Juntong Peng",
+            "Qi Chen",
+            "Deyuan Qu",
+            "Takayuki Shimizu",
+            "Yaobin Chen"
+          ],
+          "published": "2026-06-19",
+          "categories": [
+            "cs.RO",
+            "cs.AI"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2606.21222v1",
+          "pdf": "https://arxiv.org/pdf/2606.21222v1",
+          "priority": "中",
+          "problem_zh": "这篇论文探讨了大规模自主车队的远程操作问题，关注数据传输的效率。",
+          "method_zh": "提出了FleetAgent，一个基于云的多模态LLM助手，通过向量化V2N消息来优化远程操作的效率，降低了传输成本。",
+          "relevance_zh": "该论文与分布式协同推理相关，创新性地结合了多模态LLM与远程操作，符合用户的研究方向。",
+          "summary_zh": "问题：这篇论文探讨了大规模自主车队的远程操作问题，关注数据传输的效率。\n方法：提出了FleetAgent，一个基于云的多模态LLM助手，通过向量化V2N消息来优化远程操作的效率，降低了传输成本。\n相关性：该论文与分布式协同推理相关，创新性地结合了多模态LLM与远程操作，符合用户的研究方向。"
         }
       ],
       "wordcloud": "wordcloud_edge_ai.png"
@@ -266,257 +265,133 @@
     "agent_memory": {
       "name_zh": "Agent Memory",
       "name_en": "Agent Memory",
-      "count": 10,
+      "count": 5,
       "papers": [
         {
-          "id": "2606.24775v1",
-          "title": "Are We Ready For An Agent-Native Memory System?",
-          "abstract": "Memory for large language model (LLM) agents has rapidly evolved from simple retrieval-augmented mechanisms into a data management system that supports persistent information storage, retrieval, update, consolidation, and dynamic lifecycle governance throughout agent execution. Despite this evolution, existing evaluations still benchmark agent memory mainly through end-to-end task success metrics (e.g., F1, BLEU), while treating the underlying system as a monolithic black box. As a result, critical system-level concerns, including operational costs, architectural trade-offs across memory modul",
+          "id": "2606.25161v1",
+          "title": "TRUSTMEM: Learning Trustworthy Memory Consolidation for LLM Agents with Long-Term Memory",
+          "abstract": "Large language model (LLM) agents rely on long-term memory to support extended interactions and personalized assistance beyond finite context windows. Existing memory agents actively update external memory through generated write, revise, and delete operations, but these updates may omit important information, corrupt existing memory, or introduce unsupported hallucinated content. Once stored, such errors become persistent system-state failures that can affect future reasoning and generation. In this paper, we propose TrustMem, a framework designed to improve the trustworthiness of memory cons",
           "authors": [
-            "Wei Zhou",
-            "Xuanhe Zhou",
-            "Shaokun Han",
-            "Hongming Xu",
-            "Guoliang Li"
+            "Tianyu Yang",
+            "Sudipta Paul",
+            "Vijay Srinivasan",
+            "Vivek Kulkarni",
+            "Srinivas Chappidi"
           ],
           "published": "2026-06-23",
           "categories": [
-            "cs.CL",
-            "cs.DB",
-            "cs.IR"
+            "cs.AI"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2606.24775v1",
-          "pdf": "https://arxiv.org/pdf/2606.24775v1",
+          "link": "https://arxiv.org/abs/2606.25161v1",
+          "pdf": "https://arxiv.org/pdf/2606.25161v1",
           "priority": "高",
-          "problem_zh": "这篇论文探讨了为大型语言模型（LLM）代理设计原生记忆系统的必要性和挑战。",
-          "method_zh": "提出了一种支持持久信息存储、检索和动态生命周期管理的记忆系统，旨在提高代理的执行效率和能力。",
-          "relevance_zh": "该论文直接关注LLM代理中的记忆管理，探讨了计算效率和记忆动态管理的关键问题。",
-          "summary_zh": "问题：这篇论文探讨了为大型语言模型（LLM）代理设计原生记忆系统的必要性和挑战。\n方法：提出了一种支持持久信息存储、检索和动态生命周期管理的记忆系统，旨在提高代理的执行效率和能力。\n相关性：该论文直接关注LLM代理中的记忆管理，探讨了计算效率和记忆动态管理的关键问题。"
+          "problem_zh": "这篇论文探讨了如何提高LLM代理的长期记忆的可靠性和个性化能力。",
+          "method_zh": "提出了一种学习可信记忆整合的方法，通过生成写入、修订和删除操作来更新外部记忆，从而提高记忆的有效性和可靠性。",
+          "relevance_zh": "这篇文章与LLM代理的记忆管理密切相关，创新点在于提出了动态更新记忆的机制，强调了记忆的个性化和长期交互能力。",
+          "summary_zh": "问题：这篇论文探讨了如何提高LLM代理的长期记忆的可靠性和个性化能力。\n方法：提出了一种学习可信记忆整合的方法，通过生成写入、修订和删除操作来更新外部记忆，从而提高记忆的有效性和可靠性。\n相关性：这篇文章与LLM代理的记忆管理密切相关，创新点在于提出了动态更新记忆的机制，强调了记忆的个性化和长期交互能力。"
         },
         {
-          "id": "2606.24595v1",
-          "title": "MEMPROBE: Probing Long-Term Agent Memory via Hidden User-State Recovery",
-          "abstract": "Long-term memory promises LLM agents that grow more capable across sessions, maintaining an accurate, evolving understanding of the user that interaction forms. In practice, however, this memory is evaluated mostly through downstream behavior, such as later answers, personalization quality, or task success, which tests that understanding only indirectly and leaves the memory artifact itself largely unaudited. We argue that long-term memory should instead be evaluated as an auditable post-interaction artifact: after ordinary assistance, what structured user state can be reconstructed from the m",
+          "id": "2606.23195v2",
+          "title": "Memory Contagion: Cross-Temporal Propagation of Evaluator Bias via Agent Memory",
+          "abstract": "Large Language Model (LLM) agents increasingly rely on memory systems to maintain long-term coherence. Recent work shows that agent memories degrade during continuous consolidation. However, existing research assumes memories are derived from unbiased experiences. In this work, we identify and formalize a novel phenomenon: Memory Contagion -- the cross-temporal propagation of evaluator bias through agent memory. We show that when agents are trained or guided by biased evaluators, their experiences become biased; when these trajectories are stored and consolidated into memory, the bias propagat",
           "authors": [
-            "Enze Ma",
-            "Yufan Zhou",
-            "Wei-Chieh Huang",
-            "Jie Yang",
-            "Huanhuan Ma"
+            "Zewen Liu"
           ],
-          "published": "2026-06-23",
+          "published": "2026-06-22",
+          "categories": [
+            "cs.LG",
+            "cs.AI",
+            "cs.CL"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2606.23195v2",
+          "pdf": "https://arxiv.org/pdf/2606.23195v2",
+          "priority": "高",
+          "problem_zh": "这篇论文研究了LLM代理在长期一致性中记忆系统的偏差传播问题。",
+          "method_zh": "识别并形成了记忆偏差的跨时间传播现象，提出了针对记忆整合过程中的偏差影响的分析框架。",
+          "relevance_zh": "文章探讨了记忆系统的动态管理，揭示了记忆偏差对计算效率的潜在影响，符合对计算效率的关注。",
+          "summary_zh": "问题：这篇论文研究了LLM代理在长期一致性中记忆系统的偏差传播问题。\n方法：识别并形成了记忆偏差的跨时间传播现象，提出了针对记忆整合过程中的偏差影响的分析框架。\n相关性：文章探讨了记忆系统的动态管理，揭示了记忆偏差对计算效率的潜在影响，符合对计算效率的关注。"
+        },
+        {
+          "id": "2606.21649v1",
+          "title": "EvoEmbedding: Evolvable Representations for Long-Context Retrieval and Agentic Memory",
+          "abstract": "Existing embedding models are inherently static: they encode text segments in isolation, ignoring their surrounding context and temporal order. This paper introduces EvoEmbedding, a novel embedding model that generates evolvable representations for retrieval. It is tailored for long-context scenarios, where information is dynamic, sequential, and requires continuous state tracking. Our design is simple: EvoEmbedding maintains a continuously updated latent memory as it sequentially processes inputs, and uses it alongside the raw content to jointly generate evolvable embeddings. Consequently, fo",
+          "authors": [
+            "Chang Nie",
+            "Chaoyou Fu",
+            "Junlan Feng",
+            "Caifeng Shan"
+          ],
+          "published": "2026-06-19",
           "categories": [
             "cs.CL"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2606.24595v1",
-          "pdf": "https://arxiv.org/pdf/2606.24595v1",
+          "link": "https://arxiv.org/abs/2606.21649v1",
+          "pdf": "https://arxiv.org/pdf/2606.21649v1",
           "priority": "高",
-          "problem_zh": "这篇论文研究了如何通过隐藏用户状态恢复来探测长期代理记忆。",
-          "method_zh": "提出了一种评估长期记忆的方法，能够在多个会话中保持对用户的准确理解，提升个性化质量。",
-          "relevance_zh": "与LLM代理的记忆系统密切相关，探讨了记忆的计算效率和个性化能力。",
-          "summary_zh": "问题：这篇论文研究了如何通过隐藏用户状态恢复来探测长期代理记忆。\n方法：提出了一种评估长期记忆的方法，能够在多个会话中保持对用户的准确理解，提升个性化质量。\n相关性：与LLM代理的记忆系统密切相关，探讨了记忆的计算效率和个性化能力。"
+          "problem_zh": "这篇论文关注于如何为长上下文检索和代理记忆生成可演化的表示。",
+          "method_zh": "提出了EvoEmbedding模型，能够生成可演化的表示，适应长上下文场景，提高检索效率。",
+          "relevance_zh": "该研究直接涉及长上下文LLM的记忆管理，创新点在于动态生成上下文相关的表示，提升了计算效率。",
+          "summary_zh": "问题：这篇论文关注于如何为长上下文检索和代理记忆生成可演化的表示。\n方法：提出了EvoEmbedding模型，能够生成可演化的表示，适应长上下文场景，提高检索效率。\n相关性：该研究直接涉及长上下文LLM的记忆管理，创新点在于动态生成上下文相关的表示，提升了计算效率。"
         },
         {
-          "id": "2606.24535v1",
-          "title": "Governed Shared Memory for Multi-Agent LLM Systems",
-          "abstract": "Multi-agent LLM environments require robust mechanisms for shared knowledge management. This paper formalizes the fleet-memory problem and identifies four foundational failure modes: unauthorized leakage, stale propagation, contradiction persistence, and provenance collapse. To address these, we define explicit systems-level primitives: scoped retrieval, temporal supersession, provenance tracking, and policy-governed memory propagation. These primitives are implemented in MemClaw, a production multi-tenant memory service, and evaluated via ArgusFleet, a reproducible harness testing four govern",
+          "id": "2606.25206v1",
+          "title": "RAVEN: Long-Horizon Reasoning & Navigation with a Visuo-Spatio-Temporal Memory",
+          "abstract": "Long-term robot deployment requires a compact and scalable memory that preserves fine-grained visual semantics, grounds observations in space and time, and enables efficient storage and retrieval. In this paper, we propose RAVEN, an agentic memory system for long-horizon robotic question answering and navigation. RAVEN stores visual embeddings with pose and time in a vector database, and grounds retrieval in a spatial map to answer queries and navigate to goals. By operating directly on visual embeddings, RAVEN avoids lossy image-to-text captioning and enables accurate semantic, spatial, and t",
           "authors": [
-            "Yanki Margalit",
-            "Nurit Cohen-Inger",
-            "Erni Avram",
-            "Ran Taig",
-            "Oded Margalit"
+            "Yixun Hu",
+            "Zhicheng Zheng",
+            "Lihan Zha",
+            "Chunwei Xing",
+            "Rajdeep Singh"
           ],
           "published": "2026-06-23",
           "categories": [
-            "cs.AI"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2606.24535v1",
-          "pdf": "https://arxiv.org/pdf/2606.24535v1",
-          "priority": "高",
-          "problem_zh": "这篇论文解决了多代理LLM系统中共享知识管理的挑战。",
-          "method_zh": "正式化了舰队记忆问题，并提出了应对未授权泄漏、过时传播等四种失败模式的机制。",
-          "relevance_zh": "涉及多代理系统中的记忆管理，关注计算效率和共享知识的动态管理。",
-          "summary_zh": "问题：这篇论文解决了多代理LLM系统中共享知识管理的挑战。\n方法：正式化了舰队记忆问题，并提出了应对未授权泄漏、过时传播等四种失败模式的机制。\n相关性：涉及多代理系统中的记忆管理，关注计算效率和共享知识的动态管理。"
-        },
-        {
-          "id": "2606.23283v1",
-          "title": "Towards Root Memories: Benchmarking and Enhancing Implicit Logical Memory Retrieval for Personalized LLMs",
-          "abstract": "Memory systems are essential for personalized Large Language Models (LLMs). However, existing retrieval methods in these systems primarily rely on semantic similarity, potentially missing logically critical memories with limited semantic overlap. Current benchmarks remain inadequate for evaluating this problem. To address this gap, we construct IMLogic, the first high-quality benchmark targeting implicit logical memory retrieval in long-dialogue scenarios. Motivated by this challenge, we introduce root memory, a structured, decision-preserving representation that distills reusable personalized",
-          "authors": [
-            "Hongxun Ding",
-            "Xiang Yu",
-            "Chengbing Wang",
-            "Jianfei Xiao",
-            "Keqin Bao"
-          ],
-          "published": "2026-06-22",
-          "categories": [
+            "cs.RO",
+            "cs.AI",
             "cs.CL"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2606.23283v1",
-          "pdf": "https://arxiv.org/pdf/2606.23283v1",
-          "priority": "高",
-          "problem_zh": "这篇论文探讨了个性化LLM中隐式逻辑记忆检索的基准和增强方法。",
-          "method_zh": "提出了一种新的基准测试方法，旨在提高逻辑记忆检索的有效性，尤其是在语义相似性不足的情况下。",
-          "relevance_zh": "与个性化记忆系统相关，关注记忆检索的效率和性能。",
-          "summary_zh": "问题：这篇论文探讨了个性化LLM中隐式逻辑记忆检索的基准和增强方法。\n方法：提出了一种新的基准测试方法，旨在提高逻辑记忆检索的有效性，尤其是在语义相似性不足的情况下。\n相关性：与个性化记忆系统相关，关注记忆检索的效率和性能。"
-        },
-        {
-          "id": "2606.22844v1",
-          "title": "RaMem: Contextual Reinstatement for Long-term Agentic Memory",
-          "abstract": "Long-term memory has become increasingly important for LLM agents that operate across extended interactions and evolving task contexts. Recent memory systems have made past experiences more persistent, compact, and retrievable, but retrieval alone does not ensure that a memory provides valid evidence for the current query. When experiences are compressed into reusable fragments, memories from different situations may appear equally relevant if they involve recurring entities or user states. We refer to this failure as context collapse: memories lose the surrounding context needed to judge whet",
-          "authors": [
-            "Wei Yang",
-            "Bryce Kan",
-            "Shixuan Li",
-            "Li Li",
-            "Yuehan Qin"
-          ],
-          "published": "2026-06-22",
-          "categories": [
-            "cs.AI",
-            "cs.MA"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2606.22844v1",
-          "pdf": "https://arxiv.org/pdf/2606.22844v1",
-          "priority": "高",
-          "problem_zh": "这篇论文研究了长期代理记忆的上下文再现问题。",
-          "method_zh": "提出了一种新的记忆系统，旨在提高过去经验的持久性和可检索性，确保有效的记忆回忆。",
-          "relevance_zh": "直接涉及LLM代理的长期记忆管理，关注计算效率和记忆的有效性。",
-          "summary_zh": "问题：这篇论文研究了长期代理记忆的上下文再现问题。\n方法：提出了一种新的记忆系统，旨在提高过去经验的持久性和可检索性，确保有效的记忆回忆。\n相关性：直接涉及LLM代理的长期记忆管理，关注计算效率和记忆的有效性。"
-        },
-        {
-          "id": "2606.22030v1",
-          "title": "Nous: A Predictive World Model for Long-Term Agent Memory",
-          "abstract": "We present Nous, a novel agent memory architecture grounded in the principle that knowledge is prediction, not storage. Rather than persisting facts as database records, vector embeddings, or knowledge-graph triples, Nous maintains a predictive world model: a collection of categorical probability distributions, called dimensions, one per entity-attribute pair observed in conversation. Each incoming observation is scored by its information-theoretic surprise S = -log2 P(obs | D), and the distribution is updated via a closed-form Bayesian posterior. The primary stored artifact is the delta, a re",
-          "authors": [
-            "Pranav Singh"
-          ],
-          "published": "2026-06-20",
-          "categories": [
-            "cs.AI",
-            "cs.CL",
-            "cs.IR",
-            "cs.LG"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2606.22030v1",
-          "pdf": "https://arxiv.org/pdf/2606.22030v1",
-          "priority": "高",
-          "problem_zh": "这篇论文提出了一种基于预测的代理记忆架构，强调知识的预测而非存储。",
-          "method_zh": "Nous通过维护一个预测世界模型，替代传统的事实存储方式，提升了记忆的动态性和效率。",
-          "relevance_zh": "与LLM代理的记忆管理相关，探讨了计算效率和预测模型的创新。",
-          "summary_zh": "问题：这篇论文提出了一种基于预测的代理记忆架构，强调知识的预测而非存储。\n方法：Nous通过维护一个预测世界模型，替代传统的事实存储方式，提升了记忆的动态性和效率。\n相关性：与LLM代理的记忆管理相关，探讨了计算效率和预测模型的创新。"
-        },
-        {
-          "id": "2606.21732v1",
-          "title": "Safe to Check, Unsafe to Use: Relinking at the Compression Boundary of LLM Agents",
-          "abstract": "Summarization-based prompt compression is increasingly used by LLM agents to shorten long, distributed contexts, but it shifts the security boundary: filters inspect the pre-compression prompt while the backend acts on a newly generated compressed context. We identify relinking, a compression-boundary vulnerability where the compressor behaves as a confused deputy, summarizing distributed, locally benign fragments into a complete malicious instruction. Unlike prompt injection, relinking need not place an explicitly malicious payload in the source context. We show that relinking arises from sum",
-          "authors": [
-            "Zesen Liu",
-            "Zihan Zhang",
-            "Dongdong She"
-          ],
-          "published": "2026-06-19",
-          "categories": [
-            "cs.CR",
-            "cs.AI"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2606.21732v1",
-          "pdf": "https://arxiv.org/pdf/2606.21732v1",
-          "priority": "高",
-          "problem_zh": "这篇论文研究了LLM代理中基于压缩的提示压缩方法的安全性问题。",
-          "method_zh": "识别了在压缩边界下的重新链接问题，提出了相应的安全性分析和改进建议。",
-          "relevance_zh": "涉及LLM代理的提示压缩和计算效率，关注安全性与效率的权衡。",
-          "summary_zh": "问题：这篇论文研究了LLM代理中基于压缩的提示压缩方法的安全性问题。\n方法：识别了在压缩边界下的重新链接问题，提出了相应的安全性分析和改进建议。\n相关性：涉及LLM代理的提示压缩和计算效率，关注安全性与效率的权衡。"
-        },
-        {
-          "id": "2606.21562v1",
-          "title": "Compressing Observation History into Agent Memory: Distilling Transformers into Recurrent Transformers",
-          "abstract": "Transformers are AI's workhorse with strong performance in modeling sequential data, but their computational cost becomes prohibitive when processing long sequences. We target long-horizon streaming vision and robotics applications like map-free pose estimation, where it is particularly impractical to store and maintain a history of observations. Recurrent Transformers address this limitation by maintaining fixed-size memory but their performance lags behind that of transformers operating over the full observation history. We argue that this gap does not stem from architectural limitations, bu",
-          "authors": [
-            "Philippe Weinzaepfel",
-            "Christian Wolf",
-            "Bülent Mert Sariyildiz",
-            "Guillaume Bono",
-            "Gianluca Monaci"
-          ],
-          "published": "2026-06-19",
-          "categories": [
-            "cs.CV",
-            "cs.LG"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2606.21562v1",
-          "pdf": "https://arxiv.org/pdf/2606.21562v1",
+          "link": "https://arxiv.org/abs/2606.25206v1",
+          "pdf": "https://arxiv.org/pdf/2606.25206v1",
           "priority": "中",
-          "problem_zh": "这篇论文探讨了将观察历史压缩到代理记忆中的方法。",
-          "method_zh": "通过将变压器模型蒸馏为递归变压器，降低了处理长序列的计算成本，提高了效率。",
-          "relevance_zh": "与长序列处理和记忆管理相关，关注计算效率的提升。",
-          "summary_zh": "问题：这篇论文探讨了将观察历史压缩到代理记忆中的方法。\n方法：通过将变压器模型蒸馏为递归变压器，降低了处理长序列的计算成本，提高了效率。\n相关性：与长序列处理和记忆管理相关，关注计算效率的提升。"
+          "problem_zh": "这篇论文提出了一种用于长时间机器人部署的紧凑可扩展的记忆系统。",
+          "method_zh": "提出了RAVEN，一个代理记忆系统，能够高效存储和检索视觉语义信息，支持长时间的机器人问答。",
+          "relevance_zh": "虽然主要集中在机器人领域，但其记忆系统的设计理念与LLM代理的记忆管理有相似之处，涉及计算效率的存储和检索。",
+          "summary_zh": "问题：这篇论文提出了一种用于长时间机器人部署的紧凑可扩展的记忆系统。\n方法：提出了RAVEN，一个代理记忆系统，能够高效存储和检索视觉语义信息，支持长时间的机器人问答。\n相关性：虽然主要集中在机器人领域，但其记忆系统的设计理念与LLM代理的记忆管理有相似之处，涉及计算效率的存储和检索。"
         },
         {
-          "id": "2606.20954v1",
-          "title": "Learning What Not to Forget: Long-Horizon Agent Memory from a Few Kilobytes of Learning",
-          "abstract": "Long-running language-model systems accumulate interaction history that outgrows the context window, so they must continually evict. When an eviction policy drops a load-bearing detail, for example an access token issued at login or a path the next call needs, the action fails. We present LRE (Learned Relevance Eviction), a few kilobytes, CPU-only, language-model-free scorer that learns which units of history are load-bearing and keeps them by verbatim extraction. Under a matched-budget comparison, in our experiment, no baseline dominates LRE on the accuracy-cost plane. On agents, LRE matches ",
+          "id": "2606.20679v1",
+          "title": "MemoryVAM: Integrating Memory into Video Action Model for Robot Manipulation",
+          "abstract": "Video-world-model policies learn action-relevant representations by predicting future observations. However, they condition on only a short observation window, which renders long-horizon manipulation non-Markovian when the correct action depends on earlier events that are no longer visible. We present MemoryVAM, an episodic memory mechanism for video-world-model policies. We employ a Recap-Cue (RC) module, in which a Perceiver-based Recap Compressor maps per-frame CLIP embeddings into compact memory tokens, and a lightweight Cue Gate estimates task completion from memory and language. These to",
           "authors": [
-            "Nusrat Jahan Lia",
-            "Aritra Mazumder"
+            "Yuxin Jiang",
+            "Chang Yu",
+            "Yunuo Chen",
+            "Xiang Feng",
+            "Yin Yang"
           ],
-          "published": "2026-06-18",
+          "published": "2026-06-13",
           "categories": [
-            "cs.CL",
-            "cs.AI"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2606.20954v1",
-          "pdf": "https://arxiv.org/pdf/2606.20954v1",
-          "priority": "中",
-          "problem_zh": "这篇论文研究了如何在有限的学习预算下实现长期代理记忆。",
-          "method_zh": "提出了一种新的学习策略，能够有效管理记忆的编码、遗忘和检索。",
-          "relevance_zh": "关注LLM代理的记忆管理和计算效率，探讨了记忆的动态管理。",
-          "summary_zh": "问题：这篇论文研究了如何在有限的学习预算下实现长期代理记忆。\n方法：提出了一种新的学习策略，能够有效管理记忆的编码、遗忘和检索。\n相关性：关注LLM代理的记忆管理和计算效率，探讨了记忆的动态管理。"
-        },
-        {
-          "id": "2606.14470v2",
-          "title": "GitOfThoughts: Version-Controlled Reasoning and Agent Memory You Can Replay, Diff, and Merge",
-          "abstract": "Large language model reasoning leaves no trace once it is done. The steps of a chain of thought disappear when the context window closes, a pruned search branch is just gone, and memory buffers cannot be diffed, merged, or audited. Code, infrastructure, and experiments are all version-controlled. Reasoning is not. GitOfThoughts stores an agent's reasoning tree as a git repository. Every scored thought becomes a commit, scores become notes, outcomes become tags, and retrieval is just git log over the agent's own history. We use this to test something simple. Does giving an agent memory from pas",
-          "authors": [
-            "Pavan C Shekar",
-            "Abhishek H S",
-            "Aswanth Krishnan"
-          ],
-          "published": "2026-06-12",
-          "categories": [
+            "cs.RO",
             "cs.AI",
-            "cs.CL",
-            "cs.LG"
+            "cs.CV"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2606.14470v2",
-          "pdf": "https://arxiv.org/pdf/2606.14470v2",
+          "link": "https://arxiv.org/abs/2606.20679v1",
+          "pdf": "https://arxiv.org/pdf/2606.20679v1",
           "priority": "中",
-          "problem_zh": "这篇论文提出了一种版本控制的推理和代理记忆方法。",
-          "method_zh": "通过实现推理过程的版本控制，增强了记忆的可追溯性和可审计性。",
-          "relevance_zh": "与LLM代理的记忆管理相关，关注记忆的动态性和计算效率。",
-          "summary_zh": "问题：这篇论文提出了一种版本控制的推理和代理记忆方法。\n方法：通过实现推理过程的版本控制，增强了记忆的可追溯性和可审计性。\n相关性：与LLM代理的记忆管理相关，关注记忆的动态性和计算效率。"
+          "problem_zh": "这篇论文研究了如何将记忆集成到视频动作模型中，以支持机器人操作。",
+          "method_zh": "提出了一种新方法，通过记忆来处理长时间的操作决策，克服了短观察窗口的限制。",
+          "relevance_zh": "该研究涉及记忆在动态环境中的应用，虽然主要集中在机器人操作，但其对记忆管理的探讨与LLM代理的计算效率相关。",
+          "summary_zh": "问题：这篇论文研究了如何将记忆集成到视频动作模型中，以支持机器人操作。\n方法：提出了一种新方法，通过记忆来处理长时间的操作决策，克服了短观察窗口的限制。\n相关性：该研究涉及记忆在动态环境中的应用，虽然主要集中在机器人操作，但其对记忆管理的探讨与LLM代理的计算效率相关。"
         }
       ],
       "wordcloud": "wordcloud_agent_memory.png"
@@ -524,84 +399,9 @@
     "edge_intelligence": {
       "name_zh": "Edge Intelligence",
       "name_en": "Edge Intelligence",
-      "count": 3,
-      "papers": [
-        {
-          "id": "2606.19363v1",
-          "title": "When to Trust, How to Distill: Multi-Foundation Model Guidance for Lightweight, Robust Scientific Time Series Forecasting",
-          "abstract": "The deployment of Time-Series Foundation Models (TSFMs) in physical sciences is hindered by a critical trade-off: while these models encode rich, universal temporal dynamics, they suffer from severe distributional misalignment when applied zero-shot to specific scientific domains, and their computational cost prohibits deployment in edge-computing sensor networks. We address a fundamental challenge: How can we extract latent structural knowledge from misaligned foundation models (FM) to train lightweight, specialized forecasters? We propose Gated Uncertainty-Aware Routing for Distillation (Gua",
-          "authors": [
-            "Rupasree Dey",
-            "Abdul Matin",
-            "Nathan Orwick",
-            "Yao Zhang",
-            "Shrideep Pallickara"
-          ],
-          "published": "2026-06-10",
-          "categories": [
-            "cs.LG"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2606.19363v1",
-          "pdf": "https://arxiv.org/pdf/2606.19363v1",
-          "priority": "高",
-          "problem_zh": "这篇论文探讨了如何在科学时间序列预测中有效部署基础模型以克服分布不一致的问题。",
-          "method_zh": "提出了一种多基础模型指导的方法，通过轻量化和鲁棒性增强来优化时间序列预测的性能，显著提高了模型在特定领域的适应性和准确性。",
-          "relevance_zh": "这篇文章与边缘智能场景中的模型部署和推理优化密切相关，创新性地解决了模型在特定应用中的适应性问题。",
-          "summary_zh": "问题：这篇论文探讨了如何在科学时间序列预测中有效部署基础模型以克服分布不一致的问题。\n方法：提出了一种多基础模型指导的方法，通过轻量化和鲁棒性增强来优化时间序列预测的性能，显著提高了模型在特定领域的适应性和准确性。\n相关性：这篇文章与边缘智能场景中的模型部署和推理优化密切相关，创新性地解决了模型在特定应用中的适应性问题。"
-        },
-        {
-          "id": "2606.22751v1",
-          "title": "Low-Complexity Direct Geolocation of Terrestrial GNSS Jammers from Low Earth Orbit",
-          "abstract": "This paper introduces a low-complexity technique named quasi-direct geolocation (QDG) to perform passive radio-frequency (RF) geolocation of emitters directly in the position domain, akin to direct geolocation (DG) and direct position determination (DPD). The proposed technique drastically reduces the complexity of DG/DPD and is experimentally demonstrated in geolocating a terrestrial jammer at Jammertest 2025 from a repurposed satellite in low Earth orbit (LEO): OPS-SAT PRETTY. The goal of QDG is to enable satellites to contribute to a multi-constellation system for RF interference (RFI) moni",
-          "authors": [
-            "Giacomo Pojani",
-            "Javier Tegedor",
-            "Joaquim Fortuny-Guasch"
-          ],
-          "published": "2026-06-22",
-          "categories": [
-            "eess.SP"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2606.22751v1",
-          "pdf": "https://arxiv.org/pdf/2606.22751v1",
-          "priority": "高",
-          "problem_zh": "这篇论文提出了一种低复杂度的技术用于从低地球轨道直接定位地面GNSS干扰源。",
-          "method_zh": "引入了准直接定位技术（QDG），显著降低了定位过程中的计算复杂度，提升了定位精度和效率。",
-          "relevance_zh": "该研究与卫星边缘网络相关，提供了一种新颖的定位方法，适用于低地球轨道卫星的应用场景。",
-          "summary_zh": "问题：这篇论文提出了一种低复杂度的技术用于从低地球轨道直接定位地面GNSS干扰源。\n方法：引入了准直接定位技术（QDG），显著降低了定位过程中的计算复杂度，提升了定位精度和效率。\n相关性：该研究与卫星边缘网络相关，提供了一种新颖的定位方法，适用于低地球轨道卫星的应用场景。"
-        },
-        {
-          "id": "2606.21621v1",
-          "title": "Differential LEO Navigation under Asynchronous Satellite Clocks: Architecture and Performance Bounds",
-          "abstract": "Low Earth Orbit (LEO) communication satellites have emerged as a promising source of signals of opportunity for resilient positioning, navigation, and timing (PNT) in GNSS-challenged environments. Unlike GNSS constellations, however, commercial LEO systems are not globally synchronized, and independent satellite clock biases and drifts severely degrade kinematic estimation and induce statistical inconsistency when not explicitly managed. This paper proposes a base-station-aided differential navigation architecture that explicitly mitigates independent LEO satellite clock biases and drifts with",
-          "authors": [
-            "Qamar Bader",
-            "Sharief Saleh",
-            "Henk Wymeersch",
-            "Gonzalo Seco-Granados",
-            "Aboelmagd Noureldin"
-          ],
-          "published": "2026-06-19",
-          "categories": [
-            "eess.SP"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2606.21621v1",
-          "pdf": "https://arxiv.org/pdf/2606.21621v1",
-          "priority": "高",
-          "problem_zh": "这篇论文研究了在异步卫星时钟下的低地球轨道导航的架构和性能界限。",
-          "method_zh": "提出了一种新架构，能够在GNSS受限环境中利用LEO卫星信号进行定位，提升了系统的鲁棒性和可靠性。",
-          "relevance_zh": "该论文与卫星边缘网络密切相关，探讨了LEO卫星在导航中的应用，具有重要的实际意义。",
-          "summary_zh": "问题：这篇论文研究了在异步卫星时钟下的低地球轨道导航的架构和性能界限。\n方法：提出了一种新架构，能够在GNSS受限环境中利用LEO卫星信号进行定位，提升了系统的鲁棒性和可靠性。\n相关性：该论文与卫星边缘网络密切相关，探讨了LEO卫星在导航中的应用，具有重要的实际意义。"
-        }
-      ],
-      "wordcloud": "wordcloud_edge_intelligence.png"
+      "count": 0,
+      "papers": []
     }
   },
-  "total_count": 23
+  "total_count": 15
 }
