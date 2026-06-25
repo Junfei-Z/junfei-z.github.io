@@ -86,6 +86,20 @@
   .news-body { font-size: 0.9rem; }
 }
 
+/* Dark mode: lift the news timeline text out of the dark canvas. */
+.dark .news-list { border-left-color: #3a3a40; }
+.dark .news-item:hover { background: rgba(96, 165, 250, 0.08); }
+.dark .news-item::before { background: #1b1b1f; }
+.dark .news-item.itm-award::before { background: #f59e0b; }
+.dark .news-date .news-mo { color: #60a5fa; }
+.dark .news-date .news-day { color: #f3f4f6; }
+.dark .news-date .news-yr { color: #9ca3af; }
+.dark .news-venue { color: #9ca3af; }
+.dark .news-body .news-title { color: #e5e7eb; }
+.dark .news-body .news-title em { color: #cbd5e1; }
+.dark .news-body .news-meta { color: #9ca3af; }
+.dark .news-body .news-meta b { color: #cbd5e1; }
+
 /* Justify the About Me biography paragraphs (两端对齐) */
 .bio-text p {
   text-align: justify;
@@ -93,17 +107,12 @@
   hyphens: auto;
 }
 
-/* ─── Faint sticker background (math + network + chip motif) ─── */
-/* Light mode: soft tinted canvas with scattered research stickers. */
+/* ─── Plain background ─── */
+/* Light mode: pure white canvas (sticker pattern removed). */
 body {
   background-color: #ffffff;
-  background-image: url('/media/bg-stickers.svg');
-  background-repeat: repeat;
-  background-size: 760px auto;
-  background-attachment: fixed;
+  background-image: none;
 }
-/* Keep cards / panels readable on top of the pattern */
-.card { background-clip: padding-box; }
 
 /* Dark mode: hide the stickers, restore the theme's dark canvas. */
 .dark body,
