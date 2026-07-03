@@ -1,6 +1,6 @@
 {
-  "date": "2026-07-02",
-  "updated_at": "2026-07-02T04:15:29.670644Z",
+  "date": "2026-07-03",
+  "updated_at": "2026-07-03T04:08:36.954079Z",
   "tracks": {
     "edge_ai": {
       "name_zh": "Edge AI",
@@ -179,35 +179,83 @@
     "agent_memory": {
       "name_zh": "Agent Memory",
       "name_en": "Agent Memory",
-      "count": 3,
+      "count": 4,
       "papers": [
         {
-          "id": "2607.00368v1",
-          "title": "Beyond Perplexity: A Behavioral Evaluation Framework for Deployment-Memory Claims in LLM Test-Time Training",
-          "abstract": "Large language model test-time training (TTT) is often evaluated through local proxy metrics: models are updated on recent tokens, retrieved context, target-domain data, or verifiable task attempts, and then judged by perplexity, future-token loss, long-context performance, or reward. These metrics are well matched to claims about stream adaptation, domain adaptation, context compression, and reward-backed test-time improvement. They are weaker evidence, however, for a capability that TTT results are increasingly used to motivate: deployed assistant memory, personalization, or sparse post-depl",
+          "id": "2607.01935v1",
+          "title": "A-TMA: Decoupling State-Aware Memory Failures in Long-Term Agent Memory",
+          "abstract": "Long term memory lets LLM agents act as persistent assistants, but user facts change. A useful memory system must know what is true now, what used to be true, and what changed. We study \\emph{ghost memory}, a state coordination failure in which old, current, and transition facts coexist in the memory bank, remain mixed during retrieval, and mislead the answer model. We argue that memory systems should be understood and optimized from three levels: bank maintenance, retrieval, and answer time resolution. We propose ATMA, a state aware overlay for existing memory systems. ATMA keeps superseded a",
           "authors": [
-            "Xiangchen Song",
-            "Zhenhao Chen",
-            "Lingjing Kong",
-            "Shaoan Xie",
-            "Xinshuai Dong"
+            "Zitong Shi",
+            "Yixuan Tang",
+            "Anthony Kum Hoe Tung"
+          ],
+          "published": "2026-07-02",
+          "categories": [
+            "cs.AI"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2607.01935v1",
+          "pdf": "https://arxiv.org/pdf/2607.01935v1",
+          "priority": "高",
+          "problem_zh": "这篇论文探讨了长期代理记忆中的状态协调失败问题，如何处理用户事实的变化。",
+          "method_zh": "提出了一种新的记忆系统，能够区分当前、过去和变化的事实，从而解决了旧记忆与当前事实共存的问题。",
+          "relevance_zh": "这篇文章关注LLM代理的长期记忆管理，创新性地解决了记忆回忆中的状态协调问题，符合计算效率的研究方向。",
+          "summary_zh": "问题：这篇论文探讨了长期代理记忆中的状态协调失败问题，如何处理用户事实的变化。\n方法：提出了一种新的记忆系统，能够区分当前、过去和变化的事实，从而解决了旧记忆与当前事实共存的问题。\n相关性：这篇文章关注LLM代理的长期记忆管理，创新性地解决了记忆回忆中的状态协调问题，符合计算效率的研究方向。"
+        },
+        {
+          "id": "2607.01916v1",
+          "title": "ContextSniper: AntTrail's Token-Efficient Code Memory for Repository-Level Program Repair",
+          "abstract": "Large language model agents can repair real repository issues, but they often spend large context budgets on whole-file reads, broad searches, and long terminal outputs where useful evidence is mixed with irrelevant code and logs. This paper presents ContextSniper, AntTrail's token-efficient code memory layer for repository-level program repair. As the coding specialization of AntTrail's broader agent memory engine, ContextSniper implements the Sniper feature for precision evidence selection: it retrieves candidate code and runtime evidence, ranks it with hybrid retrieval signals, filters long",
+          "authors": [
+            "Chiwang Luk",
+            "Matin Mohammad Najafi",
+            "Zhifeng Jia",
+            "Wei Yang",
+            "Xiuchang Li"
+          ],
+          "published": "2026-07-02",
+          "categories": [
+            "cs.AI"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2607.01916v1",
+          "pdf": "https://arxiv.org/pdf/2607.01916v1",
+          "priority": "高",
+          "problem_zh": "这篇论文解决了大型语言模型代理在代码修复中高昂的上下文预算问题。",
+          "method_zh": "提出了ContextSniper，一种高效的代码记忆机制，能够在程序修复中显著减少token使用，提升效率。",
+          "relevance_zh": "该研究聚焦于token经济学，优化了LLM代理的上下文使用，直接与计算效率相关。",
+          "summary_zh": "问题：这篇论文解决了大型语言模型代理在代码修复中高昂的上下文预算问题。\n方法：提出了ContextSniper，一种高效的代码记忆机制，能够在程序修复中显著减少token使用，提升效率。\n相关性：该研究聚焦于token经济学，优化了LLM代理的上下文使用，直接与计算效率相关。"
+        },
+        {
+          "id": "2607.01523v1",
+          "title": "Multi-Head Recurrent Memory Agents",
+          "abstract": "Recurrent memory agents extend LLMs to arbitrarily long contexts by iteratively consolidating input into a fixed-size memory window. Despite their scalability, these agents exhibit a well-documented reliability problem: end-to-end performance degrades systematically as context length grows. We diagnose this failure by decomposing performance into two factors--memory capture and memory retention--and quantitatively confirm that retention is the dominant bottleneck. Retention collapses because existing designs maintain memory as a monolithic text block, forcing every update to risk overwriting p",
+          "authors": [
+            "Jiatong Li",
+            "Samuel Yeh",
+            "Sharon Li"
           ],
           "published": "2026-07-01",
           "categories": [
+            "cs.LG",
+            "cs.AI",
             "cs.CL"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2607.00368v1",
-          "pdf": "https://arxiv.org/pdf/2607.00368v1",
+          "link": "https://arxiv.org/abs/2607.01523v1",
+          "pdf": "https://arxiv.org/pdf/2607.01523v1",
           "priority": "高",
-          "problem_zh": "这篇论文探讨了如何评估LLM在测试时训练中的记忆表现，尤其是其对长期上下文的影响。",
-          "method_zh": "提出了一种行为评估框架，通过多种代理指标来评估LLM在测试时训练中的记忆表现，强调了长期上下文性能的重要性。",
-          "relevance_zh": "这篇文章与LLM agent memory的计算效率密切相关，创新点在于提供了一种新的评估方法，关注记忆对推理性能的影响。",
-          "summary_zh": "问题：这篇论文探讨了如何评估LLM在测试时训练中的记忆表现，尤其是其对长期上下文的影响。\n方法：提出了一种行为评估框架，通过多种代理指标来评估LLM在测试时训练中的记忆表现，强调了长期上下文性能的重要性。\n相关性：这篇文章与LLM agent memory的计算效率密切相关，创新点在于提供了一种新的评估方法，关注记忆对推理性能的影响。"
+          "problem_zh": "这篇论文研究了递归记忆代理在处理长上下文时的性能下降问题。",
+          "method_zh": "提出了一种新的方法，通过迭代整合输入到固定大小的记忆窗口中，扩展了LLM的上下文能力。",
+          "relevance_zh": "该研究探讨了长上下文的计算效率问题，直接与LLM代理的记忆管理相关。",
+          "summary_zh": "问题：这篇论文研究了递归记忆代理在处理长上下文时的性能下降问题。\n方法：提出了一种新的方法，通过迭代整合输入到固定大小的记忆窗口中，扩展了LLM的上下文能力。\n相关性：该研究探讨了长上下文的计算效率问题，直接与LLM代理的记忆管理相关。"
         },
         {
-          "id": "2607.01071v1",
+          "id": "2607.01071v2",
           "title": "MemSyco-Bench: Benchmarking Sycophancy in Agent Memory",
           "abstract": "Memory has emerged as a cornerstone of modern LLM-based agents, supporting their evolution from single-turn assistants to long-term collaborators. However, memory is not always beneficial: retrieved memories often induce a critical issue of sycophancy, causing agents to over-align with the user at the cost of factual accuracy or objective reasoning. Despite this emerging risk, existing memory benchmarks primarily evaluate whether memories are correctly stored, retrieved, or updated, while overlooking how retrieved memories influence downstream reasoning and decision-making. To bridge this gap,",
           "authors": [
@@ -224,37 +272,13 @@
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2607.01071v1",
-          "pdf": "https://arxiv.org/pdf/2607.01071v1",
+          "link": "https://arxiv.org/abs/2607.01071v2",
+          "pdf": "https://arxiv.org/pdf/2607.01071v2",
           "priority": "中",
-          "problem_zh": "这篇论文研究了在代理记忆中出现的过度迎合用户的问题，影响了代理的长期协作能力。",
-          "method_zh": "提出了MemSyco-Bench基准，评估代理在记忆检索时的迎合行为，旨在优化记忆的使用以提高代理的表现。",
-          "relevance_zh": "虽然主要关注记忆的行为问题，但与LLM agent memory的计算效率相关，尤其是在记忆检索时的计算开销。",
-          "summary_zh": "问题：这篇论文研究了在代理记忆中出现的过度迎合用户的问题，影响了代理的长期协作能力。\n方法：提出了MemSyco-Bench基准，评估代理在记忆检索时的迎合行为，旨在优化记忆的使用以提高代理的表现。\n相关性：虽然主要关注记忆的行为问题，但与LLM agent memory的计算效率相关，尤其是在记忆检索时的计算开销。"
-        },
-        {
-          "id": "2606.31275v1",
-          "title": "CLIMB: Centroid-Based Hierarchical Memory for Online Continual Self-Supervised Learning",
-          "abstract": "Online Continual Self-Supervised Learning (OCSSL) aims to learn representations from a continuous stream of unlabeled data, without knowledge of task boundaries and under memory constraints. Existing methods rely either on replay buffers that exploit latent space structure, or on regularization alone. We present CLIMB (Continual Learning with Intelligent Memory Bank), which combines both simultaneously. Our method introduces a hierarchical centroid-based memory, bounded in total number of stored images, combined with knowledge distillation on replayed examples to limit representation drift. Th",
-          "authors": [
-            "Julien Lefebvre",
-            "Stefan Duffner",
-            "Mathieu Lefort"
-          ],
-          "published": "2026-06-30",
-          "categories": [
-            "cs.CV",
-            "cs.AI"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2606.31275v1",
-          "pdf": "https://arxiv.org/pdf/2606.31275v1",
-          "priority": "中",
-          "problem_zh": "这篇论文解决了在线持续自监督学习中的记忆约束问题，旨在从连续的无标签数据流中学习表示。",
-          "method_zh": "提出了一种基于中心的分层记忆框架，能够在内存限制下有效学习，优化了记忆的使用和计算效率。",
-          "relevance_zh": "与LLM agent memory相关，特别是在处理大规模数据流和记忆管理方面，创新点在于其分层记忆结构。",
-          "summary_zh": "问题：这篇论文解决了在线持续自监督学习中的记忆约束问题，旨在从连续的无标签数据流中学习表示。\n方法：提出了一种基于中心的分层记忆框架，能够在内存限制下有效学习，优化了记忆的使用和计算效率。\n相关性：与LLM agent memory相关，特别是在处理大规模数据流和记忆管理方面，创新点在于其分层记忆结构。"
+          "problem_zh": "这篇论文探讨了记忆在LLM代理中的双刃剑作用，如何导致过度迎合用户。",
+          "method_zh": "提出了MemSyco-Bench基准，评估记忆对代理行为的影响，尤其是对用户偏好的过度对齐。",
+          "relevance_zh": "该研究关注记忆的计算效率和性能权衡，探讨了记忆管理中的潜在问题。",
+          "summary_zh": "问题：这篇论文探讨了记忆在LLM代理中的双刃剑作用，如何导致过度迎合用户。\n方法：提出了MemSyco-Bench基准，评估记忆对代理行为的影响，尤其是对用户偏好的过度对齐。\n相关性：该研究关注记忆的计算效率和性能权衡，探讨了记忆管理中的潜在问题。"
         }
       ],
       "wordcloud": "wordcloud_agent_memory.png"
@@ -262,88 +286,9 @@
     "edge_intelligence": {
       "name_zh": "Edge Intelligence",
       "name_en": "Edge Intelligence",
-      "count": 3,
-      "papers": [
-        {
-          "id": "2607.00967v1",
-          "title": "Opportunistic Positioning with LEO Satellites based on SSB from NR NTN",
-          "abstract": "Forthcoming Low Earth Orbit (LEO) satellite networks such as Starlink's Mobile Satellite Service (MSS) will incorporate the New Radio (NR) Non-Terrestrial Network (NTN) standard. The Synchronization Signal Block (SSB) specified as part of NR is periodically broadcast for cell search and initial access. We propose to exploit the SSB for opportunistic receiver positioning. Doppler shift measurements are modeled and pseudoranges are derived from SSB while also taking into account the receiver's clock bias and drift. The resulting per satellite integer ambiguity in the pseudorange is resolved by g",
-          "authors": [
-            "Rainer Bachl",
-            "Muhammad Nabeel",
-            "Tingting Lei"
-          ],
-          "published": "2026-07-01",
-          "categories": [
-            "eess.SP"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2607.00967v1",
-          "pdf": "https://arxiv.org/pdf/2607.00967v1",
-          "priority": "高",
-          "problem_zh": "这篇论文探讨了如何利用LEO卫星进行机会定位，以提高网络服务的可靠性和效率。",
-          "method_zh": "提出了一种基于NR NTN标准的同步信号块（SSB）方法，能够在LEO卫星网络中实现高效的定位，提升了信号的接收和处理能力。",
-          "relevance_zh": "与卫星边缘网络相关，创新点在于结合了LEO卫星和非地面网络的技术，提升了星地协同的定位能力。",
-          "summary_zh": "问题：这篇论文探讨了如何利用LEO卫星进行机会定位，以提高网络服务的可靠性和效率。\n方法：提出了一种基于NR NTN标准的同步信号块（SSB）方法，能够在LEO卫星网络中实现高效的定位，提升了信号的接收和处理能力。\n相关性：与卫星边缘网络相关，创新点在于结合了LEO卫星和非地面网络的技术，提升了星地协同的定位能力。"
-        },
-        {
-          "id": "2607.00029v1",
-          "title": "Memory-Native Non-Terrestrial Networks for Embodied Intelligence",
-          "abstract": "Non-terrestrial networks (NTN) provide ubiquitous connectivity for embodied intelligence (EI), enabling robots in wilderness to leverage cloud resources or report critical information to remote centers. However, the synergy is nontrivial due to the highly-dynamic, resource-constrained, topology-varying, and task-oriented environment. Existing memoryless NTN protocols become inefficient, since the decisions are driven by local channel conditions and instantaneous service demands. To address these limitations, this paper proposes the memory-native NTN (MemNTN) paradigm that leverages long-horizo",
-          "authors": [
-            "Chengyang Li",
-            "Yikun Wang",
-            "Jiahui He",
-            "Yujie Wan",
-            "Shuai Wang"
-          ],
-          "published": "2026-06-22",
-          "categories": [
-            "cs.RO",
-            "cs.AI",
-            "cs.MA",
-            "cs.NI"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2607.00029v1",
-          "pdf": "https://arxiv.org/pdf/2607.00029v1",
-          "priority": "高",
-          "problem_zh": "这篇论文研究了非地面网络在支持具身智能方面的应用，尤其是在动态和资源受限环境中的挑战。",
-          "method_zh": "提出了一种内存原生的非地面网络架构，能够为具身智能提供无缝的云资源连接和信息报告能力，提升了系统的适应性。",
-          "relevance_zh": "与非地面网络和边缘智能相关，创新点在于解决了动态环境中资源管理和连接的复杂性。",
-          "summary_zh": "问题：这篇论文研究了非地面网络在支持具身智能方面的应用，尤其是在动态和资源受限环境中的挑战。\n方法：提出了一种内存原生的非地面网络架构，能够为具身智能提供无缝的云资源连接和信息报告能力，提升了系统的适应性。\n相关性：与非地面网络和边缘智能相关，创新点在于解决了动态环境中资源管理和连接的复杂性。"
-        },
-        {
-          "id": "2607.01088v1",
-          "title": "ROSA: A Robotics Foundation Model Serving System for Robot Factories",
-          "abstract": "Robotics foundation models (RFMs) are making general-purpose robots increasingly practical for factory deployments. While RFM serving systems are central to this vision, existing systems are largely shaped by a single-robot, single-model assumption: inference is treated as an edge-computing problem handled by an on-robot or dedicated nearby GPU, and the serving objective is to minimize the latency of a single action model. In this paper, we propose ROSA, an RFM serving system for robot factories designed around three key principles. First, ROSA adopts shared GPU-pool serving, allowing a fleet ",
-          "authors": [
-            "Wenqi Jiang",
-            "Jason Clemons",
-            "Rowland O'Flaherty",
-            "Hugo Hadfield",
-            "Alperen Degirmenci"
-          ],
-          "published": "2026-07-01",
-          "categories": [
-            "cs.RO",
-            "cs.DC"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2607.01088v1",
-          "pdf": "https://arxiv.org/pdf/2607.01088v1",
-          "priority": "普通",
-          "problem_zh": "这篇论文关注于机器人工厂中机器人的基础模型服务系统，旨在提高机器人部署的实用性。",
-          "method_zh": "提出了一种新的机器人基础模型服务系统，能够处理多机器人和多模型的推理问题，提升了边缘计算的效率。",
-          "relevance_zh": "与边缘计算和推理优化相关，创新点在于突破了单机器人单模型的假设，增强了系统的灵活性。",
-          "summary_zh": "问题：这篇论文关注于机器人工厂中机器人的基础模型服务系统，旨在提高机器人部署的实用性。\n方法：提出了一种新的机器人基础模型服务系统，能够处理多机器人和多模型的推理问题，提升了边缘计算的效率。\n相关性：与边缘计算和推理优化相关，创新点在于突破了单机器人单模型的假设，增强了系统的灵活性。"
-        }
-      ],
-      "wordcloud": "wordcloud_edge_intelligence.png"
+      "count": 0,
+      "papers": []
     }
   },
-  "total_count": 13
+  "total_count": 11
 }
