@@ -31,7 +31,7 @@ organizations:
 # Need to use another icon? Simply download the SVG icon to your `assets/media/icons/` folder.
 # profiles:
 #   - icon: lucide/mailbox
-#     url: 'mailto:zjf2024@seas.upenn.edu'
+#     url: 'mailto:junfeizhan@outlook.com'
 #     label: E-mail Me
 #   - icon: brands/x
 #     url: https://twitter.com/GetResearchDev
@@ -47,7 +47,7 @@ organizations:
 #     url: https://orcid.org/
 profiles:
   - icon: at-symbol
-    url: 'mailto:zjf2024@seas.upenn.edu'
+    url: 'mailto:junfeizhan@outlook.com'
     label: E-mail Me
   - icon: brands/github
     url: https://github.com/Junfei-Z
@@ -239,7 +239,7 @@ Outside of academics, grabbing meals with friends and socializing are among my f
 <p> 📧 Feel free to contact me at: <span id="email"></span></p>
 <script>
   document.getElementById("email").innerHTML =
-    '<a href="mailto:' + 'zjf2024' + '@' + 'seas.upenn.edu">zjf2024@seas.upenn.edu</a>';
+    '<a href="mailto:' + 'junfeizhan' + '@' + 'outlook.com">junfeizhan@outlook.com</a>';
 </script>
 
 <div class="typed-tagline">

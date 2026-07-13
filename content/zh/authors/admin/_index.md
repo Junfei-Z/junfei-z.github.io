@@ -31,7 +31,7 @@ organizations:
 # Need to use another icon? Simply download the SVG icon to your `assets/media/icons/` folder.
 profiles:
   - icon: at-symbol
-    url: 'mailto:zjf2024@seas.upenn.edu'
+    url: 'mailto:junfeizhan@outlook.com'
     label: 发送邮件
   - icon: brands/github
     url: https://github.com/Junfei-Z
@@ -194,7 +194,7 @@ awards:
 <p> 📧 欢迎通过邮件联系我：<span id="email"></span></p>
 <script>
   document.getElementById("email").innerHTML =
-    '<a href="mailto:' + 'zjf2024' + '@' + 'seas.upenn.edu">zjf2024@seas.upenn.edu</a>';
+    '<a href="mailto:' + 'junfeizhan' + '@' + 'outlook.com">junfeizhan@outlook.com</a>';
 </script>
 
 <div class="typed-tagline">

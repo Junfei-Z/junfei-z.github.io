@@ -100,6 +100,47 @@
 .dark .news-body .news-meta { color: #9ca3af; }
 .dark .news-body .news-meta b { color: #cbd5e1; }
 
+/* ─── Publications (homepage) ─── */
+.pub-block { max-width: 820px; margin: 0 auto; }
+.pub-list { list-style: none !important; padding: 0; margin: 0; }
+.pub-item { display: grid; grid-template-columns: 92px 1fr; gap: 18px; padding: 15px 10px; border-radius: 10px; transition: background 0.2s; align-items: start; }
+.pub-item + .pub-item { border-top: 1px dashed #e5e7eb; }
+.pub-item:hover { background: rgba(37, 99, 235, 0.04); }
+.pub-side { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; padding-top: 3px; }
+.pub-badge {
+  display: inline-block; font-size: 0.66rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 3px 9px; border-radius: 999px; line-height: 1.25; text-align: center;
+}
+.pub-badge.pb-conf { background: #dbeafe; color: #1d4ed8; }
+.pub-badge.pb-journal { background: #d1fae5; color: #047857; }
+.pub-badge.pb-poster { background: #ede9fe; color: #5b21b6; }
+.pub-year { font-size: 0.74rem; color: #9ca3af; font-family: ui-monospace, monospace; }
+.pub-title { font-size: 0.96rem; font-weight: 600; color: #111827; margin: 0 0 3px 0; line-height: 1.45; }
+.pub-authors { font-size: 0.84rem; color: #4b5563; margin: 0 0 2px 0; }
+.pub-authors b { color: #1f2937; font-weight: 700; }
+.pub-venue { font-size: 0.8rem; color: #6b7280; font-style: italic; margin: 0; }
+.pub-more { text-align: center; margin-top: 22px; font-size: 0.88rem; color: #6b7280; }
+.pub-more a { font-weight: 600; color: #2563eb; text-decoration: none; }
+.pub-more a:hover { text-decoration: underline; }
+@media (max-width: 600px) {
+  .pub-item { grid-template-columns: 76px 1fr; gap: 12px; }
+}
+
+/* Dark mode: keep every publication line readable on the dark canvas. */
+.dark .pub-item + .pub-item { border-top-color: #33333a; }
+.dark .pub-item:hover { background: rgba(96, 165, 250, 0.08); }
+.dark .pub-title { color: #e5e7eb; }
+.dark .pub-authors { color: #9ca3af; }
+.dark .pub-authors b { color: #e2e8f0; }
+.dark .pub-venue { color: #9ca3af; }
+.dark .pub-year { color: #9ca3af; }
+.dark .pub-badge.pb-conf { background: rgba(59, 130, 246, 0.18); color: #93c5fd; }
+.dark .pub-badge.pb-journal { background: rgba(16, 185, 129, 0.18); color: #6ee7b7; }
+.dark .pub-badge.pb-poster { background: rgba(139, 92, 246, 0.18); color: #c4b5fd; }
+.dark .pub-more { color: #9ca3af; }
+.dark .pub-more a { color: #60a5fa; }
+
 /* Justify the About Me biography paragraphs (两端对齐) */
 .bio-text p {
   text-align: justify;

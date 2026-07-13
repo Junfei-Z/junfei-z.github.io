@@ -136,6 +136,115 @@ sections:
 
   - block: markdown
     content:
+      title: 论文发表
+      text: |
+        <div class="pub-block">
+        <ul class="pub-list">
+
+          <li class="pub-item">
+            <div class="pub-side">
+              <span class="pub-badge pb-conf">ACM MM</span>
+              <span class="pub-year">2026</span>
+            </div>
+            <div class="pub-main">
+              <p class="pub-title">Seeing is Free, Speaking is Not: Uncovering the True Energy Bottleneck in Edge VLM Inference</p>
+              <p class="pub-authors"><b>J. Zhan</b>, H. Shen, M. Guo, Z. Huang, T. He</p>
+              <p class="pub-venue">Proceedings of the 34th ACM International Conference on Multimedia (ACM MM), 2026. To appear · arXiv:2607.09520</p>
+            </div>
+          </li>
+
+          <li class="pub-item">
+            <div class="pub-side">
+              <span class="pub-badge pb-conf">AAAI</span>
+              <span class="pub-year">2026</span>
+            </div>
+            <div class="pub-main">
+              <p class="pub-title">PRISM: Privacy-Aware Routing for Adaptive Cloud&ndash;Edge LLM Inference via Semantic Sketch Collaboration</p>
+              <p class="pub-authors"><b>J. Zhan</b>, H. Shen, Z. Lin, T. He</p>
+              <p class="pub-venue">Proceedings of the AAAI Conference on Artificial Intelligence (AAAI), 2026</p>
+            </div>
+          </li>
+
+          <li class="pub-item">
+            <div class="pub-side">
+              <span class="pub-badge pb-journal">IoT-J</span>
+              <span class="pub-year">2026</span>
+            </div>
+            <div class="pub-main">
+              <p class="pub-title">Orchestrating Data Collection and Computation in Green IoT Networks</p>
+              <p class="pub-authors"><b>J. Zhan</b>, T. He, K.-W. Chin, B. Chen, F. Song</p>
+              <p class="pub-venue">IEEE Internet of Things Journal, 2026</p>
+            </div>
+          </li>
+
+          <li class="pub-item">
+            <div class="pub-side">
+              <span class="pub-badge pb-journal">IoT-J</span>
+              <span class="pub-year">2026</span>
+            </div>
+            <div class="pub-main">
+              <p class="pub-title">Joint Function Configuration and Multi-Slot Offloading in Solar-Powered Serverless Edge Computing</p>
+              <p class="pub-authors">B. Chen, T. He, M. Zheng, <b>J. Zhan</b>, B. He</p>
+              <p class="pub-venue">IEEE Internet of Things Journal, 2026</p>
+            </div>
+          </li>
+
+          <li class="pub-item">
+            <div class="pub-side">
+              <span class="pub-badge pb-conf">ICASSP</span>
+              <span class="pub-year">2026</span>
+            </div>
+            <div class="pub-main">
+              <p class="pub-title">SpikeBP: Efficient Spike-Driven Transformer for Blood Pressure Waveform Generation with Frequency Knowledge Distillation</p>
+              <p class="pub-authors">Z. Huang, Z. Wang, W. Qiu, <b>J. Zhan</b>, S. Zou, Y. Li, F. Miao</p>
+              <p class="pub-venue">IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), 2026 · Oral</p>
+            </div>
+          </li>
+
+          <li class="pub-item">
+            <div class="pub-side">
+              <span class="pub-badge pb-poster">MobiSys</span>
+              <span class="pub-year">2026</span>
+            </div>
+            <div class="pub-main">
+              <p class="pub-title">Poster: Graph Learning-based Update Manipulation Attack on Federated Fine-Tuning of LLMs over Wireless Networks</p>
+              <p class="pub-authors">H. Cai, <b>J. Zhan</b>, Z. Lin, X. Cai</p>
+              <p class="pub-venue">Proceedings of the 24th ACM International Conference on Mobile Systems, Applications, and Services (MobiSys Posters), 2026</p>
+            </div>
+          </li>
+
+          <li class="pub-item">
+            <div class="pub-side">
+              <span class="pub-badge pb-conf">SMC</span>
+              <span class="pub-year">2025</span>
+            </div>
+            <div class="pub-main">
+              <p class="pub-title">RL-Enhanced Disturbance-Aware MPC for Fast and Robust UAV Trajectory Tracking</p>
+              <p class="pub-authors">H. Shen, <b>J. Zhan</b>, T. He</p>
+              <p class="pub-venue">IEEE International Conference on Systems, Man, and Cybernetics (SMC), 2025</p>
+            </div>
+          </li>
+
+          <li class="pub-item">
+            <div class="pub-side">
+              <span class="pub-badge pb-journal">IEEE LNET</span>
+              <span class="pub-year">2024</span>
+            </div>
+            <div class="pub-main">
+              <p class="pub-title">Task Offloading and Approximate Computing in Solar Powered IoT Networks</p>
+              <p class="pub-authors"><b>J. Zhan</b>, J. Wu, T. He, K.-W. Chin</p>
+              <p class="pub-venue">IEEE Networking Letters, 6(1), 26&ndash;30, 2024</p>
+            </div>
+          </li>
+
+        </ul>
+        <p class="pub-more">最新的具体出版物，请关注我的<a href="https://scholar.google.com/citations?user=v2doypQAAAAJ&hl=en" target="_blank">谷歌学术主页</a>。</p>
+        </div>
+    design:
+      columns: '1'
+
+  - block: markdown
+    content:
       title: ""
       text: |
         {{< visitor-globe >}}
