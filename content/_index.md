@@ -34,6 +34,22 @@ sections:
         <div class="news-block">
         <ul class="news-list">
 
+          <li class="news-item itm-paper">
+            <div class="news-date">
+              <span class="news-mo">Jul</span>
+              <span class="news-day">10</span>
+              <span class="news-yr">2026</span>
+            </div>
+            <div class="news-body">
+              <div class="news-tags">
+                <span class="news-tag t-paper">Paper accepted</span>
+                <span class="news-venue">ACM MM 2026</span>
+              </div>
+              <p class="news-title">"Seeing is Free, Speaking is Not: Uncovering the True Energy Bottleneck in Edge VLM Inference" was accepted to <em>The 34th ACM International Conference on Multimedia (ACM MM 2026)</em>.</p>
+              <p class="news-meta">With <b>Haoxun Shen</b>, <b>Mingang Guo</b>, <b>Zixuan Huang</b>, and <b>Prof. Tengjiao He</b>. Sincere thanks to Prof. He for his guidance.</p>
+            </div>
+          </li>
+
           <li class="news-item itm-journal">
             <div class="news-date">
               <span class="news-mo">May</span>
