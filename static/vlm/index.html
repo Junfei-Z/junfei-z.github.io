@@ -26,32 +26,36 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .reveal.vis{opacity:1;transform:translateY(0)}
 .reveal-d1{transition-delay:.1s}.reveal-d2{transition-delay:.2s}.reveal-d3{transition-delay:.3s}.reveal-d4{transition-delay:.4s}
 
-/* ─── Hero ─── */
+/* ─── Hero (dark warm) ─── */
 .hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(ellipse at 30% 50%,rgba(232,99,10,0.06) 0%,transparent 50%),
-             radial-gradient(ellipse at 70% 30%,rgba(5,150,105,0.05) 0%,transparent 40%),var(--bg)}
+  background:radial-gradient(ellipse at 25% 40%,rgba(232,99,10,0.20) 0%,transparent 52%),
+             radial-gradient(ellipse at 75% 22%,rgba(16,185,129,0.12) 0%,transparent 45%),
+             radial-gradient(ellipse at 55% 90%,rgba(217,119,6,0.12) 0%,transparent 50%),
+             linear-gradient(165deg,#181210 0%,#221711 55%,#2a1b0f 100%)}
 .hero-inner{position:relative;z-index:2;text-align:center;padding:40px 24px;max-width:860px}
-.hero-badge{display:inline-block;padding:7px 20px;border-radius:100px;background:rgba(232,99,10,0.08);color:var(--orange);font-size:0.8rem;font-weight:600;letter-spacing:.5px;margin-bottom:24px;border:1px solid rgba(232,99,10,0.18)}
-.hero h1{font-size:clamp(2rem,5vw,3rem);font-weight:900;color:var(--white);line-height:1.15;margin-bottom:20px}
-.hero h1 .g{color:var(--emerald)}.hero h1 .o{color:var(--orange)}
-.hero-sub{font-size:1.15rem;color:var(--text-dim);margin-bottom:32px;font-style:italic}
+.hero-badge{display:inline-block;padding:7px 20px;border-radius:100px;background:rgba(232,99,10,0.16);color:#ffb27a;font-size:0.8rem;font-weight:600;letter-spacing:.5px;margin-bottom:24px;border:1px solid rgba(255,140,66,0.35);backdrop-filter:blur(8px)}
+.hero h1{font-size:clamp(2rem,5vw,3rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:20px}
+.hero h1 .g{color:#34d399}.hero h1 .o{color:#ff8c42}
+.hero-sub{font-size:1.15rem;color:rgba(255,255,255,0.62);margin-bottom:32px;font-style:italic}
+.hero-desc{font-size:1rem;color:rgba(255,255,255,0.78);max-width:640px;margin:0 auto 32px;line-height:1.8}
+.hero-desc strong{color:#ff9d57}
 .hero-stats{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:36px}
-.hero-stat{background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:16px 24px;min-width:130px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.hero-stat{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:16px 24px;min-width:130px;backdrop-filter:blur(10px)}
 .hero-stat b{display:block;font-size:1.8rem;font-weight:900;margin-bottom:2px}
-.hero-stat span{font-size:0.72rem;color:var(--text-dim)}
-.hero-scroll{margin-top:8px;font-size:0.85rem;color:var(--text-dim)}
-.hero-scroll a{color:var(--orange);text-decoration:none;font-weight:600}
+.hero-stat span{font-size:0.72rem;color:rgba(255,255,255,0.55)}
+.hero-scroll{margin-top:8px;font-size:0.85rem;color:rgba(255,255,255,0.5)}
+.hero-scroll a{color:#ffa860;text-decoration:none;font-weight:600}
 .hero-scroll a:hover{text-decoration:underline}
-.hero-authors{font-size:0.95rem;color:var(--text);margin-bottom:6px}
-.hero-authors a{color:var(--orange);text-decoration:none;font-weight:600}
+.hero-authors{font-size:0.95rem;color:rgba(255,255,255,0.85);margin-bottom:6px}
+.hero-authors a{color:#ffa860;text-decoration:none;font-weight:600}
 .hero-authors a:hover{text-decoration:underline}
-.hero-affil{font-size:0.78rem;color:var(--text-dim);margin-bottom:28px}
+.hero-affil{font-size:0.78rem;color:rgba(255,255,255,0.45);margin-bottom:28px}
 .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:36px}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 26px;border-radius:12px;font-size:0.88rem;font-weight:600;text-decoration:none;transition:all .3s ease;cursor:pointer}
 .btn-primary{background:var(--orange);color:#fff;box-shadow:0 2px 10px rgba(232,99,10,0.25)}
 .btn-primary:hover{background:#c95608;transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,99,10,0.3)}
-.btn-ghost{background:var(--card);color:var(--text);border:1.5px solid var(--card-border)}
-.btn-ghost:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px)}
+.btn-ghost{background:rgba(255,255,255,0.06);color:#fff;border:1.5px solid rgba(255,255,255,0.28);backdrop-filter:blur(8px)}
+.btn-ghost:hover{border-color:#fff;background:rgba(255,255,255,0.12);transform:translateY(-2px)}
 
 /* ─── Citation ─── */
 .cite-box{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:28px;max-width:800px;margin:0 auto;position:relative;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
@@ -187,16 +191,16 @@ footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);
         BibTeX
       </a>
     </div>
-    <p style="font-size:1rem;color:var(--text);max-width:640px;margin:0 auto 32px;line-height:1.8">The first systematic energy profiling of 5 VLMs on 2 edge platforms overturns a widespread assumption: <strong style="color:var(--orange)">the energy bottleneck is not visual processing, but text generation.</strong></p>
+    <p class="hero-desc">The first systematic energy profiling of 5 VLMs on 2 edge platforms overturns a widespread assumption: <strong>the energy bottleneck is not visual processing, but text generation.</strong></p>
     <div class="hero-stats">
-      <div class="hero-stat"><b style="color:var(--orange)">86&ndash;97%</b><span>Energy from Decode</span></div>
-      <div class="hero-stat"><b style="color:var(--cyan)">11&ndash;39&times;</b><span>Output vs Input Cost</span></div>
-      <div class="hero-stat"><b style="color:var(--emerald)">&lt;5%</b><span>Power Variation</span></div>
-      <div class="hero-stat"><b style="color:var(--violet)">5&times;2</b><span>VLMs &times; Platforms</span></div>
+      <div class="hero-stat"><b style="color:#ff8c42">86&ndash;97%</b><span>Energy from Decode</span></div>
+      <div class="hero-stat"><b style="color:#22d3ee">11&ndash;39&times;</b><span>Output vs Input Cost</span></div>
+      <div class="hero-stat"><b style="color:#34d399">&lt;5%</b><span>Power Variation</span></div>
+      <div class="hero-stat"><b style="color:#a78bfa">5&times;2</b><span>VLMs &times; Platforms</span></div>
     </div>
     <p class="hero-scroll"><a href="#question">Scroll to explore &darr;</a></p>
   </div>
-  <div class="wave"><svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C360,10 720,70 1080,25 C1260,10 1380,40 1440,35 L1440,80 L0,80Z" fill="rgba(232,99,10,0.05)"/></svg></div>
+  <div class="wave"><svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C360,10 720,70 1080,25 C1260,10 1380,40 1440,35 L1440,80 L0,80Z" fill="rgba(255,140,66,0.12)"/></svg></div>
 </section>
 
 <!-- ═══════ 2. THE QUESTION ═══════ -->
