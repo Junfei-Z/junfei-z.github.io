@@ -58,6 +58,7 @@ The paper is accepted at ACM MM 2026 and the proceedings version is not yet onli
   year          = {2026},
   eprint        = {2607.09520},
   archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
   url           = {https://arxiv.org/abs/2607.09520},
   note          = {Accepted to the 34th ACM International Conference on Multimedia (ACM MM 2026)}
 }

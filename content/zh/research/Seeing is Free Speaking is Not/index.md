@@ -58,6 +58,7 @@ Autoregressive decoding 占据了**总能耗的 86% 至 97%**。由于 prefill �
   year          = {2026},
   eprint        = {2607.09520},
   archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
   url           = {https://arxiv.org/abs/2607.09520},
   note          = {Accepted to the 34th ACM International Conference on Multimedia (ACM MM 2026)}
 }
