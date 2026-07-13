@@ -12,6 +12,14 @@ tags:
 image:
   caption: 'VLM inference pipeline: input encoding, concatenation, and two-phase LLM inference'
 ---
+<a href="https://arxiv.org/abs/2607.09520" target="_blank">
+  <img src="https://img.shields.io/badge/arXiv%20Preprint-2607.09520-b31b1b?logo=arxiv&logoColor=white" alt="arXiv PDF">
+</a>
+<a href="https://junfei-z.github.io/vlm/" target="_blank">
+  <img src="https://img.shields.io/badge/Project%20Page-Interactive%20Demo-blue?logo=googlechrome&logoColor=white" alt="Project Page">
+</a>
+
+📄 [Accepted at ACM MM 2026] — To appear. The camera-ready version is not yet online; please refer to the [arXiv preprint](https://arxiv.org/abs/2607.09520) and the [interactive project page](https://junfei-z.github.io/vlm/).
 
 Vision-Language Models (VLMs) are the perceptual backbone of embodied AI, but their energy footprint on edge hardware remains poorly understood. Existing efficiency efforts focus predominantly on reducing visual tokens, implicitly treating visual processing as the dominant energy cost. We overturn this implicit assumption through the **first systematic energy profiling** of on-device VLM inference, spanning five models across three architecture families, four input resolutions, and two hardware platforms (NVIDIA RTX 3070 and Jetson Orin NX).
 
@@ -39,4 +47,18 @@ Even removing **all visual tokens** saves at most **10% of total energy** for fi
 
 The true energy bottleneck in edge VLM inference is not *seeing* but *speaking*: not what the model sees, but how much it says. Our energy decomposition framework provides actionable guidelines for energy-aware VLM deployment on resource-constrained edge devices.
 
-[ACM MM 2026 Submission] — In Review
+## Citation
+
+The paper is accepted at ACM MM 2026 and the proceedings version is not yet online. Please cite the arXiv preprint:
+
+```bibtex
+@misc{zhan2026seeing,
+  title         = {Seeing is Free, Speaking is Not: Uncovering the True Energy Bottleneck in Edge VLM Inference},
+  author        = {Zhan, Junfei and Shen, Haoxun and Guo, Mingang and Huang, Zixuan and He, Tengjiao},
+  year          = {2026},
+  eprint        = {2607.09520},
+  archivePrefix = {arXiv},
+  url           = {https://arxiv.org/abs/2607.09520},
+  note          = {Accepted to the 34th ACM International Conference on Multimedia (ACM MM 2026)}
+}
+```

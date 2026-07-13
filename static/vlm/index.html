@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Seeing is Free, Speaking is Not - Edge VLM Energy Profiling</title>
-<meta name="description" content="Uncovering the True Energy Bottleneck in Edge VLM Inference.">
+<title>Seeing is Free, Speaking is Not - Edge VLM Energy Profiling (ACM MM 2026)</title>
+<meta name="description" content="Uncovering the True Energy Bottleneck in Edge VLM Inference. Accepted at ACM MM 2026. arXiv:2607.09520.">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -42,6 +42,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .hero-scroll{margin-top:8px;font-size:0.85rem;color:var(--text-dim)}
 .hero-scroll a{color:var(--orange);text-decoration:none;font-weight:600}
 .hero-scroll a:hover{text-decoration:underline}
+.hero-authors{font-size:0.95rem;color:var(--text);margin-bottom:6px}
+.hero-authors a{color:var(--orange);text-decoration:none;font-weight:600}
+.hero-authors a:hover{text-decoration:underline}
+.hero-affil{font-size:0.78rem;color:var(--text-dim);margin-bottom:28px}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:36px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 26px;border-radius:12px;font-size:0.88rem;font-weight:600;text-decoration:none;transition:all .3s ease;cursor:pointer}
+.btn-primary{background:var(--orange);color:#fff;box-shadow:0 2px 10px rgba(232,99,10,0.25)}
+.btn-primary:hover{background:#c95608;transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,99,10,0.3)}
+.btn-ghost{background:var(--card);color:var(--text);border:1.5px solid var(--card-border)}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px)}
+
+/* ─── Citation ─── */
+.cite-box{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:28px;max-width:800px;margin:0 auto;position:relative;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.cite-box pre{background:#2d2a26;color:#f1efe9;border-radius:12px;padding:24px;font-size:0.8rem;overflow-x:auto;line-height:1.6;white-space:pre-wrap;font-family:'SF Mono',Menlo,Consolas,monospace}
+.cite-copy{position:absolute;top:40px;right:40px;background:rgba(255,255,255,0.08);color:#b8b2a7;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:6px 14px;font-size:0.75rem;cursor:pointer;transition:all .2s;z-index:2}
+.cite-copy:hover{background:rgba(255,255,255,0.18);color:#fff}
+
+/* ─── Footer links ─── */
+.footer-links{display:flex;justify-content:center;gap:24px;margin-bottom:14px;flex-wrap:wrap}
+.footer-links a{color:var(--orange);text-decoration:none;font-weight:600}
+.footer-links a:hover{text-decoration:underline}
 
 /* Wave */
 .wave{position:absolute;bottom:0;left:0;right:0;height:80px;z-index:1;opacity:.25}
@@ -144,9 +165,28 @@ footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);
 <!-- ═══════ 1. HERO ═══════ -->
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-badge">MM '26 &mdash; Under Review</div>
+    <div class="hero-badge">ACM MM 2026 &mdash; Accepted (To Appear)</div>
     <h1><span class="g">Seeing is Free</span>, <span class="o">Speaking is Not</span></h1>
     <p class="hero-sub">Uncovering the True Energy Bottleneck in Edge VLM Inference</p>
+    <p class="hero-authors">
+      <a href="https://junfei-z.github.io" target="_blank">Junfei Zhan</a> &nbsp;&middot;&nbsp;
+      Haoxun Shen &nbsp;&middot;&nbsp; Mingang Guo &nbsp;&middot;&nbsp; Zixuan Huang &nbsp;&middot;&nbsp; Tengjiao He
+    </p>
+    <p class="hero-affil">The 34th ACM International Conference on Multimedia (ACM MM 2026)</p>
+    <div class="hero-btns">
+      <a href="https://arxiv.org/pdf/2607.09520" target="_blank" class="btn btn-primary">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+        Paper (PDF)
+      </a>
+      <a href="https://arxiv.org/abs/2607.09520" target="_blank" class="btn btn-ghost">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        arXiv:2607.09520
+      </a>
+      <a href="#citation" class="btn btn-ghost">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg>
+        BibTeX
+      </a>
+    </div>
     <p style="font-size:1rem;color:var(--text);max-width:640px;margin:0 auto 32px;line-height:1.8">The first systematic energy profiling of 5 VLMs on 2 edge platforms overturns a widespread assumption: <strong style="color:var(--orange)">the energy bottleneck is not visual processing, but text generation.</strong></p>
     <div class="hero-stats">
       <div class="hero-stat"><b style="color:var(--orange)">86&ndash;97%</b><span>Energy from Decode</span></div>
@@ -576,11 +616,40 @@ footer{padding:36px 0;text-align:center;border-top:1px solid var(--card-border);
   </div>
 </section>
 
+<!-- ═══════ 7. CITATION ═══════ -->
+<section class="section" id="citation">
+  <div class="container">
+    <div class="section-label reveal">Citation</div>
+    <h2 class="section-title reveal">Cite this work</h2>
+    <p class="section-desc reveal">The paper is accepted at ACM MM 2026 and will appear in the proceedings. Until the camera-ready version is online, please cite the arXiv preprint.</p>
+    <div class="cite-box reveal">
+      <button class="cite-copy" onclick="copyCite()">Copy BibTeX</button>
+      <pre id="bibtex">@misc{zhan2026seeing,
+  title         = {Seeing is Free, Speaking is Not: Uncovering the True
+                   Energy Bottleneck in Edge VLM Inference},
+  author        = {Zhan, Junfei and Shen, Haoxun and Guo, Mingang and
+                   Huang, Zixuan and He, Tengjiao},
+  year          = {2026},
+  eprint        = {2607.09520},
+  archivePrefix = {arXiv},
+  url           = {https://arxiv.org/abs/2607.09520},
+  note          = {Accepted to the 34th ACM International Conference
+                   on Multimedia (ACM MM 2026)}
+}</pre>
+    </div>
+  </div>
+</section>
+
 <!-- ═══════ FOOTER ═══════ -->
 <footer>
   <div class="container">
-    <p style="margin-bottom:6px">Under double-blind review. Keywords: Vision-Language Models &middot; Energy Profiling &middot; Edge Inference &middot; On-Device AI</p>
-    <p style="color:rgba(0,0,0,0.3);font-size:0.75rem">This project page does not reveal author identities in compliance with the review process.</p>
+    <div class="footer-links">
+      <a href="https://arxiv.org/abs/2607.09520" target="_blank">arXiv</a>
+      <a href="https://arxiv.org/pdf/2607.09520" target="_blank">Paper PDF</a>
+      <a href="https://junfei-z.github.io" target="_blank">Author Homepage</a>
+    </div>
+    <p style="margin-bottom:6px">Accepted at ACM MM 2026 &middot; Vision-Language Models &middot; Energy Profiling &middot; Edge Inference &middot; On-Device AI</p>
+    <p style="color:rgba(0,0,0,0.3);font-size:0.75rem">&copy; 2026 Junfei Zhan, Haoxun Shen, Mingang Guo, Zixuan Huang, Tengjiao He</p>
   </div>
 </footer>
 
@@ -701,6 +770,16 @@ function calcUpdate() {
     'Halving output tokens (→' + Math.round(Nout/2) + ') would save ~' + saving + '% energy. Power fingerprint: ' + Pbar.toFixed(1) + ' W.';
 }
 calcUpdate();
+
+// ─── Copy BibTeX ───
+function copyCite() {
+  const text = document.getElementById('bibtex').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.cite-copy');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy BibTeX', 2000);
+  });
+}
 </script>
 </body>
 </html>

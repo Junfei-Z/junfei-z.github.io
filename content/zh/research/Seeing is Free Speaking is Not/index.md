@@ -12,6 +12,14 @@ tags:
 image:
   caption: 'VLM 推理流程：输入编码、拼接与两阶段 LLM 推理'
 ---
+<a href="https://arxiv.org/abs/2607.09520" target="_blank">
+  <img src="https://img.shields.io/badge/arXiv%20Preprint-2607.09520-b31b1b?logo=arxiv&logoColor=white" alt="arXiv PDF">
+</a>
+<a href="https://junfei-z.github.io/vlm/" target="_blank">
+  <img src="https://img.shields.io/badge/Project%20Page-Interactive%20Demo-blue?logo=googlechrome&logoColor=white" alt="Project Page">
+</a>
+
+📄 [ACM MM 2026 已接收] — 即将正式发表。正式版本尚未上线，请参阅 [arXiv 预印本](https://arxiv.org/abs/2607.09520) 与[交互式项目主页](https://junfei-z.github.io/vlm/)。
 
 Vision-Language Models (VLMs) 是具身智能的感知核心，但其在边缘硬件上的能耗特征仍未被充分理解。现有的效率优化工作主要集中在减少 visual tokens，隐式地将视觉处理视为主要能耗来源。我们通过**首次系统性的设备端 VLM 推理能耗分析**推翻了这一隐含假设，实验涵盖五个模型、三种架构系列、四种输入分辨率，以及两个硬件平台（NVIDIA RTX 3070 和 Jetson Orin NX）。
 
@@ -39,4 +47,18 @@ Autoregressive decoding 占据了**总能耗的 86% 至 97%**。由于 prefill �
 
 边缘 VLM 推理的真正能耗瓶颈不在于*看*，而在于*说*：不是模型看到了什么，而是它说了多少。我们的能耗分解框架为资源受限的边缘设备上的节能型 VLM 部署提供了可操作的指导。
 
-[ACM MM 2026 投稿] — 审稿中
+## 引用
+
+论文已被 ACM MM 2026 接收，正式版本尚未上线，目前请引用 arXiv 预印本：
+
+```bibtex
+@misc{zhan2026seeing,
+  title         = {Seeing is Free, Speaking is Not: Uncovering the True Energy Bottleneck in Edge VLM Inference},
+  author        = {Zhan, Junfei and Shen, Haoxun and Guo, Mingang and Huang, Zixuan and He, Tengjiao},
+  year          = {2026},
+  eprint        = {2607.09520},
+  archivePrefix = {arXiv},
+  url           = {https://arxiv.org/abs/2607.09520},
+  note          = {Accepted to the 34th ACM International Conference on Multimedia (ACM MM 2026)}
+}
+```
