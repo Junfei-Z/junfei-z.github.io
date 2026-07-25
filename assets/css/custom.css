@@ -163,6 +163,45 @@ html.dark body {
   background-image: none;
 }
 
+/* ─── Contact pill (About section) ─── */
+/* Same design tokens as the news/pub badges: #2563eb accent, #e5e7eb border, 999px radius. */
+a.contact-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  margin: 0.4rem 0 0.2rem 0;
+  padding: 7px 16px;
+  border: 1.5px solid #e5e7eb;
+  /* !important: the theme sets a small border-radius on a:hover which would
+     square off the pill mid-hover. */
+  border-radius: 999px !important;
+  background: #fff;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #374151 !important;
+  text-decoration: none !important;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, color 0.2s;
+}
+a.contact-pill .cp-icon { flex: 0 0 auto; width: 17px; height: 17px; color: #2563eb; }
+a.contact-pill .cp-addr { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; letter-spacing: 0.01em; }
+a.contact-pill:hover {
+  border-color: #2563eb;
+  background: rgba(37, 99, 235, 0.04);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+  color: #1d4ed8 !important;
+}
+
+/* Dark mode: follow the .dark class the theme toggles (not prefers-color-scheme). */
+.dark a.contact-pill { border-color: #3a3a40; background: transparent; color: #cbd5e1 !important; }
+.dark a.contact-pill .cp-icon { color: #60a5fa; }
+.dark a.contact-pill:hover {
+  border-color: #60a5fa;
+  background: rgba(96, 165, 250, 0.08);
+  box-shadow: none;
+  color: #93c5fd !important;
+}
+
 /* ─── Typed tagline: a terminal-console card with type/erase loop ─── */
 .typed-tagline {
   display: flex;

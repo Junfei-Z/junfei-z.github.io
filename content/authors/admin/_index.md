@@ -46,8 +46,11 @@ organizations:
 #   - icon: academicons/orcid
 #     url: https://orcid.org/
 profiles:
+  # No plaintext mailto here: harvesters scrape it from the static HTML.
+  # The '#contact-email' anchor is rewritten to a real mailto: link at
+  # runtime by the script next to the contact pill in the bio below.
   - icon: at-symbol
-    url: 'mailto:junfeizhan@outlook.com'
+    url: '#contact-email'
     label: E-mail Me
   - icon: brands/github
     url: https://github.com/Junfei-Z
@@ -236,10 +239,27 @@ Outside of academics, grabbing meals with friends and socializing are among my f
 
 <!-- 📄 You can download my full CV [here](https://junfei-z.github.io/CV_junfei_7_23.pdf). -->
 
-<p> 📧 Feel free to contact me at: <span id="email"></span></p>
+<a id="contact-email" class="contact-pill" href="#contact-email" aria-label="Email me">
+  <svg class="cp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <rect x="2" y="4" width="20" height="16" rx="3"/>
+    <path d="m2 7.5 9.1 5.6a1.7 1.7 0 0 0 1.8 0L22 7.5"/>
+  </svg>
+  <span class="cp-addr">&hellip;</span>
+</a>
 <script>
-  document.getElementById("email").innerHTML =
-    '<a href="mailto:' + 'junfeizhan' + '@' + 'outlook.com">junfeizhan@outlook.com</a>';
+(function () {
+  // Address is base64-encoded so it never appears in the page source.
+  var addr = atob('anVuZmVpemhhbkBvdXRsb29rLmNvbQ==');
+  var pill = document.getElementById('contact-email');
+  if (pill) {
+    pill.href = 'mailto:' + addr;
+    pill.querySelector('.cp-addr').textContent = addr;
+  }
+  // Also fix up the profile-bar icon, which points at #contact-email.
+  document.querySelectorAll('a[href$="#contact-email"]').forEach(function (a) {
+    if (a !== pill) a.href = 'mailto:' + addr;
+  });
+})();
 </script>
 
 <div class="typed-tagline">

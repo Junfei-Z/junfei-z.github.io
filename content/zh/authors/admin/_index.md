@@ -30,8 +30,10 @@ organizations:
 # Social network links
 # Need to use another icon? Simply download the SVG icon to your `assets/media/icons/` folder.
 profiles:
+  # 这里不放明文 mailto：爬虫会直接从静态 HTML 里抓走。
+  # '#contact-email' 锚点会由下方联系 pill 旁的脚本在运行时改写成真正的 mailto: 链接。
   - icon: at-symbol
-    url: 'mailto:junfeizhan@outlook.com'
+    url: '#contact-email'
     label: 发送邮件
   - icon: brands/github
     url: https://github.com/Junfei-Z
@@ -191,10 +193,27 @@ awards:
 
 📄 你可以在[这里](https://junfei-z.github.io/CV_junfei_11_8.pdf)下载我的完整简历。
 
-<p> 📧 欢迎通过邮件联系我：<span id="email"></span></p>
+<a id="contact-email" class="contact-pill" href="#contact-email" aria-label="给我发邮件">
+  <svg class="cp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <rect x="2" y="4" width="20" height="16" rx="3"/>
+    <path d="m2 7.5 9.1 5.6a1.7 1.7 0 0 0 1.8 0L22 7.5"/>
+  </svg>
+  <span class="cp-addr">&hellip;</span>
+</a>
 <script>
-  document.getElementById("email").innerHTML =
-    '<a href="mailto:' + 'junfeizhan' + '@' + 'outlook.com">junfeizhan@outlook.com</a>';
+(function () {
+  // 邮箱地址用 base64 存放，页面源码中不出现明文。
+  var addr = atob('anVuZmVpemhhbkBvdXRsb29rLmNvbQ==');
+  var pill = document.getElementById('contact-email');
+  if (pill) {
+    pill.href = 'mailto:' + addr;
+    pill.querySelector('.cp-addr').textContent = addr;
+  }
+  // 同时改写顶部社交栏里指向 #contact-email 的邮箱图标。
+  document.querySelectorAll('a[href$="#contact-email"]').forEach(function (a) {
+    if (a !== pill) a.href = 'mailto:' + addr;
+  });
+})();
 </script>
 
 <div class="typed-tagline">
