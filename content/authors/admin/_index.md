@@ -234,13 +234,13 @@ My research interests center on optimization, Large Language Models (LLMs), and 
 
 Outside of academics, grabbing meals with friends and socializing are among my favorite activities. Sports have also been a significant part of my life, with awards earned in sprinting, rock climbing, rowing, and table tennis.
 
-📄 You can download my full CV [here](https://junfei-z.github.io/CV_junfei_7_23.pdf).
+<!-- 📄 You can download my full CV [here](https://junfei-z.github.io/CV_junfei_7_23.pdf). -->
 
-<!-- <p> 📧 Feel free to contact me at: <span id="email"></span></p>
+<p> 📧 Feel free to contact me at: <span id="email"></span></p>
 <script>
   document.getElementById("email").innerHTML =
     '<a href="mailto:' + 'junfeizhan' + '@' + 'outlook.com">junfeizhan@outlook.com</a>';
-</script> -->
+</script>
 
 <div class="typed-tagline">
   <svg class="tg-icon" viewBox="0 0 28 30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
