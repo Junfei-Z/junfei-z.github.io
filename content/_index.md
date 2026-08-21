@@ -36,6 +36,22 @@ sections:
 
           <li class="news-item itm-paper">
             <div class="news-date">
+              <span class="news-mo">Aug</span>
+              <span class="news-day">21</span>
+              <span class="news-yr">2026</span>
+            </div>
+            <div class="news-body">
+              <div class="news-tags">
+                <span class="news-tag t-paper">Paper accepted</span>
+                <span class="news-venue">EMNLP 2026</span>
+              </div>
+              <p class="news-title">"Trains but Doesn’t Learn: A Post-Training Delivery Benchmark for LLM Agents as Forward-Deployed Engineers" was accepted to <em>The 2026 Conference on Empirical Methods in Natural Language Processing (EMNLP 2026)</em>.</p>
+              <p class="news-meta">With <b>Weihang Ding</b>. Sincere thanks to Weihang for his tremendous effort on this work.</p>
+            </div>
+          </li>
+
+          <li class="news-item itm-paper">
+            <div class="news-date">
               <span class="news-mo">Jul</span>
               <span class="news-day">10</span>
               <span class="news-yr">2026</span>
@@ -140,6 +156,18 @@ sections:
       text: |
         <div class="pub-block">
         <ul class="pub-list">
+
+          <li class="pub-item">
+            <div class="pub-side">
+              <span class="pub-badge pb-conf">EMNLP</span>
+              <span class="pub-year">2026</span>
+            </div>
+            <div class="pub-main">
+              <p class="pub-title">Trains but Doesn’t Learn: A Post-Training Delivery Benchmark for LLM Agents as Forward-Deployed Engineers</p>
+              <p class="pub-authors">W. Ding, <b>J. Zhan</b></p>
+              <p class="pub-venue">Proceedings of the 2026 Conference on Empirical Methods in Natural Language Processing (EMNLP), 2026. To appear</p>
+            </div>
+          </li>
 
           <li class="pub-item">
             <div class="pub-side">

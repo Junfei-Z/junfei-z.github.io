@@ -17,7 +17,7 @@ image:
   <img src="https://img.shields.io/badge/Interactive%20Demo-Open-2563eb?logo=googlechrome&logoColor=white" alt="Demo">
 </a>
 
-📄 *EMNLP 2026 submission — under review.*
+📄 *Accepted to EMNLP 2026.*
 
 Post-training is becoming a service (PTaaS): a customer hands an operator data and a goal, and a **forward-deployed engineer** (FDE) returns a fine-tuned, evaluated, and deployed model under a budget, a human-approval gate, and reproducibility requirements. The FDE is a natural target for automation, but seating an LLM agent in that seat raises a question existing benchmarks cannot answer: not whether an agent can *raise a metric*, but whether it can be *trusted to deliver*.
 

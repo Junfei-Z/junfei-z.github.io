@@ -17,7 +17,7 @@ image:
   <img src="https://img.shields.io/badge/Interactive%20Demo-Open-2563eb?logo=googlechrome&logoColor=white" alt="Demo">
 </a>
 
-📄 *EMNLP 2026 投稿——审核中。*
+📄 *被 EMNLP 2026 录用。*
 
 Post-training 正在变成一种服务（PTaaS）：客户把数据和目标交给运营方，一名**前向部署工程师**（forward-deployed engineer, FDE）在预算、人工审批门以及可复现性要求之下，交付一个经过微调、评估并部署的模型。FDE 是自动化的天然目标，但把一个 LLM agent 放进这个位置，会引出现有基准无法回答的问题：不是 agent 能否*把指标拉高*，而是它能否*被信任去交付*。
 
