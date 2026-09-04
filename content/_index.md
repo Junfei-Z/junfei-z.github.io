@@ -34,6 +34,22 @@ sections:
         <div class="news-block">
         <ul class="news-list">
 
+          <li class="news-item itm-award">
+            <div class="news-date">
+              <span class="news-mo">Sep</span>
+              <span class="news-day">04</span>
+              <span class="news-yr">2026</span>
+            </div>
+            <div class="news-body">
+              <div class="news-tags">
+                <span class="news-tag t-award">Ambassador</span>
+                <span class="news-venue">GMI Cloud</span>
+              </div>
+              <p class="news-title">I am delighted to join <a href="https://gmicloud.ai" target="_blank" rel="noopener">GMI Cloud</a> as a <em>GMI Clouder</em>, an ambassador in its global community of builders, creators, founders, researchers, and AI leaders.</p>
+              <p class="news-meta">Sincere thanks to <b>Weihang</b> for his support.</p>
+            </div>
+          </li>
+
           <li class="news-item itm-paper">
             <div class="news-date">
               <span class="news-mo">Aug</span>

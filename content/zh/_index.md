@@ -34,6 +34,22 @@ sections:
         <div class="news-block">
         <ul class="news-list">
 
+          <li class="news-item itm-award">
+            <div class="news-date">
+              <span class="news-mo">Sep</span>
+              <span class="news-day">04</span>
+              <span class="news-yr">2026</span>
+            </div>
+            <div class="news-body">
+              <div class="news-tags">
+                <span class="news-tag t-award">大使</span>
+                <span class="news-venue">GMI Cloud</span>
+              </div>
+              <p class="news-title">很高兴入选 <a href="https://gmicloud.ai" target="_blank" rel="noopener">GMI Cloud</a> 的 <em>GMI Clouder</em> 大使计划，成为其全球开发者、创作者、创业者、研究者与 AI 领袖社区的一员。</p>
+              <p class="news-meta">衷心感谢 <b>伟航</b> 的支持。</p>
+            </div>
+          </li>
+
           <li class="news-item itm-paper">
             <div class="news-date">
               <span class="news-mo">Aug</span>
