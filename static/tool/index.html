@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="在浏览器本地把 CSV 或 XLSX 工单按行拆分为适合打印的 A4 PDF。" />
+    <meta name="theme-color" content="#122033" />
+    <title>工单分页打印</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+    <script defer src="./app.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="home-link" href="/" aria-label="返回个人主页">
+        <span class="mark" aria-hidden="true">JZ</span>
+        <span>Junfei Zhan</span>
+      </a>
+      <div class="product-name">工单分页打印</div>
+    </header>
+
+    <main class="workspace">
+      <aside class="controls" aria-label="工单设置">
+        <div class="panel-heading">
+          <p class="eyebrow">PRINT DESK</p>
+          <h1>一行一页，直接打印</h1>
+          <p class="intro">选择 CSV 或 XLSX 文件。文件只在当前浏览器中处理，不会上传。</p>
+        </div>
+
+        <label class="drop-zone" id="dropZone" for="fileInput">
+          <input id="fileInput" type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+          <span class="drop-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 13v6h14v-6" /></svg>
+          </span>
+          <strong>选择文件</strong>
+          <span>或拖放到这里（CSV / XLSX）</span>
+        </label>
+
+        <div id="fileSummary" class="file-summary" hidden>
+          <div>
+            <span class="summary-label">当前文件</span>
+            <strong id="fileName"></strong>
+          </div>
+          <span class="row-count" id="rowCount"></span>
+        </div>
+
+        <fieldset class="settings" id="settings" disabled>
+          <div class="field" id="sheetField" hidden>
+            <label for="sheetSelect">工作表</label>
+            <select id="sheetSelect"></select>
+          </div>
+
+          <div class="field">
+            <label for="headerRow">表头所在行</label>
+            <input id="headerRow" type="number" min="1" value="1" inputmode="numeric" />
+          </div>
+
+          <fieldset class="field">
+            <legend>纸张方向</legend>
+            <div class="segmented">
+              <input type="radio" name="orientation" id="portrait" value="portrait" checked />
+              <label for="portrait">纵向</label>
+              <input type="radio" name="orientation" id="landscape" value="landscape" />
+              <label for="landscape">横向</label>
+            </div>
+          </fieldset>
+
+          <div class="switch-row">
+            <div>
+              <label for="showHeaders">每页显示表头</label>
+              <span>显示每个字段的名称</span>
+            </div>
+            <input class="switch" id="showHeaders" type="checkbox" checked />
+          </div>
+
+          <div class="switch-row">
+            <div>
+              <label for="hideEmpty">隐藏空字段</label>
+              <span>避免空白生产栏占用版面</span>
+            </div>
+            <input class="switch" id="hideEmpty" type="checkbox" checked />
+          </div>
+
+          <div class="switch-row">
+            <div>
+              <label for="fitToPage">自动缩放</label>
+              <span>内容过长时缩小到一张 A4</span>
+            </div>
+            <input class="switch" id="fitToPage" type="checkbox" checked />
+          </div>
+        </fieldset>
+
+        <button class="primary-button" id="downloadButton" type="button" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l4-4m-4 4l-4-4M5 19h14" /></svg>
+          <span id="downloadLabel">生成 PDF</span>
+        </button>
+        <p class="error-message" id="errorMessage" role="alert" hidden></p>
+      </aside>
+
+      <section class="preview-panel" aria-labelledby="previewTitle">
+        <div class="preview-toolbar">
+          <div>
+            <p class="eyebrow">PREVIEW</p>
+            <h2 id="previewTitle">打印预览</h2>
+          </div>
+          <div class="pager" id="pager" hidden>
+            <button id="previousPage" type="button" aria-label="上一页">‹</button>
+            <span><strong id="currentPage">1</strong> / <span id="totalPages">1</span></span>
+            <button id="nextPage" type="button" aria-label="下一页">›</button>
+          </div>
+        </div>
+
+        <div class="preview-stage" id="previewStage">
+          <div class="empty-state" id="emptyState">
+            <div class="paper-stack" aria-hidden="true"><span></span><span></span><span></span></div>
+            <h3>上传工单后在这里检查排版</h3>
+            <p>每条数据会生成一页。生成前可以逐页查看。</p>
+          </div>
+          <div id="singlePreview" class="single-preview" hidden></div>
+        </div>
+      </section>
+    </main>
+
+    <div id="pdfPages" class="pdf-pages" aria-hidden="true"></div>
+  </body>
+</html>
