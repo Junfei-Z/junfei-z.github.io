@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="在浏览器本地把 CSV 或 XLSX 工单按行拆分为适合打印的 A4 PDF。" />
+    <meta name="description" content="在浏览器本地把 CSV 或 XLSX 工单按行拆分为适合打印的 A5 PDF。" />
     <meta name="theme-color" content="#122033" />
     <title>工单分页打印</title>
     <link rel="stylesheet" href="./styles.css" />
@@ -53,13 +53,25 @@
             <input id="headerRow" type="number" min="1" value="1" inputmode="numeric" />
           </div>
 
+          <details class="column-picker" id="columnPicker" hidden>
+            <summary>
+              <span>选择保留字段</span>
+              <strong id="selectedColumnCount">0 / 0</strong>
+            </summary>
+            <div class="column-actions">
+              <button id="selectAllColumns" type="button">全选</button>
+              <button id="clearColumns" type="button">清空</button>
+            </div>
+            <div class="column-list" id="columnList" aria-label="选择要保留的字段"></div>
+          </details>
+
           <fieldset class="field">
             <legend>纸张方向</legend>
             <div class="segmented">
               <input type="radio" name="orientation" id="portrait" value="portrait" checked />
-              <label for="portrait">纵向</label>
+              <label for="portrait">A5 纵向</label>
               <input type="radio" name="orientation" id="landscape" value="landscape" />
-              <label for="landscape">横向</label>
+              <label for="landscape">A5 横向</label>
             </div>
           </fieldset>
 
@@ -82,7 +94,7 @@
           <div class="switch-row">
             <div>
               <label for="fitToPage">自动缩放</label>
-              <span>内容过长时缩小到一张 A4</span>
+              <span>内容过长时缩小到一张 A5</span>
             </div>
             <input class="switch" id="fitToPage" type="checkbox" checked />
           </div>

@@ -6,6 +6,7 @@
     workbook: null,
     matrix: [],
     page: 0,
+    selectedColumns: new Set(),
   };
 
   const ui = {
@@ -18,6 +19,11 @@
     sheetField: document.querySelector("#sheetField"),
     sheetSelect: document.querySelector("#sheetSelect"),
     headerRow: document.querySelector("#headerRow"),
+    columnPicker: document.querySelector("#columnPicker"),
+    columnList: document.querySelector("#columnList"),
+    selectedColumnCount: document.querySelector("#selectedColumnCount"),
+    selectAllColumns: document.querySelector("#selectAllColumns"),
+    clearColumns: document.querySelector("#clearColumns"),
     showHeaders: document.querySelector("#showHeaders"),
     hideEmpty: document.querySelector("#hideEmpty"),
     fitToPage: document.querySelector("#fitToPage"),
@@ -74,7 +80,45 @@
   function fieldList(headers, row) {
     return headers
       .map((label, index) => ({ label, value: row.values[index] || "" }))
+      .filter((_, index) => state.selectedColumns.has(index))
       .filter((field) => !ui.hideEmpty.checked || field.value !== "");
+  }
+
+  function updateSelectedColumnCount(total) {
+    ui.selectedColumnCount.textContent = `${state.selectedColumns.size} / ${total}`;
+  }
+
+  function renderColumnPicker(resetSelection = false) {
+    const { headers } = getParsedData();
+    if (resetSelection) state.selectedColumns = new Set(headers.map((_, index) => index));
+    else state.selectedColumns = new Set([...state.selectedColumns].filter((index) => index < headers.length));
+
+    ui.columnPicker.hidden = headers.length === 0;
+    ui.columnList.replaceChildren();
+    headers.forEach((header, index) => {
+      const option = document.createElement("label");
+      option.className = "column-option";
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = state.selectedColumns.has(index);
+      checkbox.dataset.columnIndex = String(index);
+      const text = document.createElement("span");
+      text.textContent = header;
+      option.append(checkbox, text);
+      ui.columnList.append(option);
+    });
+    updateSelectedColumnCount(headers.length);
+  }
+
+  function setAllColumns(selected) {
+    const { headers } = getParsedData();
+    state.selectedColumns = selected ? new Set(headers.map((_, index) => index)) : new Set();
+    ui.columnList.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+      checkbox.checked = selected;
+    });
+    updateSelectedColumnCount(headers.length);
+    state.page = 0;
+    renderPreview();
   }
 
   function createPage(headers, row, pageIndex, total) {
@@ -131,14 +175,19 @@
       grid.append(cell);
     }
 
-    const footer = document.createElement("footer");
-    footer.className = "page-footer";
-    const left = document.createElement("span");
-    left.textContent = "操作人签名：________________";
-    const right = document.createElement("span");
-    right.textContent = "完成时间：________________";
-    footer.append(left, right);
-    content.append(masthead, grid, footer);
+    const signatures = document.createElement("footer");
+    signatures.className = "signature-grid";
+    ["绕线员签名", "覆胶员签名", "包带员签名", "硫化员签名", "负责人签名"].forEach((name) => {
+      const signature = document.createElement("div");
+      signature.className = "signature-item";
+      const label = document.createElement("span");
+      label.textContent = name;
+      const line = document.createElement("span");
+      line.className = "signature-line";
+      signature.append(label, line);
+      signatures.append(signature);
+    });
+    content.append(masthead, grid, signatures);
     page.append(content);
     return page;
   }
@@ -169,7 +218,7 @@
     ui.pager.hidden = count === 0;
     ui.emptyState.hidden = count > 0;
     ui.singlePreview.hidden = count === 0;
-    ui.downloadButton.disabled = count === 0;
+    ui.downloadButton.disabled = count === 0 || state.selectedColumns.size === 0;
     ui.singlePreview.replaceChildren();
 
     if (count) {
@@ -191,6 +240,7 @@
   function selectSheet(name) {
     state.matrix = sheetToMatrix(state.workbook.Sheets[name]);
     state.page = 0;
+    renderColumnPicker(true);
     renderPreview();
   }
 
@@ -252,7 +302,7 @@
     const baseName = state.fileName.replace(/\.[^.]+$/, "") || "工单";
     const orientation = activeOrientation();
     try {
-      const pdf = new PdfDocument({ unit: "mm", format: "a4", orientation, compress: true });
+      const pdf = new PdfDocument({ unit: "mm", format: "a5", orientation, compress: true });
       const pages = [...ui.pdfPages.querySelectorAll(".work-page")];
       for (let index = 0; index < pages.length; index += 1) {
         ui.downloadLabel.textContent = `正在生成 ${index + 1} / ${pages.length}`;
@@ -262,7 +312,7 @@
           backgroundColor: "#ffffff",
           logging: false,
         });
-        if (index > 0) pdf.addPage("a4", orientation);
+        if (index > 0) pdf.addPage("a5", orientation);
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
         pdf.addImage(canvas.toDataURL("image/jpeg", 0.94), "JPEG", 0, 0, pageWidth, pageHeight, undefined, "FAST");
@@ -275,7 +325,7 @@
       setError("PDF 生成失败。可尝试切换纸张方向或打开“隐藏空字段”后重试。");
     } finally {
       ui.pdfPages.replaceChildren();
-      ui.downloadButton.disabled = false;
+      ui.downloadButton.disabled = rows.length === 0 || state.selectedColumns.size === 0;
       ui.downloadButton.classList.remove("busy");
       ui.downloadLabel.textContent = "生成 PDF";
     }
@@ -292,10 +342,26 @@
   }));
   ui.dropZone.addEventListener("drop", (event) => readFile(event.dataTransfer.files[0]));
   ui.sheetSelect.addEventListener("change", () => selectSheet(ui.sheetSelect.value));
+  ui.columnList.addEventListener("change", (event) => {
+    const checkbox = event.target.closest('input[type="checkbox"]');
+    if (!checkbox) return;
+    const index = Number(checkbox.dataset.columnIndex);
+    if (checkbox.checked) state.selectedColumns.add(index);
+    else state.selectedColumns.delete(index);
+    updateSelectedColumnCount(getParsedData().headers.length);
+    state.page = 0;
+    renderPreview();
+  });
+  ui.selectAllColumns.addEventListener("click", () => setAllColumns(true));
+  ui.clearColumns.addEventListener("click", () => setAllColumns(false));
   ui.previousPage.addEventListener("click", () => { state.page -= 1; renderPreview(); });
   ui.nextPage.addEventListener("click", () => { state.page += 1; renderPreview(); });
   ui.downloadButton.addEventListener("click", downloadPdf);
-  ui.headerRow.addEventListener("input", () => { state.page = 0; renderPreview(); });
+  ui.headerRow.addEventListener("input", () => {
+    state.page = 0;
+    renderColumnPicker(true);
+    renderPreview();
+  });
   [ui.showHeaders, ui.hideEmpty, ui.fitToPage].forEach((control) => control.addEventListener("change", renderPreview));
   document.querySelectorAll('input[name="orientation"]').forEach((control) => control.addEventListener("change", renderPreview));
 })();
