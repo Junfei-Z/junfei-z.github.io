@@ -191,7 +191,7 @@ awards:
 
 在学术之外，和朋友聚餐、社交是我最喜欢的活动之一。运动也是我生活中重要的一部分，我曾在短跑、攀岩、赛艇和乒乓球方面获得过奖项。
 
-📄 你可以在[这里](https://junfei-z.github.io/CV_junfei_11_8.pdf)下载我的完整简历。
+📄 你可以在[这里](https://junfei-z.github.io/CV_junfei_9_12.pdf)下载我的完整简历。
 
 <a id="contact-email" class="contact-pill" href="#contact-email" aria-label="给我发邮件">
   <svg class="cp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
