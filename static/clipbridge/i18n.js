@@ -1,7 +1,7 @@
 (()=>{
   const KEY="clipbridge.language.v1";
   const EN={
-    "在线点对点直传":"Online peer-to-peer transfer","未连接":"Not connected","已直连":"Directly connected",
+    "在线点对点直传":"Online peer-to-peer transfer","项目介绍":"About","未连接":"Not connected","已直连":"Directly connected",
     "让两台设备直接连接":"Connect two devices directly","页面只负责建立连接。文字和文件通过加密的 WebRTC DataChannel 在设备之间传输。":"This page only establishes the connection. Text and files travel between devices through an encrypted WebRTC DataChannel.",
     "建立连接":"Connect","创建一个 6 位临时房间码，另一台设备输入后自动直连。":"Create a temporary 6-digit room code. Enter it on the other device to connect automatically.",
     "创建连接":"Create connection","加入连接":"Join connection","断开":"Disconnect","让另一台设备扫描二维码，或输入下面的房间码。房间 5 分钟后失效。":"Ask the other device to scan the QR code or enter the room code below. The room expires in 5 minutes.",
