@@ -37,6 +37,22 @@ sections:
           <li class="news-item itm-award">
             <div class="news-date">
               <span class="news-mo">Sep</span>
+              <span class="news-day">24</span>
+              <span class="news-yr">2026</span>
+            </div>
+            <div class="news-body">
+              <div class="news-tags">
+                <span class="news-tag t-award">Track Champion</span>
+                <span class="news-venue">EvoTavern Hackathon · Shenzhen</span>
+              </div>
+              <p class="news-title">Our team won the <b>Native Agent Track Championship</b> at the EvoTavern Hackathon · Shenzhen, held in Shenzhen, Guangdong. We built <a href="https://frowang.com/" target="_blank" rel="noopener"><b>Frowang</b></a>, an AI-collaborative workspace for reading research papers.</p>
+              <p class="news-meta">The hackathon was sponsored by <a href="https://evomap.ai/" target="_blank" rel="noopener"><b>EvoMap</b></a>. Sincere thanks to <b>Zichen Wang</b>, <b>Shuhui Li</b>, and <b>Zhitong Lin</b> for the fantastic collaboration.</p>
+            </div>
+          </li>
+
+          <li class="news-item itm-award">
+            <div class="news-date">
+              <span class="news-mo">Sep</span>
               <span class="news-day">04</span>
               <span class="news-yr">2026</span>
             </div>

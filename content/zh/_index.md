@@ -37,6 +37,22 @@ sections:
           <li class="news-item itm-award">
             <div class="news-date">
               <span class="news-mo">Sep</span>
+              <span class="news-day">24</span>
+              <span class="news-yr">2026</span>
+            </div>
+            <div class="news-body">
+              <div class="news-tags">
+                <span class="news-tag t-award">赛道冠军</span>
+                <span class="news-venue">EvoTavern 进化酒馆黑客松 · 深圳站</span>
+              </div>
+              <p class="news-title">在广东深圳举办的「EvoTavern 进化酒馆黑客松｜深圳站」中，我们获得了<b>原生 Agent 赛道冠军</b>。我们的作品 <a href="https://frowang.com/" target="_blank" rel="noopener"><b>Frowang</b></a> 是一款 AI 协作的论文阅读工作台。</p>
+              <p class="news-meta">本次黑客松由 <a href="https://evomap.ai/" target="_blank" rel="noopener"><b>EvoMap</b></a> 赞助。感谢 <b>王子琛</b>、<b>李澍晖</b> 和 <b>林芷彤</b> 的出色合作。</p>
+            </div>
+          </li>
+
+          <li class="news-item itm-award">
+            <div class="news-date">
+              <span class="news-mo">Sep</span>
               <span class="news-day">04</span>
               <span class="news-yr">2026</span>
             </div>
