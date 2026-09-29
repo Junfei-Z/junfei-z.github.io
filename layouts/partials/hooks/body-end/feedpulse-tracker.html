@@ -1,0 +1,32 @@
+{{- if hugo.IsProduction -}}
+<script>
+  (function () {
+    function trackVisit() {
+      try {
+        var pixel = new Image();
+        var title = (document.title || '').slice(0, 160);
+        pixel.src = 'https://feed-pulse.com/api/track-pixel/e817faf1-9184-469f-81cd-30f0ecb6a11a'
+          + '?path=' + encodeURIComponent(location.pathname || '/')
+          + '&title=' + encodeURIComponent(title)
+          + '&host=' + encodeURIComponent(location.host)
+          + '&ref=' + encodeURIComponent(document.referrer || '');
+      } catch (error) {
+        // Visitor tracking must never interfere with the page itself.
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', trackVisit, { once: true });
+    } else {
+      setTimeout(trackVisit, 80);
+    }
+  })();
+</script>
+<noscript>
+  <img
+    src="https://feed-pulse.com/api/track-pixel/e817faf1-9184-469f-81cd-30f0ecb6a11a?via=img&amp;nojs=1"
+    referrerpolicy="no-referrer-when-downgrade"
+    style="position:absolute;width:1px;height:1px;border:0;opacity:0;pointer-events:none"
+    alt="">
+</noscript>
+{{- end -}}
