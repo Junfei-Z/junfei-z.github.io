@@ -163,6 +163,106 @@ html.dark body {
   background-image: none;
 }
 
+/* ─── CV download card (About section) ─── */
+a.cv-download {
+  display: inline-grid;
+  grid-template-columns: 42px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 12px;
+  min-width: min(100%, 310px);
+  margin: 0.7rem 0 0.5rem;
+  padding: 11px 14px 11px 11px;
+  border: 1.5px solid #dbe3ef;
+  border-radius: 13px !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+  color: #1f2937 !important;
+  text-decoration: none !important;
+  box-shadow: 0 3px 12px rgba(37, 99, 235, 0.07);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+a.cv-download .cv-file-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 10px;
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+a.cv-download .cv-file-icon svg {
+  width: 23px;
+  height: 23px;
+}
+
+a.cv-download .cv-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 1px;
+  text-align: left;
+}
+
+a.cv-download .cv-copy strong {
+  color: #1f2937;
+  font-size: 0.94rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+a.cv-download .cv-copy small {
+  overflow: hidden;
+  color: #6b7280;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+a.cv-download .cv-download-icon {
+  width: 19px;
+  height: 19px;
+  color: #64748b;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+a.cv-download:hover {
+  transform: translateY(-2px);
+  border-color: #93c5fd;
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.13);
+}
+
+a.cv-download:hover .cv-download-icon {
+  color: #2563eb;
+  transform: translateY(2px);
+}
+
+.dark a.cv-download {
+  border-color: #334155;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.86), rgba(15, 23, 42, 0.72));
+  color: #e2e8f0 !important;
+  box-shadow: none;
+}
+
+.dark a.cv-download .cv-file-icon {
+  background: rgba(59, 130, 246, 0.16);
+  color: #60a5fa;
+}
+
+.dark a.cv-download .cv-copy strong { color: #e5e7eb; }
+.dark a.cv-download .cv-copy small { color: #94a3b8; }
+.dark a.cv-download .cv-download-icon { color: #94a3b8; }
+.dark a.cv-download:hover { border-color: #60a5fa; }
+.dark a.cv-download:hover .cv-download-icon { color: #93c5fd; }
+
+@media (prefers-reduced-motion: reduce) {
+  a.cv-download,
+  a.cv-download .cv-download-icon { transition: none; }
+  a.cv-download:hover,
+  a.cv-download:hover .cv-download-icon { transform: none; }
+}
+
 /* ─── Contact pill (About section) ─── */
 /* Same design tokens as the news/pub badges: #2563eb accent, #e5e7eb border, 999px radius. */
 a.contact-pill {

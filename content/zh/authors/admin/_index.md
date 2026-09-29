@@ -191,7 +191,21 @@ awards:
 
 在学术之外，和朋友聚餐、社交是我最喜欢的活动之一。运动也是我生活中重要的一部分，我曾在短跑、攀岩、赛艇和乒乓球方面获得过奖项。
 
-📄 你可以在[这里](https://junfei-z.github.io/CV_junfei_9_12.pdf)下载我的完整简历。
+<a class="cv-download" href="https://junfei-z.github.io/CV_junfei_9_12.pdf" target="_blank" rel="noopener" aria-label="下载 PDF 格式的完整简历">
+  <span class="cv-file-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 2.75h7l5 5V21.25H6z"/>
+      <path d="M13 2.75v5h5M9 13h6M9 16.5h4"/>
+    </svg>
+  </span>
+  <span class="cv-copy">
+    <strong>下载完整简历</strong>
+    <small>PDF · Curriculum Vitae</small>
+  </span>
+  <svg class="cv-download-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 20h14"/>
+  </svg>
+</a>
 
 <a id="contact-email" class="contact-pill" href="#contact-email" aria-label="给我发邮件">
   <svg class="cp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

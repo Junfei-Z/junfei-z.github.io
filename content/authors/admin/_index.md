@@ -237,7 +237,21 @@ My research interests center on optimization, Large Language Models (LLMs), and 
 
 Outside of academics, grabbing meals with friends and socializing are among my favorite activities. Sports have also been a significant part of my life, with awards earned in sprinting, rock climbing, rowing, and table tennis.
 
-📄 You can download my full CV [here](https://junfei-z.github.io/CV_junfei_9_12.pdf). 
+<a class="cv-download" href="https://junfei-z.github.io/CV_junfei_9_12.pdf" target="_blank" rel="noopener" aria-label="Download my full CV as a PDF">
+  <span class="cv-file-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 2.75h7l5 5V21.25H6z"/>
+      <path d="M13 2.75v5h5M9 13h6M9 16.5h4"/>
+    </svg>
+  </span>
+  <span class="cv-copy">
+    <strong>Download CV</strong>
+    <small>PDF · Full curriculum vitae</small>
+  </span>
+  <svg class="cv-download-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 20h14"/>
+  </svg>
+</a>
 
 <a id="contact-email" class="contact-pill" href="#contact-email" aria-label="Email me">
   <svg class="cp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
