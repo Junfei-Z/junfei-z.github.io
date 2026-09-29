@@ -69,7 +69,7 @@ education:
     institution: Imperial College London, UK
     date_start: 2026-10-01
     summary: |
-      Incoming PhD student in the Department of Computing, advised by Professor Giuliano Casale.
+      PhD student in the Department of Computing, advised by Professor Giuliano Casale.
 
   - area: MS in Electrical Engineering
     institution: University of Pennsylvania, USA
@@ -231,7 +231,7 @@ awards:
 
 ## About Me
 
-I'm Junfei Zhan, originally from China, and an incoming PhD student in the Department of Computing at Imperial College London, joining in October 2026 under the supervision of Professor <a href="https://wp.doc.ic.ac.uk/gcasale/">Giuliano Casale</a>. I recently earned my master's degree in Electrical Engineering at the University of Pennsylvania, where my research was supervised by Professor <a href="https://directory.seas.upenn.edu/saswati-sarkar/">Saswati Sarkar</a>. My previous research in undergrad was supervised by Professor <a href="https://ieeexplore.ieee.org/author/37086460251">Tengjiao He</a> and Professor <a href="https://scholars.uow.edu.au/kwan-wu-chin">Kwan-Wu Chin</a>.
+I'm Junfei Zhan, originally from China, and a PhD student in the Department of Computing at Imperial College London under the supervision of Professor <a href="https://wp.doc.ic.ac.uk/gcasale/">Giuliano Casale</a>. I recently earned my master's degree in Electrical Engineering at the University of Pennsylvania, where my research was supervised by Professor <a href="https://directory.seas.upenn.edu/saswati-sarkar/">Saswati Sarkar</a>. My previous research in undergrad was supervised by Professor <a href="https://ieeexplore.ieee.org/author/37086460251">Tengjiao He</a> and Professor <a href="https://scholars.uow.edu.au/kwan-wu-chin">Kwan-Wu Chin</a>.
 
 My research interests center on optimization, Large Language Models (LLMs), and data-driven decision-making, particularly within energy-constrained computing environments. I've led and co-authored multiple research projects focused on task scheduling, LLMs, and green IoT networks. I’m passionate about combining mathematical modeling, machine learning, and control theory to tackle real-world system challenges.
 
