@@ -1,5 +1,111 @@
-<div style="text-align: center; padding: 0; margin-left: 35px;">
-  <a href="https://clustrmaps.com/site/1c7w7" title="Visit tracker">
-    <img src="//clustrmaps.com/map_v2.png?cl=ffffff&w=600&t=tt&d=Jt8x0LRoUsM3933STN7ojMVodayS1v9s5VQdU-YmKa4&co=2d78ad&ct=ffffff" alt="Visitor Map" style="max-width: 90%; height: auto; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" />
-  </a>
-</div>
+{{- $isChinese := eq .Page.Language.Lang "zh" -}}
+<section class="visitor-map-section" aria-labelledby="visitor-map-title">
+  <div class="visitor-map-heading">
+    <span class="visitor-map-kicker">{{ if $isChinese }}全球足迹{{ else }}Global reach{{ end }}</span>
+    <h2 id="visitor-map-title">{{ if $isChinese }}访客地图{{ else }}Visitor Map{{ end }}</h2>
+    <p>{{ if $isChinese }}过去 24 小时的访客位置{{ else }}Visitor locations from the last 24 hours{{ end }}</p>
+  </div>
+
+  <div class="visitor-map-frame">
+    <div id="visitor-map-status" class="visitor-map-status" role="status">
+      {{ if $isChinese }}正在加载访客地图…{{ else }}Loading visitor map…{{ end }}
+    </div>
+    <script
+      async
+      src="https://feed-pulse.com/api/embed/visitor-globe.js?site_id=e817faf1-9184-469f-81cd-30f0ecb6a11a&amp;map=globe&amp;sz=md&amp;theme=sky&amp;speed=normal"
+      onload="document.getElementById('visitor-map-status').hidden = true"
+      onerror="document.getElementById('visitor-map-status').textContent = '{{ if $isChinese }}访客地图暂时无法加载{{ else }}Visitor map is temporarily unavailable{{ end }}'">
+    </script>
+    <noscript>
+      <p class="visitor-map-status">{{ if $isChinese }}请启用 JavaScript 以查看访客地图。{{ else }}Enable JavaScript to view the visitor map.{{ end }}</p>
+    </noscript>
+  </div>
+</section>
+
+<style>
+  .visitor-map-section {
+    width: min(100%, 760px);
+    margin: 0 auto;
+    padding: 1.25rem 1rem 2rem;
+    text-align: center;
+  }
+
+  .visitor-map-heading {
+    margin-bottom: 0.75rem;
+  }
+
+  .visitor-map-heading h2 {
+    margin: 0.2rem 0 0.3rem;
+    font-size: clamp(1.45rem, 3vw, 1.85rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .visitor-map-heading p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.86rem;
+  }
+
+  .visitor-map-kicker {
+    color: #2563eb;
+    font-size: 0.68rem;
+    font-weight: 750;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .visitor-map-frame {
+    display: flex;
+    min-height: 408px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .visitor-map-frame > [data-fp-globe] {
+    max-width: 100%;
+  }
+
+  .visitor-map-frame > [data-fp-globe] canvas {
+    width: min(380px, calc(100vw - 4rem)) !important;
+    height: auto !important;
+    max-width: 100%;
+  }
+
+  .visitor-map-status {
+    display: inline-flex;
+    min-height: 10rem;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    font-size: 0.85rem;
+  }
+
+  .visitor-map-status[hidden] {
+    display: none;
+  }
+
+  .dark .visitor-map-heading p,
+  .dark .visitor-map-status {
+    color: #9ca3af;
+  }
+
+  .dark .visitor-map-kicker {
+    color: #60a5fa;
+  }
+
+  .dark .visitor-map-frame > [data-fp-globe] {
+    color: #93c5fd !important;
+  }
+
+  @media (max-width: 480px) {
+    .visitor-map-section {
+      padding-inline: 0;
+    }
+
+    .visitor-map-frame {
+      min-height: 320px;
+    }
+  }
+</style>
