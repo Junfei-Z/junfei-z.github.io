@@ -191,6 +191,7 @@ awards:
 
 在学术之外，和朋友聚餐、社交是我最喜欢的活动之一。运动也是我生活中重要的一部分，我曾在短跑、攀岩、赛艇和乒乓球方面获得过奖项。
 
+<div class="about-actions">
 <a class="cv-download" href="https://junfei-z.github.io/CV_junfei_9_12.pdf" target="_blank" rel="noopener" aria-label="下载 PDF 格式的完整简历">
   <span class="cv-file-icon" aria-hidden="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -207,13 +208,22 @@ awards:
   </svg>
 </a>
 
-<a id="contact-email" class="contact-pill" href="#contact-email" aria-label="给我发邮件">
-  <svg class="cp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <rect x="2" y="4" width="20" height="16" rx="3"/>
-    <path d="m2 7.5 9.1 5.6a1.7 1.7 0 0 0 1.8 0L22 7.5"/>
+<a id="contact-email" class="contact-card" href="#contact-email" aria-label="给我发邮件">
+  <span class="contact-file-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2.5" y="4.5" width="19" height="15" rx="3"/>
+      <path d="m3 7 8 5.2a1.8 1.8 0 0 0 2 0L21 7"/>
+    </svg>
+  </span>
+  <span class="contact-copy">
+    <strong>给我发邮件</strong>
+    <small class="cp-addr">&hellip;</small>
+  </span>
+  <svg class="contact-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M5 12h14m-5-5 5 5-5 5"/>
   </svg>
-  <span class="cp-addr">&hellip;</span>
 </a>
+</div>
 <script>
 (function () {
   // 邮箱地址用 base64 存放，页面源码中不出现明文。

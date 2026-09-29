@@ -237,6 +237,7 @@ My research interests center on optimization, Large Language Models (LLMs), and 
 
 Outside of academics, grabbing meals with friends and socializing are among my favorite activities. Sports have also been a significant part of my life, with awards earned in sprinting, rock climbing, rowing, and table tennis.
 
+<div class="about-actions">
 <a class="cv-download" href="https://junfei-z.github.io/CV_junfei_9_12.pdf" target="_blank" rel="noopener" aria-label="Download my full CV as a PDF">
   <span class="cv-file-icon" aria-hidden="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -253,13 +254,22 @@ Outside of academics, grabbing meals with friends and socializing are among my f
   </svg>
 </a>
 
-<a id="contact-email" class="contact-pill" href="#contact-email" aria-label="Email me">
-  <svg class="cp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <rect x="2" y="4" width="20" height="16" rx="3"/>
-    <path d="m2 7.5 9.1 5.6a1.7 1.7 0 0 0 1.8 0L22 7.5"/>
+<a id="contact-email" class="contact-card" href="#contact-email" aria-label="Email me">
+  <span class="contact-file-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2.5" y="4.5" width="19" height="15" rx="3"/>
+      <path d="m3 7 8 5.2a1.8 1.8 0 0 0 2 0L21 7"/>
+    </svg>
+  </span>
+  <span class="contact-copy">
+    <strong>Email me</strong>
+    <small class="cp-addr">&hellip;</small>
+  </span>
+  <svg class="contact-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M5 12h14m-5-5 5 5-5 5"/>
   </svg>
-  <span class="cp-addr">&hellip;</span>
 </a>
+</div>
 <script>
 (function () {
   // Address is base64-encoded so it never appears in the page source.
