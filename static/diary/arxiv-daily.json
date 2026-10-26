@@ -1,169 +1,123 @@
 {
-  "date": "2026-10-23",
-  "updated_at": "2026-10-23T04:33:21.470097Z",
+  "date": "2026-10-26",
+  "updated_at": "2026-10-26T04:30:01.881073Z",
   "tracks": {
     "edge_ai": {
       "name_zh": "Edge AI",
       "name_en": "Edge AI",
-      "count": 9,
+      "count": 7,
       "papers": [
         {
-          "id": "2610.30791v1",
-          "title": "Gandalf: Flash Shall Not Die! Increasing Flash Storage Lifetime for KV Cache Offloading in LLM Serving",
-          "abstract": "KV caching reduces the serving cost of large language models (LLMs), but the growing KV cache footprint is increasingly exceeds GPU and host-memory capacity. Therefore, people use SSD to expand the KV cache storage capacity with high I/O bandwidth. However, in production LLM workload, such as multi-round conversation and LLM agents, the total amount of KV cache writes significantly exceeds SSD capacity, shortening SSD lifetime from years to months. To improve SSD lifetime, a natural solution is to reduce the KV cache writes by gating the KV cache writes via historical access patterns. However,",
+          "id": "2610.31827v1",
+          "title": "KVStream: Adaptive Parallel Storage Management for KV Caching in Large-Scale LLM Serving",
+          "abstract": "Long-context LLM serving for agentic, coding, and document workloads reuses prefixes whose key-value (KV) cache outgrows GPU and host memory, putting storage I/O on the critical path of the inference step for retrieving prefixes. A single node-local NVMe absorbs all retrievals, while the parallel file system or cloud file store that nodes already mount carries almost no inference traffic. We cast prefix retrieval as aggregate-bandwidth scheduling across these tiers and present KVStream, a KV cache engine that batches a step's reads, defers writes behind the forward pass, replicates each chunk ",
           "authors": [
-            "Maharani A. P. Irawan",
-            "Kuntai Du",
-            "Jiayi Yao",
-            "Dongjoo Seo",
-            "Yuyang Huang"
+            "Avinash Maurya",
+            "Jaiaid Mobin",
+            "Jie Ye",
+            "M. Mustafa Rafique",
+            "Franck Cappello"
           ],
           "published": "2026-10-22",
           "categories": [
-            "cs.LG"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2610.30791v1",
-          "pdf": "https://arxiv.org/pdf/2610.30791v1",
-          "priority": "高",
-          "problem_zh": "这篇论文解决了KV缓存存储在LLM服务中日益增长的问题，影响了性能和存储效率。",
-          "method_zh": "提出了Gandalf框架，通过优化KV缓存的使用，显著提高了闪存存储的使用寿命，并降低了LLM服务的成本。",
-          "relevance_zh": "这篇文章与边缘LLM服务的能效优化密切相关，创新点在于提出了针对KV缓存的闪存管理策略。",
-          "summary_zh": "问题：这篇论文解决了KV缓存存储在LLM服务中日益增长的问题，影响了性能和存储效率。\n方法：提出了Gandalf框架，通过优化KV缓存的使用，显著提高了闪存存储的使用寿命，并降低了LLM服务的成本。\n相关性：这篇文章与边缘LLM服务的能效优化密切相关，创新点在于提出了针对KV缓存的闪存管理策略。"
-        },
-        {
-          "id": "2610.31479v1",
-          "title": "Evaluating the Applicability of LLM Inference Optimizations on Apple Silicon",
-          "abstract": "Apple Silicon is among the most widely used platforms for local LLM inference, yet nearly all inference optimizations are designed and validated on server-class NVIDIA GPUs under batched serving workloads. Which optimizations retain their benefits when moved to Apple Silicon, and what determines their applicability? We evaluate four optimization families: KV-cache pruning, speculative decoding, ported GPU kernels, and post-training quantization. Experiments span four Apple machines under a common single-request decode workload, with matched RTX 4090 comparisons where possible. KV-cache pruning",
-          "authors": [
-            "Kyrylo Yemets",
-            "Andrii Yaroshevych",
-            "Victor Muryn",
-            "Ostap Khomenko",
-            "Pavlo Kryven"
-          ],
-          "published": "2026-10-22",
-          "categories": [
-            "cs.LG",
             "cs.DC"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2610.31479v1",
-          "pdf": "https://arxiv.org/pdf/2610.31479v1",
+          "link": "https://arxiv.org/abs/2610.31827v1",
+          "pdf": "https://arxiv.org/pdf/2610.31827v1",
           "priority": "高",
-          "problem_zh": "这篇论文评估了在Apple Silicon上进行LLM推理优化的适用性，填补了现有研究的空白。",
-          "method_zh": "通过对比不同推理优化技术在Apple Silicon上的表现，识别出哪些优化能够有效提升性能。",
-          "relevance_zh": "与边缘设备上的LLM推理优化相关，创新点在于针对特定硬件平台的推理优化评估。",
-          "summary_zh": "问题：这篇论文评估了在Apple Silicon上进行LLM推理优化的适用性，填补了现有研究的空白。\n方法：通过对比不同推理优化技术在Apple Silicon上的表现，识别出哪些优化能够有效提升性能。\n相关性：与边缘设备上的LLM推理优化相关，创新点在于针对特定硬件平台的推理优化评估。"
+          "problem_zh": "这篇论文解决了大规模LLM服务中KV缓存管理的效率问题。",
+          "method_zh": "提出了一种自适应并行存储管理方法，能够在大规模LLM服务中有效管理KV缓存，显著提高存储I/O效率，降低延迟。",
+          "relevance_zh": "该论文与边缘设备上的LLM推理优化密切相关，创新点在于其自适应的KV缓存管理策略，能够提升推理效率。",
+          "summary_zh": "问题：这篇论文解决了大规模LLM服务中KV缓存管理的效率问题。\n方法：提出了一种自适应并行存储管理方法，能够在大规模LLM服务中有效管理KV缓存，显著提高存储I/O效率，降低延迟。\n相关性：该论文与边缘设备上的LLM推理优化密切相关，创新点在于其自适应的KV缓存管理策略，能够提升推理效率。"
         },
         {
-          "id": "2610.30206v1",
-          "title": "MoEZip: Routing-Aware KV Cache Compression for Sparse Mixture-of-Experts LLMs",
-          "abstract": "Mixture-of-Experts (MoE) language models scale model capacity efficiently by activating a small subset of parameters per token. However, in long-context inference, memory remains a major bottleneck because the KV cache grows linearly with sequence length. Existing KV cache compression methods reduce this cost for dense transformers, but overlook a problem specific to MoE: KV eviction can change which experts are selected during answer generation, degrading the generation quality. We propose MoEZip, a routing-aware KV cache compression for sparse MoE language models. To estimate the sensitivity",
+          "id": "2610.29873v2",
+          "title": "HAWK: Heterogeneity-Aware KV Cache Transfer for Efficient GPU-NPU Phase-Disaggregated LLM Inference",
+          "abstract": "Large language model (LLM) inference exhibits distinct computational characteristics across its two phases: prefill is compute-intensive, whereas decode is more memory-bound. As a result, AI accelerators achieve varying levels of efficiency across the two phases. GPUs are well suited to prefill, but are often underutilized during decode. By contrast, NPUs can utilize their compute resources more effectively during decode. Motivated by this observation, we explore a heterogeneous architecture that integrates GPUs and NPUs, mapping prefill to GPUs and decode to NPUs to achieve high performance a",
           "authors": [
-            "Minsang Kim",
-            "Seungjun Baek"
+            "Junhyeok Park",
+            "Jungeun Yoon",
+            "Kyungmin Kim",
+            "Hunsoon Lee",
+            "Shinyoung Ahn"
           ],
           "published": "2026-10-21",
           "categories": [
-            "cs.LG",
+            "cs.AR",
+            "cs.DC"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2610.29873v2",
+          "pdf": "https://arxiv.org/pdf/2610.29873v2",
+          "priority": "高",
+          "problem_zh": "这篇论文解决了GPU和NPU在LLM推理中的效率差异问题。",
+          "method_zh": "提出了一种异构感知的KV缓存转移方法，优化了LLM推理的GPU-NPU相位分离，提升了整体推理效率。",
+          "relevance_zh": "该研究与边缘设备上的LLM推理优化相关，创新点在于针对不同计算阶段的资源调度策略。",
+          "summary_zh": "问题：这篇论文解决了GPU和NPU在LLM推理中的效率差异问题。\n方法：提出了一种异构感知的KV缓存转移方法，优化了LLM推理的GPU-NPU相位分离，提升了整体推理效率。\n相关性：该研究与边缘设备上的LLM推理优化相关，创新点在于针对不同计算阶段的资源调度策略。"
+        },
+        {
+          "id": "2610.32638v1",
+          "title": "InferSlice: A Reference Architecture for SLO-driven LLM Inference over a Telco Wide-Area Network",
+          "abstract": "LLM inference is increasingly deployed as a core service for enterprise and interactive applications, but sovereignty, compliance, latency and resource-locality requirements can limit the suitability of centralised cloud deployments. Telco operators offer geographically distributed compute and network infrastructure for addressing these constraints. However, existing LLM serving frameworks are designed for tightly coupled data centres and provide limited support for coordinating geographically distributed and heterogeneous resources. We present InferSlice, a reference architecture for Service-",
+          "authors": [
+            "Juan Parra-Ullauri",
+            "Anthony Chiu",
+            "Hari Madhukumar",
+            "Zhaozhou Wu",
+            "Anderson Bravalheri"
+          ],
+          "published": "2026-10-23",
+          "categories": [
+            "cs.DC",
             "cs.AI"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2610.30206v1",
-          "pdf": "https://arxiv.org/pdf/2610.30206v1",
-          "priority": "高",
-          "problem_zh": "这篇论文解决了稀疏专家模型在长序列推理中KV缓存线性增长导致的内存瓶颈问题。",
-          "method_zh": "提出了MoEZip框架，通过路由感知的KV缓存压缩技术，显著降低了内存使用，提高了推理效率。",
-          "relevance_zh": "与LLM推理优化和内存管理相关，创新点在于结合稀疏模型和KV缓存的高效管理。",
-          "summary_zh": "问题：这篇论文解决了稀疏专家模型在长序列推理中KV缓存线性增长导致的内存瓶颈问题。\n方法：提出了MoEZip框架，通过路由感知的KV缓存压缩技术，显著降低了内存使用，提高了推理效率。\n相关性：与LLM推理优化和内存管理相关，创新点在于结合稀疏模型和KV缓存的高效管理。"
+          "link": "https://arxiv.org/abs/2610.32638v1",
+          "pdf": "https://arxiv.org/pdf/2610.32638v1",
+          "priority": "中",
+          "problem_zh": "这篇论文探讨了在电信广域网中进行LLM推理的架构设计问题。",
+          "method_zh": "提出了一种参考架构，旨在满足服务水平目标(SLO)驱动的LLM推理，优化了资源分配和延迟。",
+          "relevance_zh": "该论文与边缘计算中的LLM推理优化相关，创新点在于其针对电信网络的特定需求进行的架构设计。",
+          "summary_zh": "问题：这篇论文探讨了在电信广域网中进行LLM推理的架构设计问题。\n方法：提出了一种参考架构，旨在满足服务水平目标(SLO)驱动的LLM推理，优化了资源分配和延迟。\n相关性：该论文与边缘计算中的LLM推理优化相关，创新点在于其针对电信网络的特定需求进行的架构设计。"
         },
         {
-          "id": "2610.31338v1",
-          "title": "ValuSpec: Plug-and-Play Candidate Valuation before Target Verification for Tree-Based Speculative Decoding",
-          "abstract": "Tree-based speculative decoding accelerates large language model inference by verifying multiple candidate branches in parallel. However, in practical serving scenarios, similar requests repeatedly induce overlapping candidate branches. While retrieval-based methods mitigate this by reusing historical drafts, the resulting candidate trees often contain many low-quality branches as the candidate tree grows, which reduces verification efficiency and wastes target-side computation. To address this, we propose ValuSpec, a plug-and-play candidate valuation mechanism that filters low-quality branche",
+          "id": "2610.32881v1",
+          "title": "NgramRL: Accelerating RL Post-Training for Structured Generation via Rollout-Aware N-gram Speculative Decoding",
+          "abstract": "Reinforcement learning (RL) post-training improves the reasoning capabilities of large language models, but its cost is dominated by autoregressive rollout generation, which can exceed 70% of training time. Existing speculative-decoding methods are poorly suited to this setting: model-based drafters consume scarce GPU memory and may become misaligned as the policy evolves, while existing model-free methods do not explicitly exploit repetition across training epochs. We observe that recent rollouts of the same prompt provide a high-quality, self-updating draft source. Based on this insight, we ",
           "authors": [
-            "Liang He",
-            "SiYuan Ma",
-            "Qishi Zhan",
-            "Yongqi Fan",
-            "Mingyu Cao"
+            "Nilesh Prasad Pandey",
+            "Jangseon Park",
+            "Jason Kong",
+            "Onat Gungor",
+            "Tajana Rosing"
           ],
-          "published": "2026-10-22",
+          "published": "2026-10-23",
           "categories": [
             "cs.AI"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2610.31338v1",
-          "pdf": "https://arxiv.org/pdf/2610.31338v1",
+          "link": "https://arxiv.org/abs/2610.32881v1",
+          "pdf": "https://arxiv.org/pdf/2610.32881v1",
           "priority": "中",
-          "problem_zh": "这篇论文探讨了树形推测解码在实际服务场景中的应用，解决了候选分支重叠的问题。",
-          "method_zh": "提出了ValuSpec框架，通过并行验证多个候选分支，提升了LLM推理的速度和效率。",
-          "relevance_zh": "与推理优化技术相关，创新点在于针对候选分支的动态管理和评估。",
-          "summary_zh": "问题：这篇论文探讨了树形推测解码在实际服务场景中的应用，解决了候选分支重叠的问题。\n方法：提出了ValuSpec框架，通过并行验证多个候选分支，提升了LLM推理的速度和效率。\n相关性：与推理优化技术相关，创新点在于针对候选分支的动态管理和评估。"
+          "problem_zh": "这篇论文旨在加速结构化生成的强化学习后训练过程。",
+          "method_zh": "提出了一种基于N-gram的回滚意识的投机解码方法，显著降低了生成过程中的时间成本。",
+          "relevance_zh": "该研究与推理优化技术相关，创新点在于结合了投机解码与强化学习的后训练过程。",
+          "summary_zh": "问题：这篇论文旨在加速结构化生成的强化学习后训练过程。\n方法：提出了一种基于N-gram的回滚意识的投机解码方法，显著降低了生成过程中的时间成本。\n相关性：该研究与推理优化技术相关，创新点在于结合了投机解码与强化学习的后训练过程。"
         },
         {
-          "id": "2610.29229v1",
-          "title": "Cache Locally, Recompute Selectively for Streaming Video Understanding",
-          "abstract": "Streaming video understanding (SVU) requires video-LLMs to process incoming video continuously while answering user queries with low latency. Recent methods reduce query-time cost by prefilling frames into KV caches during idle time and reusing the cached KVs at query time. To bound per-frame computation over unbounded video streams, these methods restrict the context available during prefill. This creates a fundamental context mismatch: the restricted context may omit information needed to properly contextualize video tokens, yet, still contain information irrelevant to the eventual query, wh",
+          "id": "2610.31819v1",
+          "title": "Speculative Diffusion is a Tale of Two Tradeoffs",
+          "abstract": "Speculative decoding is a technique that accelerates the inference speed of autoregressive large language models (LLMs) by sampling from a faster, lower quality draft model. Traditionally, a fundamental characteristic of speculative decoding is that it is lossless with respect to the verifier distribution, guaranteeing speed without sacrificing quality. This differs from recently developed diffusion LLMs (dLLMs), which are notably able to achieve substantial speedups by degrading the quality of their outputs with less diffusion effort. Because diffusion models are able to sample faster than au",
           "authors": [
-            "Junhyeok Lee",
-            "Sangyoon Lee",
-            "Jaeho Lee"
-          ],
-          "published": "2026-10-21",
-          "categories": [
-            "cs.CV",
-            "cs.LG"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2610.29229v1",
-          "pdf": "https://arxiv.org/pdf/2610.29229v1",
-          "priority": "中",
-          "problem_zh": "这篇论文解决了流媒体视频理解中低延迟推理的挑战，提升了用户查询响应速度。",
-          "method_zh": "提出了缓存局部、选择性重计算的方法，通过在空闲时间预填充帧到KV缓存中，降低了查询时的计算成本。",
-          "relevance_zh": "与边缘设备上的推理优化和资源调度相关，创新点在于结合流媒体处理和缓存管理。",
-          "summary_zh": "问题：这篇论文解决了流媒体视频理解中低延迟推理的挑战，提升了用户查询响应速度。\n方法：提出了缓存局部、选择性重计算的方法，通过在空闲时间预填充帧到KV缓存中，降低了查询时的计算成本。\n相关性：与边缘设备上的推理优化和资源调度相关，创新点在于结合流媒体处理和缓存管理。"
-        },
-        {
-          "id": "2610.29733v1",
-          "title": "SAKURA: Serving Attention Key-Value State Under Rate Adaptation for Private Image Editing on Phones",
-          "abstract": "Diffusion transformers are widely used in image-editing services. To preserve both efficiency and privacy, existing systems commonly rely on cloud-device collaboration. Keeping request-specific inference on the device avoids sending personal images and prompts to the cloud. These workloads often use common templates, such as in face swapping and virtual try-on, enabling KV state to be precomputed and reused across requests. However, this reusable state is large and scales with the number of templates, making it impractical to store all of them on mobile devices. Storing them in the cloud addre",
-          "authors": [
-            "Shuncheng Jie",
-            "Desen Sun",
-            "Ri Hong",
-            "Yuyang Tian",
-            "Hong Zhang"
-          ],
-          "published": "2026-10-21",
-          "categories": [
-            "cs.SE",
-            "cs.AI",
-            "cs.NI"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2610.29733v1",
-          "pdf": "https://arxiv.org/pdf/2610.29733v1",
-          "priority": "中",
-          "problem_zh": "这篇论文探讨了在手机上进行私密图像编辑时的推理效率和隐私保护问题。",
-          "method_zh": "提出了SAKURA框架，通过设备端保持请求特定的推理，避免将个人图像发送到云端，从而提高了隐私性和效率。",
-          "relevance_zh": "与边缘设备上的LLM推理和隐私保护相关，创新点在于设备与云的协同推理。",
-          "summary_zh": "问题：这篇论文探讨了在手机上进行私密图像编辑时的推理效率和隐私保护问题。\n方法：提出了SAKURA框架，通过设备端保持请求特定的推理，避免将个人图像发送到云端，从而提高了隐私性和效率。\n相关性：与边缘设备上的LLM推理和隐私保护相关，创新点在于设备与云的协同推理。"
-        },
-        {
-          "id": "2610.31433v1",
-          "title": "Drift Says When, Budget Says How Much: Rate-Controlled KV Re-selection for Long-Form Multimodal Generation",
-          "abstract": "KV cache compression for multimodal LLMs usually selects the visual tokens to keep once, at prefill, and reuses that selection for the whole generation. We show that this one-shot selection is severely limited on long-form generation: on detailed image description, even an oracle that selects with the attention of the uncompressed answer reaches only 0.44-0.52 ROUGE-L agreement with the uncompressed output, because the evidence the model reads moves as the description unfolds. Re-selecting whenever attention drifts out of the kept set is the natural remedy, but we find that a fixed drift thres",
-          "authors": [
-            "Bin Hu",
-            "Yingbo Xiao"
+            "Aaron Zorel",
+            "Guy Van den Broeck",
+            "Aditya Grover",
+            "Daniel Israel"
           ],
           "published": "2026-10-22",
           "categories": [
@@ -171,63 +125,62 @@
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2610.31433v1",
-          "pdf": "https://arxiv.org/pdf/2610.31433v1",
+          "link": "https://arxiv.org/abs/2610.31819v1",
+          "pdf": "https://arxiv.org/pdf/2610.31819v1",
           "priority": "中",
-          "problem_zh": "这篇论文研究了长文本生成中KV缓存的选择问题，提出了改进的选择策略。",
-          "method_zh": "通过动态选择视觉标记来优化KV缓存的使用，提升了长文本生成的质量和效率。",
-          "relevance_zh": "与LLM推理优化和资源管理相关，创新点在于针对长文本生成的KV缓存动态管理。",
-          "summary_zh": "问题：这篇论文研究了长文本生成中KV缓存的选择问题，提出了改进的选择策略。\n方法：通过动态选择视觉标记来优化KV缓存的使用，提升了长文本生成的质量和效率。\n相关性：与LLM推理优化和资源管理相关，创新点在于针对长文本生成的KV缓存动态管理。"
+          "problem_zh": "这篇论文研究了投机解码在长链推理中的有效性问题。",
+          "method_zh": "分析了投机解码的两种权衡，提出了改进的解码策略以提高推理速度。",
+          "relevance_zh": "该论文与推理优化技术相关，创新点在于对投机解码的深入分析及其在LLM中的应用。",
+          "summary_zh": "问题：这篇论文研究了投机解码在长链推理中的有效性问题。\n方法：分析了投机解码的两种权衡，提出了改进的解码策略以提高推理速度。\n相关性：该论文与推理优化技术相关，创新点在于对投机解码的深入分析及其在LLM中的应用。"
         },
         {
-          "id": "2610.31320v1",
-          "title": "Stream4D: Streaming 4D Reconstruction with Training-free Motion Decoupling via Causal KV-Cache Attention",
-          "abstract": "4D scene reconstruction requires robust handling of dynamic objects, yet existing streaming methods commonly assume static scenes, leading to pose drift and ghosting artifacts over long sequences. We introduce Stream4D, a training-free, motion-decoupled streaming reconstruction framework that can be directly integrated into causal Transformer backbones (e.g., StreamVGGT, Stream3R). Our key observation is that causal attention implicitly encodes rich temporal motion cues within the KV cache. We adaptively aggregate these cues from multiple attention layers and across temporal windows, and fuse ",
+          "id": "2610.31633v1",
+          "title": "BeNice! Closing Looping's Inference-Memory Gap via KV-Sharing",
+          "abstract": "Looped architectures scale quality while keeping parameter count fixed by repeatedly passing activations through the same block of layers. During inference, each recurrence generates independent KV-caches, causing memory to grow linearly. To address this challenge, prior work has proposed KV-sharing (i.e., sharing KV-caches across depth), finding that, in some cases, the KV-cache of the final recurrence can be shared with the earlier recurrences without quality loss, a property we denote as KV-shareability. However, the mechanisms underlying KV-shareability remain poorly understood, with even ",
           "authors": [
-            "Wei Zhang",
-            "Ying Feng",
-            "Mengtong Wu",
-            "Shiqiang Gong",
-            "Huaqi Zhang"
+            "Hayden Prairie",
+            "Jacob M. Ryan",
+            "Taylor Berg-Kirkpatrick",
+            "Daniel Y. Fu"
           ],
           "published": "2026-10-22",
+          "categories": [
+            "cs.LG"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2610.31633v1",
+          "pdf": "https://arxiv.org/pdf/2610.31633v1",
+          "priority": "中",
+          "problem_zh": "这篇论文解决了循环架构中推理内存增长的问题。",
+          "method_zh": "提出了一种KV共享机制，减少了推理过程中内存的线性增长，提高了内存使用效率。",
+          "relevance_zh": "该研究与LLM推理优化相关，创新点在于通过KV共享机制优化内存管理。",
+          "summary_zh": "问题：这篇论文解决了循环架构中推理内存增长的问题。\n方法：提出了一种KV共享机制，减少了推理过程中内存的线性增长，提高了内存使用效率。\n相关性：该研究与LLM推理优化相关，创新点在于通过KV共享机制优化内存管理。"
+        },
+        {
+          "id": "2610.32784v1",
+          "title": "Video-MemComp: Taylor-Guided Sensitivity-Aware Memory Management for Streaming Video Understanding",
+          "abstract": "The rapid growth of video data has created an urgent need for efficient video understanding systems that can handle long and continuous visual inputs, posing significant challenges for Multimodal Large Language Models (MLLMs) due to severe memory bottlenecks. Moreover, existing compression methods often overlook the explosive accumulation of approximation errors. To address this issue, we propose Video-MemComp, a training-free and sensitivity-aware context management framework for memory-constrained streaming video understanding. Our method theoretically decomposes compression error into ortho",
+          "authors": [
+            "Yonghui Niu",
+            "Yuhao Ji",
+            "Chang Nie",
+            "Jiao Zhang",
+            "Yilong Li"
+          ],
+          "published": "2026-10-23",
           "categories": [
             "cs.CV"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2610.31320v1",
-          "pdf": "https://arxiv.org/pdf/2610.31320v1",
-          "priority": "中",
-          "problem_zh": "这篇论文解决了动态物体处理中的长序列重建问题，提升了4D场景重建的鲁棒性。",
-          "method_zh": "提出了Stream4D框架，通过因果KV缓存注意力机制，实现了训练无关的运动解耦重建。",
-          "relevance_zh": "与边缘设备上的推理和动态场景处理相关，创新点在于新颖的重建框架。",
-          "summary_zh": "问题：这篇论文解决了动态物体处理中的长序列重建问题，提升了4D场景重建的鲁棒性。\n方法：提出了Stream4D框架，通过因果KV缓存注意力机制，实现了训练无关的运动解耦重建。\n相关性：与边缘设备上的推理和动态场景处理相关，创新点在于新颖的重建框架。"
-        },
-        {
-          "id": "2610.28192v1",
-          "title": "Offline Makes Online Better: Calibrated Cache Compression for Video Generation",
-          "abstract": "Token merging is an effective approach to reducing KV-cache memory consumption in autoregressive video generation by clustering temporally redundant tokens and retaining only a small set of representatives. Existing methods, however, typically apply a uniform merging ratio across all attention layers and heads. We observe that different layers and heads exhibit substantially different yet jointly correlated sensitivities to token merging, and that these sensitivity patterns remain consistent across prompts. Based on this observation, we introduce CALM, a Calibrated Allocation for Layer-Head Me",
-          "authors": [
-            "Zhen Wang",
-            "Ning Lai",
-            "Qingtao Yu"
-          ],
-          "published": "2026-10-20",
-          "categories": [
-            "cs.CV",
-            "cs.AI",
-            "cs.LG"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2610.28192v1",
-          "pdf": "https://arxiv.org/pdf/2610.28192v1",
-          "priority": "中",
-          "problem_zh": "这篇论文探讨了视频生成中的KV缓存压缩问题，旨在降低内存消耗。",
-          "method_zh": "提出了基于时间冗余的令牌合并方法，通过聚类保留少量代表性令牌，显著降低了KV缓存的内存使用。",
-          "relevance_zh": "与LLM推理优化和内存管理相关，创新点在于针对视频生成的KV缓存优化策略。",
-          "summary_zh": "问题：这篇论文探讨了视频生成中的KV缓存压缩问题，旨在降低内存消耗。\n方法：提出了基于时间冗余的令牌合并方法，通过聚类保留少量代表性令牌，显著降低了KV缓存的内存使用。\n相关性：与LLM推理优化和内存管理相关，创新点在于针对视频生成的KV缓存优化策略。"
+          "link": "https://arxiv.org/abs/2610.32784v1",
+          "pdf": "https://arxiv.org/pdf/2610.32784v1",
+          "priority": "低",
+          "problem_zh": "这篇论文探讨了流媒体视频理解中的内存管理问题。",
+          "method_zh": "提出了一种基于泰勒指导的敏感度感知内存管理方法，优化了多模态大语言模型的内存使用。",
+          "relevance_zh": "虽然主要集中在视频理解，但其内存管理策略对LLM推理也有借鉴意义。",
+          "summary_zh": "问题：这篇论文探讨了流媒体视频理解中的内存管理问题。\n方法：提出了一种基于泰勒指导的敏感度感知内存管理方法，优化了多模态大语言模型的内存使用。\n相关性：虽然主要集中在视频理解，但其内存管理策略对LLM推理也有借鉴意义。"
         }
       ],
       "wordcloud": "wordcloud_edge_ai.png"
@@ -235,44 +188,37 @@
     "agent_memory": {
       "name_zh": "Agent Memory",
       "name_en": "Agent Memory",
-      "count": 7,
+      "count": 3,
       "papers": [
         {
-          "id": "2610.31272v1",
-          "title": "Memory-Aware Reward Modeling: Learning Human Preferences for LLM Memory Use",
-          "abstract": "Memory enables language model assistants to maintain continuity across sessions and generate personalized responses, but knowing more about a user does not necessarily produce responses they prefer. Existing evaluations assess memory capabilities without directly establishing whether memory use benefits the user. To study this gap, we collect approximately 1,000 pairwise judgments from 87 participants using their own ChatGPT queries and personal memories. We find that memory-conditioned responses are not consistently preferred over responses generated without memory and in some cases, users st",
+          "id": "2610.32464v1",
+          "title": "Agentic Memory Management Is the Next Frontier of Information Retrieval",
+          "abstract": "Information retrieval has long been focusing on connecting people with information they need to complete their tasks. Recently, the meaning of this has changed dramatically as more and more AI agents now consume, retain, and act on information on a user's behalf. Consequently, information management now also takes place \\emph{inside} the agent in the form of memory management. In this perspective paper, we argue that \\emph{agentic memory management} (AMM), which studies the structure, analysis, organization, storage, searching, retrieval, and \\emph{use} of information in an intelligent agent's",
           "authors": [
-            "Yijiang River Dong",
-            "Zexue He",
-            "Cheng Yu",
-            "Tiancheng Hu",
-            "Michael J Ryan"
+            "Qingyao Ai"
           ],
-          "published": "2026-10-22",
+          "published": "2026-10-23",
           "categories": [
-            "cs.CL",
-            "cs.AI"
+            "cs.IR"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2610.31272v1",
-          "pdf": "https://arxiv.org/pdf/2610.31272v1",
+          "link": "https://arxiv.org/abs/2610.32464v1",
+          "pdf": "https://arxiv.org/pdf/2610.32464v1",
           "priority": "高",
-          "problem_zh": "这篇论文探讨如何评估和优化LLM在记忆使用上的人类偏好，以提升个性化响应的质量。",
-          "method_zh": "提出了一种记忆感知的奖励建模方法，通过学习用户偏好来优化LLM的记忆使用，从而提高用户满意度，实验表明个性化响应的质量显著提升。",
-          "relevance_zh": "这篇文章与LLM agent memory密切相关，创新点在于通过用户偏好优化记忆使用，提升了记忆的计算效率。",
-          "summary_zh": "问题：这篇论文探讨如何评估和优化LLM在记忆使用上的人类偏好，以提升个性化响应的质量。\n方法：提出了一种记忆感知的奖励建模方法，通过学习用户偏好来优化LLM的记忆使用，从而提高用户满意度，实验表明个性化响应的质量显著提升。\n相关性：这篇文章与LLM agent memory密切相关，创新点在于通过用户偏好优化记忆使用，提升了记忆的计算效率。"
+          "problem_zh": "这篇论文探讨了如何管理AI代理的记忆以提升信息检索的效率。",
+          "method_zh": "提出了一种新的信息管理框架，旨在优化AI代理在用户任务中的信息消费和保留，提升信息检索的准确性和效率。",
+          "relevance_zh": "该论文与LLM agent memory密切相关，创新点在于将记忆管理与信息检索结合，强调了计算效率的重要性。",
+          "summary_zh": "问题：这篇论文探讨了如何管理AI代理的记忆以提升信息检索的效率。\n方法：提出了一种新的信息管理框架，旨在优化AI代理在用户任务中的信息消费和保留，提升信息检索的准确性和效率。\n相关性：该论文与LLM agent memory密切相关，创新点在于将记忆管理与信息检索结合，强调了计算效率的重要性。"
         },
         {
-          "id": "2610.30755v1",
-          "title": "Is Complex Agentic Memory Always Needed? Naive RAG Is Stronger Than We Thought",
-          "abstract": "LLM memory is widely used in long-term conversation understanding. Agentic memory systems often use mutation, structural organization, learned retrieval strategies, or other complex operations. Is this complexity always necessary? We study Raw-RAG, a naive RAG baseline using dense retrieval and reranking over raw history to supply evidence to a reader LLM. Across LoCoMo, LongMemEval, MEME, and MemoryAgentBench, Raw-RAG ranks first among the compared memory systems in six of seven benchmark-model settings, outperforming the strongest compared agentic memory system by 0.13-5.53 points. We invest",
+          "id": "2610.31972v1",
+          "title": "Reproducible Evaluation as the Substrate for Safe Prompt Compression in Production Agents",
+          "abstract": "Evaluating conversational agents that act on live, mutable enterprise data is hard: replayed sessions drift as backend state changes, and a benchmark built today can silently go stale as the data it describes moves on. We present an offline evaluation harness for a production conversational agent that stays reproducible despite the live data it operates on changing, and that can be regenerated on demand once it goes stale. We then use this harness as the fitness function for GEPA-based prompt optimization under a correctness gate that guards against reward hacking. Applied to a production merc",
           "authors": [
-            "Zhengye Bao",
-            "Shengtao Zhang",
-            "Haokai Zhang",
-            "Shiqi Lou",
-            "Muning Wen"
+            "Prabal Vashisht",
+            "Zheng Hu",
+            "Ying Yang"
           ],
           "published": "2026-10-22",
           "categories": [
@@ -280,139 +226,38 @@
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2610.30755v1",
-          "pdf": "https://arxiv.org/pdf/2610.30755v1",
+          "link": "https://arxiv.org/abs/2610.31972v1",
+          "pdf": "https://arxiv.org/pdf/2610.31972v1",
           "priority": "高",
-          "problem_zh": "这篇论文研究了在长时间对话理解中，复杂的代理记忆系统是否总是必要的。",
-          "method_zh": "通过对比简单的RAG基线与复杂的代理记忆系统，发现简单方法在某些情况下表现更好，提出了Raw-RAG作为有效的替代方案。",
-          "relevance_zh": "这篇文章探讨了LLM agent中的记忆效率，挑战了复杂记忆系统的必要性，具有重要的理论和实践意义。",
-          "summary_zh": "问题：这篇论文研究了在长时间对话理解中，复杂的代理记忆系统是否总是必要的。\n方法：通过对比简单的RAG基线与复杂的代理记忆系统，发现简单方法在某些情况下表现更好，提出了Raw-RAG作为有效的替代方案。\n相关性：这篇文章探讨了LLM agent中的记忆效率，挑战了复杂记忆系统的必要性，具有重要的理论和实践意义。"
+          "problem_zh": "这篇论文解决了在动态企业数据环境中评估对话代理的挑战。",
+          "method_zh": "提出了一种离线评估工具，能够在生产环境中安全地压缩提示，确保评估的可重复性和有效性。",
+          "relevance_zh": "与LLM agent的记忆和计算效率相关，创新点在于提供了一种新的评估机制，适用于动态数据环境。",
+          "summary_zh": "问题：这篇论文解决了在动态企业数据环境中评估对话代理的挑战。\n方法：提出了一种离线评估工具，能够在生产环境中安全地压缩提示，确保评估的可重复性和有效性。\n相关性：与LLM agent的记忆和计算效率相关，创新点在于提供了一种新的评估机制，适用于动态数据环境。"
         },
         {
-          "id": "2610.30485v1",
-          "title": "Why Bother Me Again? Benchmarking Personal Agent Memory for Interaction Preferences",
-          "abstract": "Personal intelligence systems are taking on increasingly complex everyday tasks, yet repeated questions, unnecessary confirmations, and unwanted outreach can turn capable assistance into interaction burden. Reducing this burden requires agents to remember how users want to be assisted. However, existing memory benchmarks focus on factual recall and personalized answers and rarely test how agents learn and act on interaction preferences. We introduce MemPABench, an interactive environment for on-policy evaluation of memory in personal agents. MemPABench poses long-horizon tasks requiring agents",
+          "id": "2610.25801v1",
+          "title": "Learning Complementary Agent Groups via Task Hypergraphs for Next-POI Recommendation with Missing Modalities",
+          "abstract": "Next point-of-interest (POI) recommendation uses visit histories and POI content, but text and images are often missing. Large language model agents have been applied to recommender systems for preference modeling and evidence acquisition. The challenge is to select agents that can jointly analyze the available evidence for each request. We propose \\textsc{CATH} (\\emph{Complementary Agents via Task Hypergraphs}), which learns to select agent groups for tasks such as comparing candidates or analyzing a POI with missing content. Agents with distinct processing roles are the task hypergraph nodes",
           "authors": [
-            "Jialin Li",
-            "Zhenhao Chen",
-            "Hanjun Luo",
-            "Hanan Salam"
+            "Jinze Wang",
+            "Yuze Liu",
+            "Liang Yuan",
+            "Gaoyuan Du",
+            "Xiaohang Xu"
           ],
-          "published": "2026-10-21",
+          "published": "2026-10-19",
           "categories": [
-            "cs.AI",
-            "cs.CL"
+            "cs.IR"
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2610.30485v1",
-          "pdf": "https://arxiv.org/pdf/2610.30485v1",
-          "priority": "高",
-          "problem_zh": "这篇论文关注个人智能系统如何减少与用户的互动负担，提升用户体验。",
-          "method_zh": "提出了一种基准测试方法来评估个人代理记忆的互动偏好，旨在通过优化记忆管理来减少不必要的确认和重复问题。",
-          "relevance_zh": "该研究直接涉及LLM agent memory的优化，创新点在于通过记忆管理提升用户交互效率。",
-          "summary_zh": "问题：这篇论文关注个人智能系统如何减少与用户的互动负担，提升用户体验。\n方法：提出了一种基准测试方法来评估个人代理记忆的互动偏好，旨在通过优化记忆管理来减少不必要的确认和重复问题。\n相关性：该研究直接涉及LLM agent memory的优化，创新点在于通过记忆管理提升用户交互效率。"
-        },
-        {
-          "id": "2610.29995v1",
-          "title": "Remembering Through Change: Provenance-Preserving Hypergraph Memory for Multimodal Agents",
-          "abstract": "Long-term memory for multimodal agents remains challenging, as it must preserve fine-grained visual evidence while tracking entity evolution across sessions. Existing abstraction-based memories compress images into text, often discarding visually discriminative details, whereas pixel-preserving memories retain raw observations but struggle to reliably associate diverse observations with persistent entity identities and track their evolving states. To address these limitations, we propose MHG-Mem, a multimodal hypergraph memory that jointly organizes entity identity, state evolution, and proven",
-          "authors": [
-            "Jielong Tang",
-            "Ling-An Zeng",
-            "Xujie Yuan",
-            "Xiao Dong",
-            "Zhiqian Xia"
-          ],
-          "published": "2026-10-21",
-          "categories": [
-            "cs.CL"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2610.29995v1",
-          "pdf": "https://arxiv.org/pdf/2610.29995v1",
+          "link": "https://arxiv.org/abs/2610.25801v1",
+          "pdf": "https://arxiv.org/pdf/2610.25801v1",
           "priority": "中",
-          "problem_zh": "这篇论文探讨了多模态代理的长期记忆如何在保留细粒度视觉证据的同时追踪实体演变。",
-          "method_zh": "提出了一种超图记忆框架，能够在多模态环境中有效保留视觉信息，避免信息丢失，提升了记忆的有效性。",
-          "relevance_zh": "该研究与LLM agent memory相关，创新点在于提出了一种新颖的记忆结构，提升了多模态代理的记忆效率。",
-          "summary_zh": "问题：这篇论文探讨了多模态代理的长期记忆如何在保留细粒度视觉证据的同时追踪实体演变。\n方法：提出了一种超图记忆框架，能够在多模态环境中有效保留视觉信息，避免信息丢失，提升了记忆的有效性。\n相关性：该研究与LLM agent memory相关，创新点在于提出了一种新颖的记忆结构，提升了多模态代理的记忆效率。"
-        },
-        {
-          "id": "2610.29722v1",
-          "title": "Retrieval Augmented Generation Compositionality",
-          "abstract": "Retrieval Augmented Generation (RAG) grounds large language models in external knowledge. Modern pipelines combine embedding, chunking, retrieval, reranking, query augmentation, context compression, and agentic verification, yet these techniques are typically evaluated one at a time. It remains unclear whether their isolated gains survive composition, whether retrieval quality and answer faithfulness favor the same design choices, and whether conclusions from small corpora hold at large scale. We pre-declare three hypotheses and introduce LASAGNA, an open-source framework for controlled RAG ev",
-          "authors": [
-            "Ido Levy",
-            "Segev Shlomov",
-            "Leshem Choshen"
-          ],
-          "published": "2026-10-21",
-          "categories": [
-            "cs.CL",
-            "cs.AI"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2610.29722v1",
-          "pdf": "https://arxiv.org/pdf/2610.29722v1",
-          "priority": "中",
-          "problem_zh": "这篇论文研究了检索增强生成（RAG）技术的组合性及其在LLM中的应用。",
-          "method_zh": "通过整合嵌入、检索、重排序等技术，提出了一种新的评估框架，强调了各个组件在记忆管理中的重要性。",
-          "relevance_zh": "该论文与LLM agent memory相关，探讨了如何通过组合技术提升计算效率，具有重要的应用价值。",
-          "summary_zh": "问题：这篇论文研究了检索增强生成（RAG）技术的组合性及其在LLM中的应用。\n方法：通过整合嵌入、检索、重排序等技术，提出了一种新的评估框架，强调了各个组件在记忆管理中的重要性。\n相关性：该论文与LLM agent memory相关，探讨了如何通过组合技术提升计算效率，具有重要的应用价值。"
-        },
-        {
-          "id": "2610.27986v1",
-          "title": "Recast the Past: Stable Long Video Generation with Full Context Memory",
-          "abstract": "Long-horizon video generation requires retaining an ever-expanding history, but conditioning on its growing token sequence is costly. Existing methods restrict or compress historical context, potentially losing information needed for future generation. This work proposes ReCam, which groups local spatiotemporal blocks of historical latents into vectors and projects them directly into the high-dimensional hidden space of a Diffusion Transformer. The model learns to use the resulting memory tokens through native self-attention, reducing token count while retaining block-level access to the full ",
-          "authors": [
-            "Yukuo Ma",
-            "Cong Liu",
-            "Junke Wang",
-            "Junqi Liu",
-            "Haibin Huang"
-          ],
-          "published": "2026-10-20",
-          "categories": [
-            "cs.CV",
-            "cs.AI"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2610.27986v1",
-          "pdf": "https://arxiv.org/pdf/2610.27986v1",
-          "priority": "中",
-          "problem_zh": "这篇论文关注长时间视频生成中的历史信息保留问题，探讨如何降低计算成本。",
-          "method_zh": "提出了一种新的视频生成方法ReCam，通过分组局部上下文来降低历史上下文的计算开销，提升生成效率。",
-          "relevance_zh": "该研究与LLM agent memory相关，创新点在于通过上下文管理降低计算成本，提升了生成效率。",
-          "summary_zh": "问题：这篇论文关注长时间视频生成中的历史信息保留问题，探讨如何降低计算成本。\n方法：提出了一种新的视频生成方法ReCam，通过分组局部上下文来降低历史上下文的计算开销，提升生成效率。\n相关性：该研究与LLM agent memory相关，创新点在于通过上下文管理降低计算成本，提升了生成效率。"
-        },
-        {
-          "id": "2610.23372v1",
-          "title": "Beyond Success Rate: Interventional Evaluation of Memory in Vision-Language-Action Systems",
-          "abstract": "When we say that a robot uses memory, does that memory actually play a role? Success-rate ablations alone cannot establish the use of task-relevant facts: they change information and computation together, while aggregate rates can hide offsetting gains and losses. We propose an Interventional Memory Evaluation Protocol (IMEP) for vision-language-action (VLA) systems to address four questions: (1) Does memory provide a net benefit? (2) Under what conditions does memory help? (3) Do changes to memory alter task outcomes? (4) Are these effects specific to task-relevant facts? At the retrieval int",
-          "authors": [
-            "Keyuan Luo",
-            "Yi Xie",
-            "Wanyun Ling",
-            "Yuanzhe Li",
-            "Ziyue Li"
-          ],
-          "published": "2026-10-16",
-          "categories": [
-            "cs.RO",
-            "cs.LG"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2610.23372v1",
-          "pdf": "https://arxiv.org/pdf/2610.23372v1",
-          "priority": "中",
-          "problem_zh": "这篇论文探讨了在视觉-语言-行动系统中，如何评估记忆的实际作用。",
-          "method_zh": "提出了一种干预性评估方法，能够更准确地判断记忆在任务执行中的贡献，揭示了记忆使用的真实效果。",
-          "relevance_zh": "该研究与LLM agent memory相关，创新点在于提出了新的评估方法，提升了对记忆作用的理解。",
-          "summary_zh": "问题：这篇论文探讨了在视觉-语言-行动系统中，如何评估记忆的实际作用。\n方法：提出了一种干预性评估方法，能够更准确地判断记忆在任务执行中的贡献，揭示了记忆使用的真实效果。\n相关性：该研究与LLM agent memory相关，创新点在于提出了新的评估方法，提升了对记忆作用的理解。"
+          "problem_zh": "这篇论文研究了如何在缺失模态下进行下一兴趣点推荐。",
+          "method_zh": "通过任务超图学习互补代理组，提升了对缺失文本和图像的处理能力，增强了推荐系统的效果。",
+          "relevance_zh": "与多代理系统和LLM相关，创新点在于利用代理组的协作来解决信息缺失问题，提高了计算效率。",
+          "summary_zh": "问题：这篇论文研究了如何在缺失模态下进行下一兴趣点推荐。\n方法：通过任务超图学习互补代理组，提升了对缺失文本和图像的处理能力，增强了推荐系统的效果。\n相关性：与多代理系统和LLM相关，创新点在于利用代理组的协作来解决信息缺失问题，提高了计算效率。"
         }
       ],
       "wordcloud": "wordcloud_agent_memory.png"
@@ -423,15 +268,88 @@
       "count": 4,
       "papers": [
         {
-          "id": "2610.31373v1",
-          "title": "Stochastic Geometry Analysis and Optimization for Multi-LEO Satellite-Assisted Communications",
-          "abstract": "Low Earth orbit (LEO) satellites are vital in providing seamless connectivities to ground users (GUs). However, complex satellite-to-ground propagation and non-negligible satellite failure probabilities make single-satellite transmission unreliable. To address this issue, we consider a multi-LEO-satellite communication network (mLEO-CN), where a typical GU is served by multiple LEO satellites. The satellite locations are modeled as a binomial point process on a sphere and ordered according to their distances to the GU. To improve communication reliability, a serial communication scheme is adop",
+          "id": "2610.32827v1",
+          "title": "Multi-Timescale Context-Aware Radio Resource Optimization for Harmonious NTN-TN Coexistence: A Digital Twin and Open RAN Enabled Framework",
+          "abstract": "Coexistence between non-terrestrial networks (NTNs) and terrestrial networks (TNs) is essential for future wireless systems, but terrestrial downlink transmissions can generate harmful aggregate interference at low-Earth orbit (LEO) satellite receivers. We present DT-STABLE, an Open Radio Access Network (O-RAN)-enabled, digital twin (DT)-assisted framework for context-aware NTN-TN coexistence. Using site-specific information, the DT estimates interference at LEO satellites, enabling proactive management with reduced real-time measurement overhead. We formulate joint beam activation and user as",
           "authors": [
-            "Xu Hu",
-            "Bin Lin",
-            "Ping Wang",
-            "Xiao Lu",
-            "Weihua Zhuang"
+            "Ecem Izde Kaya",
+            "Md. Zoheb Hassan",
+            "Georges Kaddoum"
+          ],
+          "published": "2026-10-23",
+          "categories": [
+            "cs.NI",
+            "eess.SP"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2610.32827v1",
+          "pdf": "https://arxiv.org/pdf/2610.32827v1",
+          "priority": "高",
+          "problem_zh": "这篇论文解决了非地面网络与地面网络共存时的无线资源优化问题。",
+          "method_zh": "提出了DT-STABLE框架，通过数字双胞胎和开放无线接入网络技术，实现了对无线资源的多时间尺度上下文感知优化，显著提高了网络的和谐共存能力。",
+          "relevance_zh": "该论文与卫星边缘网络相关，创新点在于结合数字双胞胎技术优化NTN与TN的资源分配，适用于未来的卫星通信网络。",
+          "summary_zh": "问题：这篇论文解决了非地面网络与地面网络共存时的无线资源优化问题。\n方法：提出了DT-STABLE框架，通过数字双胞胎和开放无线接入网络技术，实现了对无线资源的多时间尺度上下文感知优化，显著提高了网络的和谐共存能力。\n相关性：该论文与卫星边缘网络相关，创新点在于结合数字双胞胎技术优化NTN与TN的资源分配，适用于未来的卫星通信网络。"
+        },
+        {
+          "id": "2610.32720v1",
+          "title": "Migration as a Steady-State Execution Primitive: A Runtime for Virtual Stationarity in Low-Earth Orbit",
+          "abstract": "Low Earth Orbit (LEO) satellite mega-constellations enable orbital edge computing for latency-critical geocentric applications, but satellite motion compresses line-of-sight communication windows to mere minutes. To maintain logical geographic proximity, a paradigm termed Virtual Stationarity (VS), applications must continuously migrate across passing satellites in the constellation. Traditional live migration mechanisms optimize individually initiated relocations or replication, but not the continuous handover between successive hosts that orbital motion requires. We reformulate live migratio",
+          "authors": [
+            "Daniel Kleebinder",
+            "Alireza Furutanpey",
+            "Stefan Nastic"
+          ],
+          "published": "2026-10-23",
+          "categories": [
+            "cs.DC",
+            "cs.NI"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2610.32720v1",
+          "pdf": "https://arxiv.org/pdf/2610.32720v1",
+          "priority": "高",
+          "problem_zh": "这篇论文探讨了在低地球轨道卫星环境中如何维持逻辑地理接近性的问题。",
+          "method_zh": "提出了一种名为虚拟静止（Virtual Stationarity, VS）的新范式，通过运行时迁移实现了在卫星运动下的稳定执行，提升了延迟敏感应用的性能。",
+          "relevance_zh": "该研究与卫星边缘计算密切相关，创新点在于提出了新的运行时迁移机制，适应动态变化的卫星网络环境。",
+          "summary_zh": "问题：这篇论文探讨了在低地球轨道卫星环境中如何维持逻辑地理接近性的问题。\n方法：提出了一种名为虚拟静止（Virtual Stationarity, VS）的新范式，通过运行时迁移实现了在卫星运动下的稳定执行，提升了延迟敏感应用的性能。\n相关性：该研究与卫星边缘计算密切相关，创新点在于提出了新的运行时迁移机制，适应动态变化的卫星网络环境。"
+        },
+        {
+          "id": "2610.32540v1",
+          "title": "StarRTT: An End-to-End Real-Time Framework for Blind Zone-Free RTT Prediction in Starlink LEO Satellite Networks",
+          "abstract": "Low Earth Orbit (LEO) satellite mega-constellations such as Starlink require frequent handovers due to high orbital velocities, resulting in substantial Round-Trip Time (RTT) fluctuations. Accurate RTT prediction can mitigate these fluctuations, yet it fundamentally relies on continuously updated serving- satellite information. Existing serving-satellite identification methods typically complete identification only at the end of each scheduling cycle, creating an identification blind zone that limits real-time prediction. To overcome this limitation, we develop StarRTT, an end-to-end real-time",
+          "authors": [
+            "Jaeyong Lee",
+            "Seongjin Jeong",
+            "Yusang Park",
+            "Hyunho Hwang",
+            "Sangmin Han"
+          ],
+          "published": "2026-10-23",
+          "categories": [
+            "cs.IT",
+            "cs.AI"
+          ],
+          "comment": "",
+          "venue": "",
+          "link": "https://arxiv.org/abs/2610.32540v1",
+          "pdf": "https://arxiv.org/pdf/2610.32540v1",
+          "priority": "高",
+          "problem_zh": "这篇论文解决了在Starlink LEO卫星网络中，因高轨道速度导致的往返时间（RTT）波动问题。",
+          "method_zh": "提出了StarRTT框架，通过实时预测技术，准确预测RTT，减少了因频繁切换造成的延迟波动。",
+          "relevance_zh": "该论文与卫星网络的实时性能优化相关，创新点在于提供了一种盲区无预测的RTT预测方法，提升了卫星通信的可靠性。",
+          "summary_zh": "问题：这篇论文解决了在Starlink LEO卫星网络中，因高轨道速度导致的往返时间（RTT）波动问题。\n方法：提出了StarRTT框架，通过实时预测技术，准确预测RTT，减少了因频繁切换造成的延迟波动。\n相关性：该论文与卫星网络的实时性能优化相关，创新点在于提供了一种盲区无预测的RTT预测方法，提升了卫星通信的可靠性。"
+        },
+        {
+          "id": "2610.31802v1",
+          "title": "Resource Slicing for Time-Sensitive Data Traffic in Non-Terrestrial Networks with FSO ISLs",
+          "abstract": "In multi-hop Low Earth Orbit (LEO) satellite networks, time-sensitive packets experience queueing across multiple satellite hops, causing per-hop waiting times that accumulate and make the maximum end-to-end (E2E) delay difficult to guarantee. This paper presents a novel multi-hop slicing framework that reserves time-frequency resources for each time-sensitive flow of data originating at each satellite, aiming to maintain the reservation of communication resources along every inter-satellite link (ISL) on its route to the ground station (GS). The number of time-frequency resource blocks (RBs) ",
+          "authors": [
+            "Abid Afridi",
+            "Alexis A. Dowhuszko",
+            "Risto Wichman",
+            "Jyri Hämäläinen"
           ],
           "published": "2026-10-22",
           "categories": [
@@ -439,91 +357,17 @@
           ],
           "comment": "",
           "venue": "",
-          "link": "https://arxiv.org/abs/2610.31373v1",
-          "pdf": "https://arxiv.org/pdf/2610.31373v1",
+          "link": "https://arxiv.org/abs/2610.31802v1",
+          "pdf": "https://arxiv.org/pdf/2610.31802v1",
           "priority": "高",
-          "problem_zh": "这篇论文研究了多颗LEO卫星在通信中的优化问题，以提高地面用户的连接性和可靠性。",
-          "method_zh": "提出了一种随机几何分析方法，优化多颗LEO卫星的协作通信，显著提高了传输的可靠性和效率。",
-          "relevance_zh": "该论文与卫星边缘网络密切相关，创新性地解决了多颗LEO卫星协作通信中的不可靠性问题。",
-          "summary_zh": "问题：这篇论文研究了多颗LEO卫星在通信中的优化问题，以提高地面用户的连接性和可靠性。\n方法：提出了一种随机几何分析方法，优化多颗LEO卫星的协作通信，显著提高了传输的可靠性和效率。\n相关性：该论文与卫星边缘网络密切相关，创新性地解决了多颗LEO卫星协作通信中的不可靠性问题。"
-        },
-        {
-          "id": "2610.30693v1",
-          "title": "In-Orbit Computing for Remote Sensing: Task-Oriented Processing and Transmission",
-          "abstract": "The growing volume and timeliness requirements of remote sensing data are exposing the limitations of the conventional \"transmit-then-process\" architecture, particularly under intermittent satellite-ground connectivity, constrained downlink bandwidth, and limited onboard computing resources. This article presents a semantic-aware space-ground collaborative remote sensing (SSGC-RS) framework, in which remote sensing data are processed to different semantic depths according to task requirements and available communication-computing resources. Three operating modes are considered, ranging from fu",
-          "authors": [
-            "Yi Zhang",
-            "Zesong Fei",
-            "Jingxuan Huang",
-            "Hua Dang",
-            "Jihao Luo"
-          ],
-          "published": "2026-10-22",
-          "categories": [
-            "eess.SP"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2610.30693v1",
-          "pdf": "https://arxiv.org/pdf/2610.30693v1",
-          "priority": "高",
-          "problem_zh": "这篇论文探讨了在轨计算如何提高遥感数据处理和传输的效率，尤其是在卫星与地面间的连接不稳定时。",
-          "method_zh": "提出了一种任务导向的处理架构，优化了遥感数据的传输和处理，提升了带宽利用率和处理速度。",
-          "relevance_zh": "论文聚焦于卫星边缘计算，创新性地解决了遥感数据处理中的带宽和计算资源限制问题。",
-          "summary_zh": "问题：这篇论文探讨了在轨计算如何提高遥感数据处理和传输的效率，尤其是在卫星与地面间的连接不稳定时。\n方法：提出了一种任务导向的处理架构，优化了遥感数据的传输和处理，提升了带宽利用率和处理速度。\n相关性：论文聚焦于卫星边缘计算，创新性地解决了遥感数据处理中的带宽和计算资源限制问题。"
-        },
-        {
-          "id": "2610.29592v1",
-          "title": "Semantic-Aware Update Admission and Adaptive Byzantine Redundancy for Secure Computation Offloading in COIN-Enabled Metaverse Systems",
-          "abstract": "Computing in the network (COIN) supports latency-sensitive Metaverse services, but blockchain commitment of persistent shared-state updates competes with application execution for limited resources. We consider the joint problem of deciding which updates to commit, how much Byzantine redundancy to provision, and where to execute Metaverse application tasks. We formulate this problem under resource, latency, and practical Byzantine fault tolerance (PBFT) constraints, accounting for update persistence and semantic significance. We develop a hierarchical redundancy-aware PBFT (R-PBFT) approach th",
-          "authors": [
-            "Ibrahim Aliyu",
-            "Jaehyung Park",
-            "Jinsul Kim"
-          ],
-          "published": "2026-10-21",
-          "categories": [
-            "cs.DC"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2610.29592v1",
-          "pdf": "https://arxiv.org/pdf/2610.29592v1",
-          "priority": "中",
-          "problem_zh": "这篇论文研究了在COIN支持的元宇宙系统中，如何安全地进行计算卸载和更新管理。",
-          "method_zh": "提出了一种语义感知的更新接纳和自适应拜占庭冗余机制，优化了计算资源的使用和安全性。",
-          "relevance_zh": "该论文涉及计算卸载和资源优化，适用于边缘计算场景，具有一定的创新性。",
-          "summary_zh": "问题：这篇论文研究了在COIN支持的元宇宙系统中，如何安全地进行计算卸载和更新管理。\n方法：提出了一种语义感知的更新接纳和自适应拜占庭冗余机制，优化了计算资源的使用和安全性。\n相关性：该论文涉及计算卸载和资源优化，适用于边缘计算场景，具有一定的创新性。"
-        },
-        {
-          "id": "2610.30228v1",
-          "title": "Benchmarking Model Compression Techniques Across Heterogeneous Edge Platforms: A Predictive Maintenance Use Case for Rotating Machinery",
-          "abstract": "To enable Industry 5.0, where autonomous systems are widely adopted and integrated with people to promote sustainable development in industries, it is imperative to adapt complex deep learning models to operate efficiently on resource-constrained hardware for edge inference. However, adapting these models remains challenging due to the hardware heterogeneity of edge computing in industrial settings, performance degradation caused by model compression, and the lack of clear guidance on which compression techniques are practical and effective for applications such as predictive maintenance. To a",
-          "authors": [
-            "Matheus Calheira Guimarães de Oliveira",
-            "Marco Aurélio da Silva Cruz",
-            "Regis Cardoso",
-            "Lucas Cambuim",
-            "Rafael Macieira"
-          ],
-          "published": "2026-10-21",
-          "categories": [
-            "cs.LG",
-            "cs.PF"
-          ],
-          "comment": "",
-          "venue": "",
-          "link": "https://arxiv.org/abs/2610.30228v1",
-          "pdf": "https://arxiv.org/pdf/2610.30228v1",
-          "priority": "中",
-          "problem_zh": "这篇论文关注于在异构边缘平台上进行模型压缩，以实现高效的边缘推理。",
-          "method_zh": "提出了一种基于预测维护的用例，评估了多种模型压缩技术在资源受限硬件上的适应性。",
-          "relevance_zh": "论文探讨了边缘AI模型的部署与优化，具有实际应用价值。",
-          "summary_zh": "问题：这篇论文关注于在异构边缘平台上进行模型压缩，以实现高效的边缘推理。\n方法：提出了一种基于预测维护的用例，评估了多种模型压缩技术在资源受限硬件上的适应性。\n相关性：论文探讨了边缘AI模型的部署与优化，具有实际应用价值。"
+          "problem_zh": "这篇论文研究了在多跳低地球轨道卫星网络中，如何保证时间敏感数据流的传输延迟。",
+          "method_zh": "提出了一种新的多跳切片框架，通过资源切片技术优化了时间敏感数据包的传输，降低了最大端到端延迟。",
+          "relevance_zh": "该研究与卫星边缘网络中的资源优化相关，创新点在于针对时间敏感流量提出了切片方法，提升了网络的服务质量。",
+          "summary_zh": "问题：这篇论文研究了在多跳低地球轨道卫星网络中，如何保证时间敏感数据流的传输延迟。\n方法：提出了一种新的多跳切片框架，通过资源切片技术优化了时间敏感数据包的传输，降低了最大端到端延迟。\n相关性：该研究与卫星边缘网络中的资源优化相关，创新点在于针对时间敏感流量提出了切片方法，提升了网络的服务质量。"
         }
       ],
       "wordcloud": "wordcloud_edge_intelligence.png"
     }
   },
-  "total_count": 20
+  "total_count": 14
 }
