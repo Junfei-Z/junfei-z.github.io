@@ -1,12 +1,68 @@
 (() => {
   "use strict";
 
+  // Keys are normalized below so spaces, units, and duplicate-column suffixes
+  // do not prevent a known field from receiving its translation.
+  const myanmarFields = new Map([
+    ["序号|编号|行号", "စဉ်"],
+    ["客户|客户名称|客户名", "ဖောက်သည်"],
+    ["订单|订单信息|客户订单信息", "အော်ဒါအချက်အလက်"],
+    ["订单号|订单编号|客户订单号", "အော်ဒါနံပါတ်"],
+    ["订单日期|下单日期|下单时间", "အော်ဒါရက်စွဲ"],
+    ["交期|交货日期|交货时间|交货期", "ပေးပို့ရမည့်ရက်"],
+    ["日期|生产日期", "ရက်စွဲ"],
+    ["品牌|商标", "အမှတ်တံဆိပ်"],
+    ["品名|产品名称|产品|名称", "ကုန်ပစ္စည်းအမည်"],
+    ["型号|产品型号|带型", "မော်ဒယ်"],
+    ["规格|产品规格", "သတ်မှတ်ချက်"],
+    ["数量|订单数量|生产数量|条数", "အရေအတွက်"],
+    ["单位", "ယူနစ်"],
+    ["齿数|模具齿数|模齿数|楦块齿数", "သွားအရေအတွက်"],
+    ["齿距|模具齿距|楦块齿距", "သွားအကွာအဝေး"],
+    ["楦块|模具|模具编号", "ပုံစံခွက်"],
+    ["楦块齿高|模具齿高|齿高", "သွားအမြင့်"],
+    ["楦块齿形|模具齿形|齿形", "သွားပုံစံ"],
+    ["排线方向|绕线方向", "ကြိုးပတ်သည့်ဦးတည်ချက်"],
+    ["绕线|排线", "ကြိုးပတ်ခြင်း"],
+    ["长度|长|长度标记", "အလျား"],
+    ["长度齿数", "အလျားသွားအရေအတွက်"],
+    ["宽度|宽|带宽", "အနံ"],
+    ["厚度|胶厚", "အထူ"],
+    ["线型|线号|线绳型号|线绳规格", "ကြိုးအမျိုးအစား"],
+    ["线长|线绳长度", "ကြိုးအလျား"],
+    ["线数|线绳根数", "ကြိုးအရေအတွက်"],
+    ["绕线长度", "ကြိုးပတ်အလျား"],
+    ["绕线转数|绕线圈数|圈数", "ကြိုးပတ်အပတ်ရေ"],
+    ["绕线转速|转速", "လည်ပတ်နှုန်း"],
+    ["覆胶|包胶", "ရော်ဘာဖုံးခြင်း"],
+    ["包带|包布", "ပတ်တီးပတ်ခြင်း"],
+    ["硫化", "ရော်ဘာအပူပေးခြင်း"],
+    ["硫化温度|温度", "အပူချိန်"],
+    ["硫化时间|时间", "အချိန်"],
+    ["压力|硫化压力", "ဖိအား"],
+    ["材料|材质|原料", "ကုန်ကြမ်း"],
+    ["颜色", "အရောင်"],
+    ["备注|说明|特殊要求", "မှတ်ချက်"],
+    ["负责人", "တာဝန်ခံ"],
+    ["操作员|生产人员", "လုပ်သား"],
+    ["检验员|质检员", "အရည်အသွေးစစ်ဆေးသူ"],
+  ].flatMap(([aliases, translation]) => aliases.split("|").map((alias) => [alias, translation])));
+
+  const signatureLabels = [
+    ["绕线员签名", "ကြိုးပတ်သူ လက်မှတ်"],
+    ["覆胶员签名", "ရော်ဘာဖုံးသူ လက်မှတ်"],
+    ["包带员签名", "ပတ်တီးပတ်သူ လက်မှတ်"],
+    ["硫化员签名", "ရော်ဘာအပူပေးသူ လက်မှတ်"],
+    ["负责人签名", "တာဝန်ခံ လက်မှတ်"],
+  ];
+
   const state = {
     fileName: "",
     workbook: null,
     matrix: [],
     page: 0,
     selectedColumns: new Set(),
+    translations: new Map(),
   };
 
   const ui = {
@@ -50,6 +106,22 @@
     return String(value).replace(/\r\n?/g, "\n").trim();
   }
 
+  function defaultTranslation(label) {
+    const key = label.normalize("NFKC").replace(/\([^)]*\)|\[[^\]]*\]|\s+/g, "");
+    return myanmarFields.get(key) || "";
+  }
+
+  function bilingualLabel(element, chinese, myanmar) {
+    element.append(document.createTextNode(chinese));
+    if (myanmar) {
+      const translation = document.createElement("span");
+      translation.className = "myanmar-text";
+      translation.lang = "my";
+      translation.textContent = myanmar;
+      element.append(translation);
+    }
+  }
+
   function makeUniqueHeaders(row, width) {
     const used = new Map();
     return Array.from({ length: width }, (_, index) => {
@@ -79,7 +151,7 @@
 
   function fieldList(headers, row) {
     return headers
-      .map((label, index) => ({ label, value: row.values[index] || "" }))
+      .map((label, index) => ({ label, translation: state.translations.get(label) || "", value: row.values[index] || "" }))
       .filter((_, index) => state.selectedColumns.has(index))
       .filter((field) => !ui.hideEmpty.checked || field.value !== "");
   }
@@ -96,6 +168,9 @@
     ui.columnPicker.hidden = headers.length === 0;
     ui.columnList.replaceChildren();
     headers.forEach((header, index) => {
+      if (!state.translations.has(header)) state.translations.set(header, defaultTranslation(header));
+      const entry = document.createElement("div");
+      entry.className = "column-entry";
       const option = document.createElement("label");
       option.className = "column-option";
       const checkbox = document.createElement("input");
@@ -105,7 +180,19 @@
       const text = document.createElement("span");
       text.textContent = header;
       option.append(checkbox, text);
-      ui.columnList.append(option);
+      const translation = document.createElement("input");
+      translation.type = "text";
+      translation.className = "column-translation";
+      translation.lang = "my";
+      translation.value = state.translations.get(header);
+      translation.placeholder = "填写缅语翻译";
+      translation.setAttribute("aria-label", `${header}的缅语翻译`);
+      translation.addEventListener("input", () => {
+        state.translations.set(header, translation.value.trim());
+        renderPreview();
+      });
+      entry.append(option, translation);
+      ui.columnList.append(entry);
     });
     updateSelectedColumnCount(headers.length);
   }
@@ -135,7 +222,8 @@
     const heading = document.createElement("div");
     const kicker = document.createElement("p");
     kicker.className = "page-kicker";
-    kicker.textContent = "PRODUCTION WORK ORDER";
+    kicker.lang = "my";
+    kicker.textContent = "ထုတ်လုပ်မှုအလုပ်အမိန့်စာ";
     const title = document.createElement("h3");
     title.className = "page-title";
     title.textContent = "生产工单";
@@ -146,7 +234,8 @@
     const fileLine = document.createElement("div");
     fileLine.textContent = state.fileName;
     const rowLine = document.createElement("div");
-    rowLine.textContent = `原表第 ${row.sourceRow} 行 · 第 ${pageIndex + 1} / ${total} 页`;
+    bilingualLabel(rowLine, `原表第 ${row.sourceRow} 行 · 第 ${pageIndex + 1} / ${total} 页`,
+      `မူရင်းအတန်း ${row.sourceRow} · စာမျက်နှာ ${pageIndex + 1} / ${total}`);
     meta.append(fileLine, rowLine);
     masthead.append(heading, meta);
 
@@ -155,12 +244,12 @@
     if (fields.length > (orientation === "landscape" ? 24 : 18)) grid.classList.add("dense");
     if (!ui.showHeaders.checked) grid.classList.add("no-headers");
 
-    fields.forEach(({ label, value }) => {
+    fields.forEach(({ label, translation, value }) => {
       const cell = document.createElement("section");
       cell.className = "data-cell";
       const key = document.createElement("div");
       key.className = "data-label";
-      key.textContent = label;
+      bilingualLabel(key, label, translation);
       const val = document.createElement("div");
       val.className = "data-value";
       val.textContent = value || "—";
@@ -171,17 +260,18 @@
     if (!fields.length) {
       const cell = document.createElement("section");
       cell.className = "data-cell";
-      cell.textContent = "这一行没有可打印的数据";
+      bilingualLabel(cell, "这一行没有可打印的数据", "ပုံနှိပ်ရန် အချက်အလက်မရှိပါ");
       grid.append(cell);
     }
 
     const signatures = document.createElement("footer");
     signatures.className = "signature-grid";
-    ["绕线员签名", "覆胶员签名", "包带员签名", "硫化员签名", "负责人签名"].forEach((name) => {
+    signatureLabels.forEach(([name, translation]) => {
       const signature = document.createElement("div");
       signature.className = "signature-item";
       const label = document.createElement("span");
-      label.textContent = name;
+      label.className = "signature-label";
+      bilingualLabel(label, name, translation);
       const line = document.createElement("span");
       line.className = "signature-line";
       signature.append(label, line);
@@ -196,12 +286,14 @@
     page.style.setProperty("--fit-scale", "1");
     if (!ui.fitToPage.checked) return;
     const content = page.querySelector(".page-content");
-    const availableWidth = content.clientWidth;
-    const availableHeight = content.clientHeight;
-    const neededWidth = content.scrollWidth;
-    const neededHeight = content.scrollHeight;
-    const scale = Math.min(1, availableWidth / neededWidth, availableHeight / neededHeight);
-    page.style.setProperty("--fit-scale", String(scale > 0 ? scale : 1));
+    let scale = 1;
+    // Scaling changes the available line width, so remeasure wrapped labels.
+    for (let attempt = 0; attempt < 4; attempt += 1) {
+      const ratio = Math.min(1, content.clientWidth / content.scrollWidth, content.clientHeight / content.scrollHeight);
+      if (ratio >= 1) break;
+      scale *= ratio;
+      page.style.setProperty("--fit-scale", String(scale));
+    }
   }
 
   function renderPreview() {
@@ -224,7 +316,13 @@
     if (count) {
       const page = createPage(headers, rows[state.page], state.page, count);
       ui.singlePreview.append(page);
-      requestAnimationFrame(() => fitPage(page));
+      requestAnimationFrame(() => {
+        fitPage(page);
+        // Importing the first sheet can trigger the first use of this font.
+        document.fonts.ready.then(() => {
+          if (page.isConnected) fitPage(page);
+        });
+      });
     }
   }
 
@@ -296,12 +394,12 @@
     ui.downloadLabel.textContent = "正在准备…";
     ui.pdfPages.replaceChildren(...rows.map((row, index) => createPage(headers, row, index, rows.length)));
 
-    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-    ui.pdfPages.querySelectorAll(".work-page").forEach(fitPage);
-
     const baseName = state.fileName.replace(/\.[^.]+$/, "") || "工单";
     const orientation = activeOrientation();
     try {
+      await document.fonts.ready;
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      ui.pdfPages.querySelectorAll(".work-page").forEach(fitPage);
       const pdf = new PdfDocument({ unit: "mm", format: "a5", orientation, compress: true });
       const pages = [...ui.pdfPages.querySelectorAll(".work-page")];
       for (let index = 0; index < pages.length; index += 1) {
