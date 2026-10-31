@@ -69,6 +69,8 @@
     ["负责人签名", "တာဝန်ခံ လက်မှတ်"],
   ];
 
+  const gradeLabels = { normal: "普通", medium: "中级", high: "高级" };
+
   const state = {
     fileName: "",
     workbook: null,
@@ -85,6 +87,8 @@
     fileName: document.querySelector("#fileName"),
     rowCount: document.querySelector("#rowCount"),
     settings: document.querySelector("#settings"),
+    gradeField: document.querySelector("#gradeField"),
+    gradeHint: document.querySelector("#gradeHint"),
     sheetField: document.querySelector("#sheetField"),
     sheetSelect: document.querySelector("#sheetSelect"),
     headerRow: document.querySelector("#headerRow"),
@@ -172,6 +176,17 @@
     return document.querySelector('input[name="orientation"]:checked').value;
   }
 
+  function activeGrade() {
+    const selected = ui.gradeField.querySelector('input[name="workGrade"]:checked');
+    if (!selected || !Object.hasOwn(gradeLabels, selected.value)) return null;
+    const color = ui.gradeField.querySelector(`input[type="color"][data-grade="${selected.value}"]`).value;
+    return { label: gradeLabels[selected.value], color };
+  }
+
+  function updateDownloadButton(rowCount) {
+    ui.downloadButton.disabled = rowCount === 0 || state.selectedColumns.size === 0 || !activeGrade() || ui.downloadButton.classList.contains("busy");
+  }
+
   function fieldList(headers, row) {
     return headers
       .map((label, index) => ({ label, translation: state.translations.get(label) || "", value: row.values[index] || "" }))
@@ -236,6 +251,7 @@
     const fields = fieldList(headers, row);
     const page = document.createElement("article");
     page.className = `work-page ${orientation}`;
+    page.style.setProperty("--work-title-color", activeGrade()?.color || "#000000");
 
     const content = document.createElement("div");
     content.className = "page-content";
@@ -337,7 +353,11 @@
     ui.pager.hidden = count === 0;
     ui.emptyState.hidden = count > 0;
     ui.singlePreview.hidden = count === 0;
-    ui.downloadButton.disabled = count === 0 || state.selectedColumns.size === 0;
+    updateDownloadButton(count);
+    const grade = activeGrade();
+    ui.gradeHint.textContent = grade
+      ? `本次全部工单使用${grade.label}等级；点击色条可修改颜色。`
+      : "请选择一个等级后再生成 PDF；点击色条可修改颜色。";
     ui.singlePreview.replaceChildren();
 
     if (count) {
@@ -387,6 +407,8 @@
       state.workbook = window.XLSX.read(buffer, { type: "array", cellDates: true });
       if (!state.workbook.SheetNames.length) throw new Error("没有找到工作表");
       state.fileName = file.name;
+      // A newly imported batch must have its grade explicitly chosen.
+      ui.gradeField.querySelectorAll('input[name="workGrade"]').forEach((input) => { input.checked = false; });
       ui.fileName.textContent = file.name;
       ui.fileSummary.hidden = false;
       ui.settings.disabled = false;
@@ -408,6 +430,12 @@
   }
 
   async function downloadPdf() {
+    if (ui.downloadButton.classList.contains("busy")) return;
+    if (!activeGrade()) {
+      setError("请先选择工单等级（普通、中级或高级）。");
+      ui.gradeField.querySelector('input[name="workGrade"]').focus();
+      return;
+    }
     const { headers, rows } = getParsedData();
     const PdfDocument = window.jspdf?.jsPDF;
     if (!rows.length || !window.html2canvas || !PdfDocument) {
@@ -450,9 +478,9 @@
       setError("PDF 生成失败。可尝试切换纸张方向或打开“隐藏空字段”后重试。");
     } finally {
       ui.pdfPages.replaceChildren();
-      ui.downloadButton.disabled = rows.length === 0 || state.selectedColumns.size === 0;
       ui.downloadButton.classList.remove("busy");
       ui.downloadLabel.textContent = "生成 PDF";
+      updateDownloadButton(getParsedData().rows.length);
     }
   }
 
@@ -467,6 +495,12 @@
   }));
   ui.dropZone.addEventListener("drop", (event) => readFile(event.dataTransfer.files[0]));
   ui.sheetSelect.addEventListener("change", () => selectSheet(ui.sheetSelect.value));
+  ui.gradeField.querySelectorAll('input[name="workGrade"]').forEach((input) => input.addEventListener("change", renderPreview));
+  ui.gradeField.querySelectorAll('input[type="color"]').forEach((input) => input.addEventListener("input", () => {
+    input.closest(".grade-option").style.setProperty("--grade-color", input.value);
+    input.closest(".grade-option").querySelector(".grade-choice small").textContent = input.value.toUpperCase();
+    renderPreview();
+  }));
   ui.columnList.addEventListener("change", (event) => {
     const checkbox = event.target.closest('input[type="checkbox"]');
     if (!checkbox) return;

@@ -7,11 +7,11 @@
     <meta name="theme-color" content="#122033" />
     <title>工单分页打印</title>
     <link rel="preload" href="./fonts/NotoSansMyanmar.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="./styles.css?v=20261031-3" />
+    <link rel="stylesheet" href="./styles.css?v=20261031-5" />
     <script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
-    <script defer src="./app.js?v=20261031-4"></script>
+    <script defer src="./app.js?v=20261031-5"></script>
   </head>
   <body>
     <header class="topbar">
@@ -44,6 +44,28 @@
         </div>
 
         <fieldset class="settings" id="settings" disabled>
+          <fieldset class="field grade-field" id="gradeField" aria-describedby="gradeHint">
+            <legend>工单等级 <span class="required-label">必选</span></legend>
+            <div class="grade-options">
+              <div class="grade-option" style="--grade-color: #000000">
+                <input type="radio" name="workGrade" id="gradeNormal" value="normal" required />
+                <label class="grade-choice" for="gradeNormal"><span>普通</span><small>黑色</small></label>
+                <input type="color" id="gradeNormalColor" data-grade="normal" value="#000000" aria-label="普通等级标题颜色" title="修改普通等级标题颜色" />
+              </div>
+              <div class="grade-option" style="--grade-color: #1d4ed8">
+                <input type="radio" name="workGrade" id="gradeMedium" value="medium" required />
+                <label class="grade-choice" for="gradeMedium"><span>中级</span><small>蓝色</small></label>
+                <input type="color" id="gradeMediumColor" data-grade="medium" value="#1d4ed8" aria-label="中级等级标题颜色" title="修改中级等级标题颜色" />
+              </div>
+              <div class="grade-option" style="--grade-color: #dc2626">
+                <input type="radio" name="workGrade" id="gradeHigh" value="high" required />
+                <label class="grade-choice" for="gradeHigh"><span>高级</span><small>红色</small></label>
+                <input type="color" id="gradeHighColor" data-grade="high" value="#dc2626" aria-label="高级等级标题颜色" title="修改高级等级标题颜色" />
+              </div>
+            </div>
+            <p class="grade-hint" id="gradeHint" aria-live="polite">请选择一个等级后再生成 PDF；点击色条可修改颜色。</p>
+          </fieldset>
+
           <div class="field" id="sheetField" hidden>
             <label for="sheetSelect">工作表</label>
             <select id="sheetSelect"></select>
