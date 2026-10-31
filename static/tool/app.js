@@ -269,10 +269,14 @@
       const key = document.createElement("div");
       key.className = "data-label";
       bilingualLabel(key, label, translation);
+      const separator = document.createElement("span");
+      separator.className = "data-separator";
+      separator.textContent = "：";
+      separator.setAttribute("aria-hidden", "true");
       const val = document.createElement("div");
       val.className = "data-value";
       val.textContent = value || "—";
-      cell.append(key, val);
+      cell.append(key, separator, val);
       grid.append(cell);
     });
 
