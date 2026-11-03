@@ -1,83 +1,7 @@
 (() => {
   "use strict";
 
-  // Keys are normalized below so spaces, units, and duplicate-column suffixes
-  // do not prevent a known field from receiving its translation.
-  const myanmarFields = new Map([
-    ["序号|序|编号|行号", "စဉ်"],
-    ["未命名列", "အမည်မရှိသောကော်လံ"],
-    ["客户|客户名称|客户名", "ဖောက်သည်"],
-    ["订单|订单信息|客户订单信息", "အော်ဒါအချက်အလက်"],
-    ["订单号|订单编号|客户订单号", "အော်ဒါနံပါတ်"],
-    ["订单日期|下单日期|下单时间", "အော်ဒါရက်စွဲ"],
-    ["交期|货期|交货日期|交货时间|交货期|交货日|交付日期|交付时间|交付期", "ပေးပို့ရမည့်ရက်"],
-    ["日期|生产日期", "ရက်စွဲ"],
-    ["品牌|商标", "အမှတ်တံဆိပ်"],
-    ["印|印字|印刷|印刷内容|印字内容|印标|标识", "အမှတ်အသား"],
-    ["印刷型号|印字型号|印刷规格", "ပုံနှိပ်မော်ဒယ်"],
-    ["圈|圈数|圈号|绕线圈数|绕线转数", "ကြိုးပတ်အပတ်ရေ"],
-    ["围|周长|带周长|皮带周长|带长", "ပတ်လည်အလျား"],
-    ["品名|产品名称|产品|名称", "ကုန်ပစ္စည်းအမည်"],
-    ["货号|产品编号|产品货号|物料编号|物料编码", "ကုန်ပစ္စည်းနံပါတ်"],
-    ["型号|产品型号|带型|型", "မော်ဒယ်"],
-    ["号|号码", "နံပါတ်"],
-    ["规格|产品规格", "သတ်မှတ်ချက်"],
-    ["数量|订单数量|生产数量|条数", "အရေအတွက်"],
-    ["件数|包装件数|包数|箱数", "အထုပ်အရေအတွက်"],
-    ["条/件|条数/件|每件条数|每件数量", "တစ်ထုပ်လျှင် အရေအတွက်"],
-    ["单位", "ယူနစ်"],
-    ["长度单位|长单位", "အလျားယူနစ်"],
-    ["每米重量|每米重|米重", "တစ်မီတာအလေးချိန်"],
-    ["合计米数|总米数", "စုစုပေါင်းအလျား (မီတာ)"],
-    ["每件重量|单件重量|件重", "တစ်ထုပ်အလေးချိန်"],
-    ["合计重量|重量合计|总重量|总重", "စုစုပေါင်းအလေးချိန်"],
-    ["等级|级别|产品等级|质量等级", "အဆင့်"],
-    ["齿数|模具齿数|模齿数|楦块齿数", "သွားအရေအတွက်"],
-    ["齿距|模具齿距|楦块齿距", "သွားအကွာအဝေး"],
-    ["楦块|模具|模具编号", "ပုံစံခွက်"],
-    ["模具型号|楦块型号", "ပုံစံခွက်မော်ဒယ်"],
-    ["模具长度|模长|楦块长度", "ပုံစံခွက်အလျား"],
-    ["楦块齿高|模具齿高|齿高", "သွားအမြင့်"],
-    ["楦块齿形|模具齿形|齿形", "သွားပုံစံ"],
-    ["排线方向|绕线方向", "ကြိုးပတ်သည့်ဦးတည်ချက်"],
-    ["绕线|排线", "ကြိုးပတ်ခြင်း"],
-    ["长度|长|长度标记", "အလျား"],
-    ["长度标准|长度基准|长度规格|标准长度|基准长度", "အလျားစံနှုန်း"],
-    ["长度齿数", "အလျားသွားအရေအတွက်"],
-    ["尺寸增量|尺寸增值|长度增量|长度增值|加长量|加长尺寸|增量", "အရွယ်အစားတိုးပမာဏ"],
-    ["尺寸补偿|长度补偿|补偿尺寸|补偿值|补偿量", "အရွယ်အစားဖြည့်စွက်ပမာဏ"],
-    ["尺寸加减|尺寸加减量|尺寸调整|长度加减|长度调整", "အရွယ်အစားညှိပမာဏ"],
-    ["尺寸|成品尺寸|产品尺寸", "အရွယ်အစား"],
-    ["宽度|宽|带宽", "အနံ"],
-    ["厚度|胶厚", "အထူ"],
-    ["线型|线号|线绳型号|线绳规格|线绳型|绳型号|绳芯型号|绳芯规格|线芯型号|棉绳型号|棉绳规格|绵绳型号|棉线型号|纱线型号", "ကြိုးအမျိုးအစား"],
-    ["线长|线绳长度", "ကြိုးအလျား"],
-    ["线数|线绳根数", "ကြိုးအရေအတွက်"],
-    ["绕线长度", "ကြိုးပတ်အလျား"],
-    ["绕线转速|转速", "လည်ပတ်နှုန်း"],
-    ["覆胶|包胶", "ရော်ဘာဖုံးခြင်း"],
-    ["包带|包布", "ပတ်တီးပတ်ခြင်း"],
-    ["硫化", "ရော်ဘာအပူပေးခြင်း"],
-    ["硫化温度|温度", "အပူချိန်"],
-    ["硫化时间|时间", "အချိန်"],
-    ["压力|硫化压力", "ဖိအား"],
-    ["材料|材质|原料", "ကုန်ကြမ်း"],
-    ["材料编号|材料编码|原料编号|原料编码", "ကုန်ကြမ်းနံပါတ်"],
-    ["材料结构|材质结构|结构|线绳结构|线芯结构", "ကုန်ကြမ်းဖွဲ့စည်းပုံ"],
-    ["颜色", "အရောင်"],
-    ["备注|说明|特殊要求", "မှတ်ချက်"],
-    ["负责人", "တာဝန်ခံ"],
-    ["操作员|生产人员", "လုပ်သား"],
-    ["检验员|质检员", "အရည်အသွေးစစ်ဆေးသူ"],
-  ].flatMap(([aliases, translation]) => aliases.split("|").map((alias) => [alias, translation])));
-
-  const signatureLabels = [
-    ["绕线员签名", "ကြိုးပတ်သူ လက်မှတ်"],
-    ["覆胶员签名", "ရော်ဘာဖုံးသူ လက်မှတ်"],
-    ["包带员签名", "ပတ်တီးပတ်သူ လက်မှတ်"],
-    ["硫化员签名", "ရော်ဘာအပူပေးသူ လက်မှတ်"],
-    ["负责人签名", "တာဝန်ခံ လက်မှတ်"],
-  ];
+  const signatureLabels = ["绕线员签名", "覆胶员签名", "包带员签名", "硫化员签名", "负责人签名"];
 
   const gradeLabels = { normal: "普通", medium: "中级", high: "高级" };
 
@@ -87,7 +11,7 @@
     matrix: [],
     page: 0,
     selectedColumns: new Set(),
-    translations: new Map(),
+    parsedData: null,
   };
 
   const ui = {
@@ -133,34 +57,6 @@
     return String(value).replace(/\r\n?/g, "\n").trim();
   }
 
-  function defaultTranslation(label) {
-    const key = label.normalize("NFKC")
-      .replace(/\s+/g, "")
-      .replace(/[\[【]/g, "(").replace(/[\]】]/g, ")")
-      .replace(/[：:]+$/g, "");
-    if (myanmarFields.has(key)) return myanmarFields.get(key);
-
-    // Spreadsheet exports append duplicate numbers and measurement units.
-    // Keep meaningful qualifiers (such as 内径) instead of discarding them.
-    const base = key
-      .replace(/\((?:\d+|mm|cm|m|kg|g|pcs|rpm|mpa|℃|°c|毫米|厘米|米|条|个|圈|齿|秒|分钟|分|度|转\/分)\)/gi, "")
-      .replace(/(?:[\/／](?:mm|cm|m|kg|g|pcs|rpm|mpa)|[\/／](?:毫米|厘米|米|条|个|圈|齿|秒|分钟|分|度|转\/分))$/gi, "");
-    if (myanmarFields.has(base)) return myanmarFields.get(base);
-    const unnamedColumn = base.match(/^未命名列(\d+)$/);
-    return unnamedColumn ? `${myanmarFields.get("未命名列")} ${unnamedColumn[1]}` : "";
-  }
-
-  function bilingualLabel(element, chinese, myanmar) {
-    element.append(document.createTextNode(chinese));
-    if (myanmar) {
-      const translation = document.createElement("span");
-      translation.className = "myanmar-text";
-      translation.lang = "my";
-      translation.textContent = myanmar;
-      element.append(translation);
-    }
-  }
-
   function makeUniqueHeaders(row, width) {
     const used = new Map();
     return Array.from({ length: width }, (_, index) => {
@@ -172,6 +68,7 @@
   }
 
   function getParsedData() {
+    if (state.parsedData) return state.parsedData;
     const headerIndex = Math.max(0, Number(ui.headerRow.value || 1) - 1);
     if (!state.matrix.length || headerIndex >= state.matrix.length) return { headers: [], rows: [] };
 
@@ -181,7 +78,8 @@
       .slice(headerIndex + 1)
       .map((row, index) => ({ values: Array.from({ length: width }, (_, i) => cleanText(row[i])), sourceRow: headerIndex + index + 2 }))
       .filter(({ values }) => values.some(Boolean));
-    return { headers, rows };
+    state.parsedData = { headers, rows };
+    return state.parsedData;
   }
 
   function activeOrientation() {
@@ -201,7 +99,7 @@
 
   function fieldList(headers, row) {
     return headers
-      .map((label, index) => ({ label, translation: state.translations.get(label) || "", value: row.values[index] || "" }))
+      .map((label, index) => ({ label, value: row.values[index] || "" }))
       .filter((_, index) => state.selectedColumns.has(index))
       .filter((field) => !ui.hideEmpty.checked || field.value !== "");
   }
@@ -218,9 +116,6 @@
     ui.columnPicker.hidden = headers.length === 0;
     ui.columnList.replaceChildren();
     headers.forEach((header, index) => {
-      if (!state.translations.has(header)) state.translations.set(header, defaultTranslation(header));
-      const entry = document.createElement("div");
-      entry.className = "column-entry";
       const option = document.createElement("label");
       option.className = "column-option";
       const checkbox = document.createElement("input");
@@ -230,19 +125,7 @@
       const text = document.createElement("span");
       text.textContent = header;
       option.append(checkbox, text);
-      const translation = document.createElement("input");
-      translation.type = "text";
-      translation.className = "column-translation";
-      translation.lang = "my";
-      translation.value = state.translations.get(header);
-      translation.placeholder = "填写缅语翻译";
-      translation.setAttribute("aria-label", `${header}的缅语翻译`);
-      translation.addEventListener("input", () => {
-        state.translations.set(header, translation.value.trim());
-        renderPreview();
-      });
-      entry.append(option, translation);
-      ui.columnList.append(entry);
+      ui.columnList.append(option);
     });
     updateSelectedColumnCount(headers.length);
   }
@@ -271,22 +154,17 @@
     const masthead = document.createElement("header");
     masthead.className = "page-masthead";
     const heading = document.createElement("div");
-    const kicker = document.createElement("p");
-    kicker.className = "page-kicker";
-    kicker.lang = "my";
-    kicker.textContent = "ထုတ်လုပ်မှုအလုပ်အမိန့်စာ";
     const title = document.createElement("h3");
     title.className = "page-title";
     title.textContent = "生产工单";
-    heading.append(kicker, title);
+    heading.append(title);
 
     const meta = document.createElement("div");
     meta.className = "page-meta";
     const fileLine = document.createElement("div");
     fileLine.textContent = state.fileName;
     const rowLine = document.createElement("div");
-    bilingualLabel(rowLine, `原表第 ${row.sourceRow} 行 · 第 ${pageIndex + 1} / ${total} 页`,
-      `မူရင်းအတန်း ${row.sourceRow} · စာမျက်နှာ ${pageIndex + 1} / ${total}`);
+    rowLine.textContent = `原表第 ${row.sourceRow} 行 · 第 ${pageIndex + 1} / ${total} 页`;
     meta.append(fileLine, rowLine);
     masthead.append(heading, meta);
 
@@ -295,12 +173,12 @@
     if (fields.length > (orientation === "landscape" ? 24 : 18)) grid.classList.add("dense");
     if (!ui.showHeaders.checked) grid.classList.add("no-headers");
 
-    fields.forEach(({ label, translation, value }) => {
+    fields.forEach(({ label, value }) => {
       const cell = document.createElement("section");
       cell.className = "data-cell";
       const key = document.createElement("div");
       key.className = "data-label";
-      bilingualLabel(key, label, translation);
+      key.textContent = label;
       const separator = document.createElement("span");
       separator.className = "data-separator";
       separator.textContent = "：";
@@ -315,18 +193,18 @@
     if (!fields.length) {
       const cell = document.createElement("section");
       cell.className = "data-cell";
-      bilingualLabel(cell, "这一行没有可打印的数据", "ပုံနှိပ်ရန် အချက်အလက်မရှိပါ");
+      cell.textContent = "这一行没有可打印的数据";
       grid.append(cell);
     }
 
     const signatures = document.createElement("footer");
     signatures.className = "signature-grid";
-    signatureLabels.forEach(([name, translation]) => {
+    signatureLabels.forEach((name) => {
       const signature = document.createElement("div");
       signature.className = "signature-item";
       const label = document.createElement("span");
       label.className = "signature-label";
-      bilingualLabel(label, name, translation);
+      label.textContent = name;
       const line = document.createElement("span");
       line.className = "signature-line";
       signature.append(label, line);
@@ -375,13 +253,7 @@
     if (count) {
       const page = createPage(headers, rows[state.page], state.page, count);
       ui.singlePreview.append(page);
-      requestAnimationFrame(() => {
-        fitPage(page);
-        // Importing the first sheet can trigger the first use of this font.
-        document.fonts.ready.then(() => {
-          if (page.isConnected) fitPage(page);
-        });
-      });
+      requestAnimationFrame(() => fitPage(page));
     }
   }
 
@@ -396,6 +268,7 @@
 
   function selectSheet(name) {
     state.matrix = sheetToMatrix(state.workbook.Sheets[name]);
+    state.parsedData = null;
     state.page = 0;
     renderColumnPicker(true);
     renderPreview();
@@ -403,7 +276,7 @@
 
   async function readFile(file) {
     setError();
-    if (!file) return;
+    if (!file || ui.downloadButton.classList.contains("busy")) return;
     const extension = file.name.split(".").pop().toLowerCase();
     if (!window.XLSX) {
       setError("文件解析组件未加载，请检查网络连接后刷新页面。");
@@ -441,6 +314,90 @@
     }
   }
 
+  function exportStyles() {
+    const rules = [];
+    for (const sheet of document.styleSheets) {
+      try {
+        rules.push(...Array.from(sheet.cssRules, (rule) => rule.cssText));
+      } catch {
+        // Only the local work-order stylesheet is needed for this document.
+      }
+    }
+    // An SVG image uses its own viewport. Keep the full A5 dimensions even
+    // when the screen preview uses a mobile zoom or a drop shadow.
+    rules.push(".work-page { transform: none !important; margin: 0 !important; box-shadow: none !important; }");
+    return rules.join("\n");
+  }
+
+  async function renderPageImage(page, styles) {
+    const svgNamespace = "http://www.w3.org/2000/svg";
+    const htmlNamespace = "http://www.w3.org/1999/xhtml";
+    const computed = getComputedStyle(page);
+    const width = parseFloat(computed.width);
+    const height = parseFloat(computed.height);
+    const clone = page.cloneNode(true);
+    clone.style.width = `${width}px`;
+    clone.style.height = `${height}px`;
+
+    const svg = document.createElementNS(svgNamespace, "svg");
+    svg.setAttribute("width", String(width));
+    svg.setAttribute("height", String(height));
+    const foreignObject = document.createElementNS(svgNamespace, "foreignObject");
+    foreignObject.setAttribute("width", "100%");
+    foreignObject.setAttribute("height", "100%");
+    const wrapper = document.createElementNS(htmlNamespace, "div");
+    wrapper.style.fontFamily = computed.fontFamily;
+    const style = document.createElementNS(htmlNamespace, "style");
+    style.textContent = styles;
+    wrapper.append(style, clone);
+    foreignObject.append(wrapper);
+    svg.append(foreignObject);
+
+    const image = new Image();
+    image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(new XMLSerializer().serializeToString(svg))}`;
+    await image.decode();
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.ceil(width * 1.7);
+    canvas.height = Math.ceil(height * 1.7);
+    const context = canvas.getContext("2d");
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    // Some browsers cannot paint foreignObject content into a canvas. Check
+    // the first data value before accepting the image, then use html2canvas
+    // below if this renderer produced an empty or unreadable image.
+    const sample = page.querySelector(".data-value, .signature-label");
+    const pageBox = page.getBoundingClientRect();
+    const textBox = sample.getBoundingClientRect();
+    const scaleX = canvas.width / pageBox.width;
+    const scaleY = canvas.height / pageBox.height;
+    const x = Math.max(0, Math.floor((textBox.x - pageBox.x) * scaleX));
+    const y = Math.max(0, Math.floor((textBox.y - pageBox.y) * scaleY));
+    const pixels = context.getImageData(x, y,
+      Math.min(canvas.width - x, Math.ceil(textBox.width * scaleX)),
+      Math.min(canvas.height - y, Math.ceil(textBox.height * scaleY))).data;
+    let ink = 0;
+    for (let index = 0; index < pixels.length; index += 4) {
+      if (Math.min(pixels[index], pixels[index + 1], pixels[index + 2]) < 200) ink += 1;
+      if (ink >= 8) return canvas;
+    }
+    throw new Error("The browser did not render the page text");
+  }
+
+  function canvasToJpeg(canvas) {
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(async (blob) => {
+        try {
+          if (!blob) throw new Error("Could not encode the page image");
+          resolve(new Uint8Array(await blob.arrayBuffer()));
+        } catch (error) {
+          reject(error);
+        }
+      }, "image/jpeg", 0.94);
+    });
+  }
+
   async function downloadPdf() {
     if (ui.downloadButton.classList.contains("busy")) return;
     if (!activeGrade()) {
@@ -450,7 +407,7 @@
     }
     const { headers, rows } = getParsedData();
     const PdfDocument = window.jspdf?.jsPDF;
-    if (!rows.length || !window.html2canvas || !PdfDocument) {
+    if (!rows.length || !PdfDocument) {
       setError(rows.length ? "PDF 组件未加载，请检查网络连接后刷新页面。" : "没有可生成的工单数据。");
       return;
     }
@@ -459,28 +416,44 @@
     ui.downloadButton.disabled = true;
     ui.downloadButton.classList.add("busy");
     ui.downloadLabel.textContent = "正在准备…";
-    ui.pdfPages.replaceChildren(...rows.map((row, index) => createPage(headers, row, index, rows.length)));
+    ui.settings.disabled = true;
+    ui.fileInput.disabled = true;
 
     const baseName = state.fileName.replace(/\.[^.]+$/, "") || "工单";
     const orientation = activeOrientation();
     try {
-      await document.fonts.ready;
-      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-      ui.pdfPages.querySelectorAll(".work-page").forEach(fitPage);
+      const styles = exportStyles();
+      let useNativeRenderer = true;
       const pdf = new PdfDocument({ unit: "mm", format: "a5", orientation, compress: true });
-      const pages = [...ui.pdfPages.querySelectorAll(".work-page")];
-      for (let index = 0; index < pages.length; index += 1) {
-        ui.downloadLabel.textContent = `正在生成 ${index + 1} / ${pages.length}`;
-        const canvas = await window.html2canvas(pages[index], {
-          scale: 1.7,
-          useCORS: true,
-          backgroundColor: "#ffffff",
-          logging: false,
-        });
+      for (let index = 0; index < rows.length; index += 1) {
+        ui.downloadLabel.textContent = `正在生成 ${index + 1} / ${rows.length}`;
+        if (index % 8 === 0) await new Promise(requestAnimationFrame);
+        const page = createPage(headers, rows[index], index, rows.length);
+        // Keep one export page in the DOM instead of cloning the entire batch
+        // for every image. This also bounds memory use for large workbooks.
+        ui.pdfPages.replaceChildren(page);
+        fitPage(page);
+        let canvas;
+        if (useNativeRenderer) {
+          try {
+            canvas = await renderPageImage(page, styles);
+          } catch {
+            useNativeRenderer = false;
+          }
+        }
+        if (!canvas) {
+          if (!window.html2canvas) throw new Error("PDF rendering component did not load");
+          canvas = await window.html2canvas(page, {
+            scale: 1.7,
+            useCORS: true,
+            backgroundColor: "#ffffff",
+            logging: false,
+          });
+        }
         if (index > 0) pdf.addPage("a5", orientation);
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
-        pdf.addImage(canvas.toDataURL("image/jpeg", 0.94), "JPEG", 0, 0, pageWidth, pageHeight, undefined, "FAST");
+        pdf.addImage(await canvasToJpeg(canvas), "JPEG", 0, 0, pageWidth, pageHeight, undefined, "FAST");
         canvas.width = 1;
         canvas.height = 1;
       }
@@ -490,6 +463,8 @@
       setError("PDF 生成失败。可尝试切换纸张方向或打开“隐藏空字段”后重试。");
     } finally {
       ui.pdfPages.replaceChildren();
+      ui.settings.disabled = !state.workbook;
+      ui.fileInput.disabled = false;
       ui.downloadButton.classList.remove("busy");
       ui.downloadLabel.textContent = "生成 PDF";
       updateDownloadButton(getParsedData().rows.length);
@@ -529,6 +504,7 @@
   ui.nextPage.addEventListener("click", () => { state.page += 1; renderPreview(); });
   ui.downloadButton.addEventListener("click", downloadPdf);
   ui.headerRow.addEventListener("input", () => {
+    state.parsedData = null;
     state.page = 0;
     renderColumnPicker(true);
     renderPreview();
